@@ -3,10 +3,14 @@ import '/chat/ai_chat_component/ai_chat_component_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:text_search/text_search.dart';
+
 import 'list_page_model.dart';
 export 'list_page_model.dart';
 
@@ -55,7 +59,7 @@ class _ListPageWidgetState extends State<ListPageWidget>
         body: SafeArea(
           top: true,
           child: Align(
-            alignment: const AlignmentDirectional(0.0, 0.0),
+            alignment: AlignmentDirectional(0.0, 0.0),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -63,13 +67,13 @@ class _ListPageWidgetState extends State<ListPageWidget>
               children: [
                 Padding(
                   padding:
-                      const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 12.0),
+                  EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 12.0),
                   child: Container(
                     width: double.infinity,
                     height: 60.0,
                     decoration: BoxDecoration(
                       color: FlutterFlowTheme.of(context).secondaryBackground,
-                      boxShadow: const [
+                      boxShadow: [
                         BoxShadow(
                           blurRadius: 3.0,
                           color: Color(0x33000000),
@@ -86,7 +90,7 @@ class _ListPageWidgetState extends State<ListPageWidget>
                     ),
                     child: Padding(
                       padding:
-                          const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 12.0, 0.0),
+                      EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 12.0, 0.0),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
@@ -97,41 +101,41 @@ class _ListPageWidgetState extends State<ListPageWidget>
                           ),
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
+                              padding: EdgeInsetsDirectional.fromSTEB(
                                   4.0, 0.0, 0.0, 0.0),
-                              child: SizedBox(
+                              child: Container(
                                 width: 200.0,
                                 child: TextFormField(
                                   controller: _model.textController,
                                   focusNode: _model.textFieldFocusNode,
                                   onChanged: (_) => EasyDebounce.debounce(
                                     '_model.textController',
-                                    const Duration(milliseconds: 2000),
-                                    () async {
+                                    Duration(milliseconds: 2000),
+                                        () async {
                                       await queryPostsRecordOnce()
                                           .then(
                                             (records) =>
-                                                _model.simpleSearchResults =
-                                                    TextSearch(
+                                        _model.simpleSearchResults =
+                                            TextSearch(
                                               records
                                                   .map(
                                                     (record) => TextSearchItem
-                                                        .fromTerms(record, [
-                                                      record.postTitle,
-                                                      record.postDescription,
-                                                      record.tag
-                                                    ]),
-                                                  )
+                                                    .fromTerms(record, [
+                                                  record.postTitle!,
+                                                  record.postDescription!,
+                                                  record.tag!
+                                                ]),
+                                              )
                                                   .toList(),
                                             )
-                                                        .search(_model
-                                                            .textController
-                                                            .text)
-                                                        .map((r) => r.object)
-                                                        .toList(),
-                                          )
+                                                .search(_model
+                                                .textController
+                                                .text)
+                                                .map((r) => r.object)
+                                                .toList(),
+                                      )
                                           .onError((_, __) =>
-                                              _model.simpleSearchResults = [])
+                                      _model.simpleSearchResults = [])
                                           .whenComplete(
                                               () => safeSetState(() {}));
                                     },
@@ -143,16 +147,16 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                     labelStyle: FlutterFlowTheme.of(context)
                                         .labelMedium
                                         .override(
-                                          fontFamily: 'Inter',
-                                          fontSize: 16.0,
-                                          letterSpacing: 0.0,
-                                        ),
+                                      fontFamily: 'Inter',
+                                      fontSize: 16.0,
+                                      letterSpacing: 0.0,
+                                    ),
                                     hintStyle: FlutterFlowTheme.of(context)
                                         .labelMedium
                                         .override(
-                                          fontFamily: 'Inter',
-                                          letterSpacing: 0.0,
-                                        ),
+                                      fontFamily: 'Inter',
+                                      letterSpacing: 0.0,
+                                    ),
                                     enabledBorder: InputBorder.none,
                                     focusedBorder: InputBorder.none,
                                     errorBorder: InputBorder.none,
@@ -164,11 +168,11 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        fontFamily: 'Inter',
-                                        letterSpacing: 0.0,
-                                      ),
+                                    fontFamily: 'Inter',
+                                    letterSpacing: 0.0,
+                                  ),
                                   cursorColor:
-                                      FlutterFlowTheme.of(context).primary,
+                                  FlutterFlowTheme.of(context).primary,
                                   validator: _model.textControllerValidator
                                       .asValidator(context),
                                 ),
@@ -184,21 +188,21 @@ class _ListPageWidgetState extends State<ListPageWidget>
                   child: Column(
                     children: [
                       Align(
-                        alignment: const Alignment(0.0, 0),
+                        alignment: Alignment(0.0, 0),
                         child: TabBar(
                           labelColor: FlutterFlowTheme.of(context).primaryText,
                           unselectedLabelColor:
-                              FlutterFlowTheme.of(context).primaryText,
+                          FlutterFlowTheme.of(context).secondaryText,
                           labelStyle:
-                              FlutterFlowTheme.of(context).labelSmall.override(
-                                    fontFamily: 'Inter',
-                                    fontSize: 15.0,
-                                    letterSpacing: 0.0,
-                                  ),
-                          unselectedLabelStyle: const TextStyle(),
+                          FlutterFlowTheme.of(context).labelSmall.override(
+                            fontFamily: 'Inter',
+                            fontSize: 15.0,
+                            letterSpacing: 0.0,
+                          ),
+                          unselectedLabelStyle: TextStyle(),
                           indicatorColor: FlutterFlowTheme.of(context).primary,
-                          padding: const EdgeInsets.all(4.0),
-                          tabs: const [
+                          padding: EdgeInsets.all(4.0),
+                          tabs: [
                             Tab(
                               text: '백과사전',
                               icon: FaIcon(
@@ -248,28 +252,28 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                   padding: EdgeInsets.zero,
                                                   shrinkWrap: true,
                                                   scrollDirection:
-                                                      Axis.vertical,
+                                                  Axis.vertical,
                                                   itemCount:
-                                                      searchResults.length,
+                                                  searchResults.length,
                                                   itemBuilder: (context,
                                                       searchResultsIndex) {
                                                     final searchResultsItem =
-                                                        searchResults[
-                                                            searchResultsIndex];
+                                                    searchResults[
+                                                    searchResultsIndex];
                                                     return Padding(
                                                       padding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  16.0,
-                                                                  0.0,
-                                                                  16.0,
-                                                                  0.0),
+                                                      EdgeInsetsDirectional
+                                                          .fromSTEB(
+                                                          16.0,
+                                                          0.0,
+                                                          16.0,
+                                                          0.0),
                                                       child: Container(
                                                         width: double.infinity,
                                                         decoration:
-                                                            BoxDecoration(
+                                                        BoxDecoration(
                                                           color: Colors.white,
-                                                          boxShadow: const [
+                                                          boxShadow: [
                                                             BoxShadow(
                                                               blurRadius: 7.0,
                                                               color: Color(
@@ -281,47 +285,47 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                             )
                                                           ],
                                                           borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      8.0),
+                                                          BorderRadius
+                                                              .circular(
+                                                              8.0),
                                                         ),
                                                         child: Padding(
                                                           padding:
-                                                              const EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      16.0,
-                                                                      12.0,
-                                                                      16.0,
-                                                                      12.0),
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                              16.0,
+                                                              12.0,
+                                                              16.0,
+                                                              12.0),
                                                           child: Column(
                                                             mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
+                                                            MainAxisSize
+                                                                .max,
                                                             crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
+                                                            CrossAxisAlignment
+                                                                .start,
                                                             children: [
                                                               Text(
                                                                 searchResultsItem
                                                                     .tag,
                                                                 style: FlutterFlowTheme.of(
-                                                                        context)
+                                                                    context)
                                                                     .bodyMedium
                                                                     .override(
-                                                                      fontFamily:
-                                                                          'Plus Jakarta Sans',
-                                                                      color: const Color(
-                                                                          0xFF39D2C0),
-                                                                      fontSize:
-                                                                          14.0,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                    ),
+                                                                  fontFamily:
+                                                                  'Plus Jakarta Sans',
+                                                                  color: Color(
+                                                                      0xFF39D2C0),
+                                                                  fontSize:
+                                                                  14.0,
+                                                                  letterSpacing:
+                                                                  0.0,
+                                                                  fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                                ),
                                                               ),
-                                                              const Divider(
+                                                              Divider(
                                                                 height: 16.0,
                                                                 thickness: 2.0,
                                                                 color: Color(
@@ -331,48 +335,48 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                 searchResultsItem
                                                                     .postTitle,
                                                                 style: FlutterFlowTheme.of(
-                                                                        context)
+                                                                    context)
                                                                     .bodyLarge
                                                                     .override(
-                                                                      fontFamily:
-                                                                          'Plus Jakarta Sans',
-                                                                      color: const Color(
-                                                                          0xFF14181B),
-                                                                      fontSize:
-                                                                          16.0,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                    ),
+                                                                  fontFamily:
+                                                                  'Plus Jakarta Sans',
+                                                                  color: Color(
+                                                                      0xFF14181B),
+                                                                  fontSize:
+                                                                  16.0,
+                                                                  letterSpacing:
+                                                                  0.0,
+                                                                  fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                                ),
                                                               ),
                                                               Padding(
                                                                 padding:
-                                                                    const EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            0.0,
-                                                                            4.0,
-                                                                            0.0,
-                                                                            0.0),
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                    0.0,
+                                                                    4.0,
+                                                                    0.0,
+                                                                    0.0),
                                                                 child: Text(
                                                                   searchResultsItem
                                                                       .postDescription,
                                                                   style: FlutterFlowTheme.of(
-                                                                          context)
+                                                                      context)
                                                                       .labelMedium
                                                                       .override(
-                                                                        fontFamily:
-                                                                            'Plus Jakarta Sans',
-                                                                        color: const Color(
-                                                                            0xFF57636C),
-                                                                        fontSize:
-                                                                            14.0,
-                                                                        letterSpacing:
-                                                                            0.0,
-                                                                        fontWeight:
-                                                                            FontWeight.w500,
-                                                                      ),
+                                                                    fontFamily:
+                                                                    'Plus Jakarta Sans',
+                                                                    color: Color(
+                                                                        0xFF57636C),
+                                                                    fontSize:
+                                                                    14.0,
+                                                                    letterSpacing:
+                                                                    0.0,
+                                                                    fontWeight:
+                                                                    FontWeight.w500,
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ],
@@ -386,8 +390,8 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                             );
                                           } else {
                                             return StreamBuilder<
-                                                List<PostsRecord>>(
-                                              stream: queryPostsRecord(),
+                                                List<DictionsRecord>>(
+                                              stream: queryDictionsRecord(),
                                               builder: (context, snapshot) {
                                                 // Customize what your widget looks like when it's loading.
                                                 if (!snapshot.hasData) {
@@ -396,49 +400,49 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                       width: 50.0,
                                                       height: 50.0,
                                                       child:
-                                                          CircularProgressIndicator(
+                                                      CircularProgressIndicator(
                                                         valueColor:
-                                                            AlwaysStoppedAnimation<
-                                                                Color>(
+                                                        AlwaysStoppedAnimation<
+                                                            Color>(
                                                           FlutterFlowTheme.of(
-                                                                  context)
+                                                              context)
                                                               .primary,
                                                         ),
                                                       ),
                                                     ),
                                                   );
                                                 }
-                                                List<PostsRecord>
-                                                    listViewPostsRecordList =
-                                                    snapshot.data!;
+                                                List<DictionsRecord>
+                                                listViewDictionsRecordList =
+                                                snapshot.data!;
 
                                                 return ListView.builder(
                                                   padding: EdgeInsets.zero,
                                                   shrinkWrap: true,
                                                   scrollDirection:
-                                                      Axis.vertical,
+                                                  Axis.vertical,
                                                   itemCount:
-                                                      listViewPostsRecordList
-                                                          .length,
+                                                  listViewDictionsRecordList
+                                                      .length,
                                                   itemBuilder:
                                                       (context, listViewIndex) {
-                                                    final listViewPostsRecord =
-                                                        listViewPostsRecordList[
-                                                            listViewIndex];
+                                                    final listViewDictionsRecord =
+                                                    listViewDictionsRecordList[
+                                                    listViewIndex];
                                                     return Padding(
                                                       padding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  16.0,
-                                                                  12.0,
-                                                                  16.0,
-                                                                  6.0),
+                                                      EdgeInsetsDirectional
+                                                          .fromSTEB(
+                                                          16.0,
+                                                          12.0,
+                                                          16.0,
+                                                          6.0),
                                                       child: Container(
                                                         width: double.infinity,
                                                         decoration:
-                                                            BoxDecoration(
+                                                        BoxDecoration(
                                                           color: Colors.white,
-                                                          boxShadow: const [
+                                                          boxShadow: [
                                                             BoxShadow(
                                                               blurRadius: 7.0,
                                                               color: Color(
@@ -450,71 +454,71 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                             )
                                                           ],
                                                           borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      8.0),
+                                                          BorderRadius
+                                                              .circular(
+                                                              8.0),
                                                         ),
                                                         child: Padding(
                                                           padding:
-                                                              const EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      16.0,
-                                                                      12.0,
-                                                                      16.0,
-                                                                      12.0),
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                              16.0,
+                                                              12.0,
+                                                              16.0,
+                                                              12.0),
                                                           child: Column(
                                                             mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
+                                                            MainAxisSize
+                                                                .max,
                                                             crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
+                                                            CrossAxisAlignment
+                                                                .start,
                                                             children: [
                                                               Text(
-                                                                listViewPostsRecord
+                                                                listViewDictionsRecord
                                                                     .tag,
                                                                 style: FlutterFlowTheme.of(
-                                                                        context)
+                                                                    context)
                                                                     .bodyMedium
                                                                     .override(
-                                                                      fontFamily:
-                                                                          'Plus Jakarta Sans',
-                                                                      color: const Color(
-                                                                          0xFF39D2C0),
-                                                                      fontSize:
-                                                                          14.0,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                    ),
+                                                                  fontFamily:
+                                                                  'Plus Jakarta Sans',
+                                                                  color: Color(
+                                                                      0xFF39D2C0),
+                                                                  fontSize:
+                                                                  14.0,
+                                                                  letterSpacing:
+                                                                  0.0,
+                                                                  fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                                ),
                                                               ),
-                                                              const Divider(
+                                                              Divider(
                                                                 height: 16.0,
                                                                 thickness: 2.0,
                                                                 color: Color(
                                                                     0xFFF1F4F8),
                                                               ),
                                                               Text(
-                                                                listViewPostsRecord
+                                                                listViewDictionsRecord
                                                                     .postTitle,
                                                                 style: FlutterFlowTheme.of(
-                                                                        context)
+                                                                    context)
                                                                     .bodyLarge
                                                                     .override(
-                                                                      fontFamily:
-                                                                          'Plus Jakarta Sans',
-                                                                      color: const Color(
-                                                                          0xFF14181B),
-                                                                      fontSize:
-                                                                          16.0,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                    ),
+                                                                  fontFamily:
+                                                                  'Plus Jakarta Sans',
+                                                                  color: Color(
+                                                                      0xFF14181B),
+                                                                  fontSize:
+                                                                  16.0,
+                                                                  letterSpacing:
+                                                                  0.0,
+                                                                  fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                                ),
                                                               ),
                                                             ],
                                                           ),
@@ -532,12 +536,12 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                   ),
                                 ),
                                 Align(
-                                  alignment: const AlignmentDirectional(1.0, 1.0),
+                                  alignment: AlignmentDirectional(1.0, 1.0),
                                   child: Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
                                         0.0, 0.0, 15.0, 10.0),
                                     child: FlutterFlowIconButton(
-                                      borderColor: const Color(0xFF747474),
+                                      borderColor: Color(0xFF747474),
                                       borderRadius: 30.0,
                                       borderWidth: 3.0,
                                       buttonSize: 60.0,
@@ -576,28 +580,28 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                   padding: EdgeInsets.zero,
                                                   shrinkWrap: true,
                                                   scrollDirection:
-                                                      Axis.vertical,
+                                                  Axis.vertical,
                                                   itemCount:
-                                                      searchResults.length,
+                                                  searchResults.length,
                                                   itemBuilder: (context,
                                                       searchResultsIndex) {
                                                     final searchResultsItem =
-                                                        searchResults[
-                                                            searchResultsIndex];
+                                                    searchResults[
+                                                    searchResultsIndex];
                                                     return Padding(
                                                       padding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  16.0,
-                                                                  0.0,
-                                                                  16.0,
-                                                                  0.0),
+                                                      EdgeInsetsDirectional
+                                                          .fromSTEB(
+                                                          16.0,
+                                                          0.0,
+                                                          16.0,
+                                                          0.0),
                                                       child: Container(
                                                         width: double.infinity,
                                                         decoration:
-                                                            BoxDecoration(
+                                                        BoxDecoration(
                                                           color: Colors.white,
-                                                          boxShadow: const [
+                                                          boxShadow: [
                                                             BoxShadow(
                                                               blurRadius: 7.0,
                                                               color: Color(
@@ -609,47 +613,47 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                             )
                                                           ],
                                                           borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      8.0),
+                                                          BorderRadius
+                                                              .circular(
+                                                              8.0),
                                                         ),
                                                         child: Padding(
                                                           padding:
-                                                              const EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      16.0,
-                                                                      12.0,
-                                                                      16.0,
-                                                                      12.0),
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                              16.0,
+                                                              12.0,
+                                                              16.0,
+                                                              12.0),
                                                           child: Column(
                                                             mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
+                                                            MainAxisSize
+                                                                .max,
                                                             crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
+                                                            CrossAxisAlignment
+                                                                .start,
                                                             children: [
                                                               Text(
                                                                 searchResultsItem
                                                                     .tag,
                                                                 style: FlutterFlowTheme.of(
-                                                                        context)
+                                                                    context)
                                                                     .bodyMedium
                                                                     .override(
-                                                                      fontFamily:
-                                                                          'Plus Jakarta Sans',
-                                                                      color: const Color(
-                                                                          0xFF39D2C0),
-                                                                      fontSize:
-                                                                          14.0,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                    ),
+                                                                  fontFamily:
+                                                                  'Plus Jakarta Sans',
+                                                                  color: Color(
+                                                                      0xFF39D2C0),
+                                                                  fontSize:
+                                                                  14.0,
+                                                                  letterSpacing:
+                                                                  0.0,
+                                                                  fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                                ),
                                                               ),
-                                                              const Divider(
+                                                              Divider(
                                                                 height: 16.0,
                                                                 thickness: 2.0,
                                                                 color: Color(
@@ -659,48 +663,48 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                 searchResultsItem
                                                                     .postTitle,
                                                                 style: FlutterFlowTheme.of(
-                                                                        context)
+                                                                    context)
                                                                     .bodyLarge
                                                                     .override(
-                                                                      fontFamily:
-                                                                          'Plus Jakarta Sans',
-                                                                      color: const Color(
-                                                                          0xFF14181B),
-                                                                      fontSize:
-                                                                          16.0,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                    ),
+                                                                  fontFamily:
+                                                                  'Plus Jakarta Sans',
+                                                                  color: Color(
+                                                                      0xFF14181B),
+                                                                  fontSize:
+                                                                  16.0,
+                                                                  letterSpacing:
+                                                                  0.0,
+                                                                  fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                                ),
                                                               ),
                                                               Padding(
                                                                 padding:
-                                                                    const EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            0.0,
-                                                                            4.0,
-                                                                            0.0,
-                                                                            0.0),
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                    0.0,
+                                                                    4.0,
+                                                                    0.0,
+                                                                    0.0),
                                                                 child: Text(
                                                                   searchResultsItem
                                                                       .postDescription,
                                                                   style: FlutterFlowTheme.of(
-                                                                          context)
+                                                                      context)
                                                                       .labelMedium
                                                                       .override(
-                                                                        fontFamily:
-                                                                            'Plus Jakarta Sans',
-                                                                        color: const Color(
-                                                                            0xFF57636C),
-                                                                        fontSize:
-                                                                            14.0,
-                                                                        letterSpacing:
-                                                                            0.0,
-                                                                        fontWeight:
-                                                                            FontWeight.w500,
-                                                                      ),
+                                                                    fontFamily:
+                                                                    'Plus Jakarta Sans',
+                                                                    color: Color(
+                                                                        0xFF57636C),
+                                                                    fontSize:
+                                                                    14.0,
+                                                                    letterSpacing:
+                                                                    0.0,
+                                                                    fontWeight:
+                                                                    FontWeight.w500,
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ],
@@ -727,12 +731,12 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                           width: 50.0,
                                                           height: 50.0,
                                                           child:
-                                                              CircularProgressIndicator(
+                                                          CircularProgressIndicator(
                                                             valueColor:
-                                                                AlwaysStoppedAnimation<
-                                                                    Color>(
+                                                            AlwaysStoppedAnimation<
+                                                                Color>(
                                                               FlutterFlowTheme.of(
-                                                                      context)
+                                                                  context)
                                                                   .primary,
                                                             ),
                                                           ),
@@ -740,85 +744,85 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                       );
                                                     }
                                                     List<PostsRecord>
-                                                        listViewPostsRecordList =
-                                                        snapshot.data!;
+                                                    listViewPostsRecordList =
+                                                    snapshot.data!;
 
                                                     return ListView.builder(
                                                       padding: EdgeInsets.zero,
                                                       shrinkWrap: true,
                                                       scrollDirection:
-                                                          Axis.vertical,
+                                                      Axis.vertical,
                                                       itemCount:
-                                                          listViewPostsRecordList
-                                                              .length,
+                                                      listViewPostsRecordList
+                                                          .length,
                                                       itemBuilder: (context,
                                                           listViewIndex) {
                                                         final listViewPostsRecord =
-                                                            listViewPostsRecordList[
-                                                                listViewIndex];
+                                                        listViewPostsRecordList[
+                                                        listViewIndex];
                                                         return Padding(
                                                           padding:
-                                                              const EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      16.0,
-                                                                      4.0,
-                                                                      16.0,
-                                                                      4.0),
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                              16.0,
+                                                              4.0,
+                                                              16.0,
+                                                              4.0),
                                                           child: Container(
                                                             width:
-                                                                double.infinity,
+                                                            double.infinity,
                                                             decoration:
-                                                                BoxDecoration(
+                                                            BoxDecoration(
                                                               color:
-                                                                  Colors.white,
-                                                              boxShadow: const [
+                                                              Colors.white,
+                                                              boxShadow: [
                                                                 BoxShadow(
                                                                   blurRadius:
-                                                                      7.0,
+                                                                  7.0,
                                                                   color: Color(
                                                                       0x2F1D2429),
                                                                   offset:
-                                                                      Offset(
+                                                                  Offset(
                                                                     0.0,
                                                                     3.0,
                                                                   ),
                                                                 )
                                                               ],
                                                               borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8.0),
+                                                              BorderRadius
+                                                                  .circular(
+                                                                  8.0),
                                                             ),
                                                             child: Padding(
                                                               padding:
-                                                                  const EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          16.0,
-                                                                          12.0,
-                                                                          16.0,
-                                                                          12.0),
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                  16.0,
+                                                                  12.0,
+                                                                  16.0,
+                                                                  12.0),
                                                               child: Column(
                                                                 mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
+                                                                MainAxisSize
+                                                                    .max,
                                                                 crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
+                                                                CrossAxisAlignment
+                                                                    .start,
                                                                 children: [
                                                                   Padding(
-                                                                    padding: const EdgeInsetsDirectional
+                                                                    padding: EdgeInsetsDirectional
                                                                         .fromSTEB(
-                                                                            0.0,
-                                                                            10.0,
-                                                                            0.0,
-                                                                            0.0),
+                                                                        0.0,
+                                                                        10.0,
+                                                                        0.0,
+                                                                        0.0),
                                                                     child: Row(
                                                                       mainAxisSize:
-                                                                          MainAxisSize
-                                                                              .max,
+                                                                      MainAxisSize
+                                                                          .max,
                                                                       mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceBetween,
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
                                                                       children: [
                                                                         Text(
                                                                           listViewPostsRecord
@@ -826,12 +830,12 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                           style: FlutterFlowTheme.of(context)
                                                                               .bodyMedium
                                                                               .override(
-                                                                                fontFamily: 'Plus Jakarta Sans',
-                                                                                color: const Color(0xFF39D2C0),
-                                                                                fontSize: 14.0,
-                                                                                letterSpacing: 0.0,
-                                                                                fontWeight: FontWeight.w500,
-                                                                              ),
+                                                                            fontFamily: 'Plus Jakarta Sans',
+                                                                            color: Color(0xFF39D2C0),
+                                                                            fontSize: 14.0,
+                                                                            letterSpacing: 0.0,
+                                                                            fontWeight: FontWeight.w500,
+                                                                          ),
                                                                         ),
                                                                         Text(
                                                                           listViewPostsRecord
@@ -839,19 +843,19 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                           style: FlutterFlowTheme.of(context)
                                                                               .bodyMedium
                                                                               .override(
-                                                                                fontFamily: 'Inter',
-                                                                                color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                letterSpacing: 0.0,
-                                                                              ),
+                                                                            fontFamily: 'Inter',
+                                                                            color: FlutterFlowTheme.of(context).secondaryText,
+                                                                            letterSpacing: 0.0,
+                                                                          ),
                                                                         ),
                                                                       ],
                                                                     ),
                                                                   ),
-                                                                  const Divider(
+                                                                  Divider(
                                                                     height:
-                                                                        16.0,
+                                                                    16.0,
                                                                     thickness:
-                                                                        2.0,
+                                                                    2.0,
                                                                     color: Color(
                                                                         0xFFF1F4F8),
                                                                   ),
@@ -859,40 +863,40 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                     listViewPostsRecord
                                                                         .postTitle,
                                                                     style: FlutterFlowTheme.of(
-                                                                            context)
+                                                                        context)
                                                                         .titleMedium
                                                                         .override(
-                                                                          fontFamily:
-                                                                              'Inter Tight',
-                                                                          letterSpacing:
-                                                                              0.0,
-                                                                        ),
+                                                                      fontFamily:
+                                                                      'Inter Tight',
+                                                                      letterSpacing:
+                                                                      0.0,
+                                                                    ),
                                                                   ),
                                                                   Text(
                                                                     listViewPostsRecord
                                                                         .postDescription,
                                                                     style: FlutterFlowTheme.of(
-                                                                            context)
+                                                                        context)
                                                                         .bodyLarge
                                                                         .override(
-                                                                          fontFamily:
-                                                                              'Inter',
-                                                                          letterSpacing:
-                                                                              0.0,
-                                                                        ),
+                                                                      fontFamily:
+                                                                      'Inter',
+                                                                      letterSpacing:
+                                                                      0.0,
+                                                                    ),
                                                                   ),
                                                                   Padding(
-                                                                    padding: const EdgeInsetsDirectional
+                                                                    padding: EdgeInsetsDirectional
                                                                         .fromSTEB(
-                                                                            0.0,
-                                                                            10.0,
-                                                                            0.0,
-                                                                            0.0),
+                                                                        0.0,
+                                                                        10.0,
+                                                                        0.0,
+                                                                        0.0),
                                                                     child:
-                                                                        ClipRRect(
+                                                                    ClipRRect(
                                                                       borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              8.0),
+                                                                      BorderRadius.circular(
+                                                                          8.0),
                                                                       child: Image
                                                                           .network(
                                                                         listViewPostsRecord
@@ -900,36 +904,36 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                         width: MediaQuery.sizeOf(context).width *
                                                                             1.0,
                                                                         height:
-                                                                            200.0,
+                                                                        200.0,
                                                                         fit: BoxFit
                                                                             .cover,
                                                                       ),
                                                                     ),
                                                                   ),
                                                                   Padding(
-                                                                    padding: const EdgeInsetsDirectional
+                                                                    padding: EdgeInsetsDirectional
                                                                         .fromSTEB(
-                                                                            0.0,
-                                                                            10.0,
-                                                                            0.0,
-                                                                            0.0),
+                                                                        0.0,
+                                                                        10.0,
+                                                                        0.0,
+                                                                        0.0),
                                                                     child: Row(
                                                                       mainAxisSize:
-                                                                          MainAxisSize
-                                                                              .max,
+                                                                      MainAxisSize
+                                                                          .max,
                                                                       mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceBetween,
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
                                                                       children: [
                                                                         Row(
                                                                           mainAxisSize:
-                                                                              MainAxisSize.max,
+                                                                          MainAxisSize.max,
                                                                           children:
-                                                                              [
+                                                                          [
                                                                             Row(
                                                                               mainAxisSize: MainAxisSize.max,
                                                                               children: [
-                                                                                const Icon(
+                                                                                Icon(
                                                                                   Icons.thumb_up,
                                                                                   color: Color(0xFF6994FD),
                                                                                   size: 15.0,
@@ -937,11 +941,11 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                                 Text(
                                                                                   listViewPostsRecord.like.toString(),
                                                                                   style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                        fontFamily: 'Inter',
-                                                                                        letterSpacing: 0.0,
-                                                                                      ),
+                                                                                    fontFamily: 'Inter',
+                                                                                    letterSpacing: 0.0,
+                                                                                  ),
                                                                                 ),
-                                                                              ].divide(const SizedBox(width: 4.0)),
+                                                                              ].divide(SizedBox(width: 4.0)),
                                                                             ),
                                                                             Row(
                                                                               mainAxisSize: MainAxisSize.max,
@@ -954,13 +958,13 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                                 Text(
                                                                                   listViewPostsRecord.dislike.toString(),
                                                                                   style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                        fontFamily: 'Inter',
-                                                                                        letterSpacing: 0.0,
-                                                                                      ),
+                                                                                    fontFamily: 'Inter',
+                                                                                    letterSpacing: 0.0,
+                                                                                  ),
                                                                                 ),
-                                                                              ].divide(const SizedBox(width: 4.0)),
+                                                                              ].divide(SizedBox(width: 4.0)),
                                                                             ),
-                                                                          ].divide(const SizedBox(width: 16.0)),
+                                                                          ].divide(SizedBox(width: 16.0)),
                                                                         ),
                                                                         Text(
                                                                           valueOrDefault<
@@ -971,10 +975,10 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                           style: FlutterFlowTheme.of(context)
                                                                               .bodyMedium
                                                                               .override(
-                                                                                fontFamily: 'Inter',
-                                                                                color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                letterSpacing: 0.0,
-                                                                              ),
+                                                                            fontFamily: 'Inter',
+                                                                            color: FlutterFlowTheme.of(context).secondaryText,
+                                                                            letterSpacing: 0.0,
+                                                                          ),
                                                                         ),
                                                                       ],
                                                                     ),
@@ -997,12 +1001,12 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                   ),
                                 ),
                                 Align(
-                                  alignment: const AlignmentDirectional(1.0, 1.0),
+                                  alignment: AlignmentDirectional(1.0, 1.0),
                                   child: Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
                                         0.0, 0.0, 15.0, 10.0),
                                     child: FlutterFlowIconButton(
-                                      borderColor: const Color(0xFF747474),
+                                      borderColor: Color(0xFF747474),
                                       borderRadius: 3.0,
                                       borderWidth: 3.0,
                                       buttonSize: 60.0,
@@ -1036,22 +1040,22 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                           color: FlutterFlowTheme.of(context)
                                               .secondaryBackground,
                                         ),
-                                        child: SizedBox(
+                                        child: Container(
                                           height: MediaQuery.sizeOf(context)
-                                                  .height *
+                                              .height *
                                               0.7,
                                           child: Opacity(
                                             opacity: 0.9,
                                             child: Align(
-                                              alignment: const AlignmentDirectional(
+                                              alignment: AlignmentDirectional(
                                                   0.0, 0.0),
                                               child: wrapWithModel(
                                                 model:
-                                                    _model.aiChatComponentModel,
+                                                _model.aiChatComponentModel,
                                                 updateCallback: () =>
                                                     safeSetState(() {}),
                                                 updateOnChange: true,
-                                                child: const AiChatComponentWidget(),
+                                                child: AiChatComponentWidget(),
                                               ),
                                             ),
                                           ),

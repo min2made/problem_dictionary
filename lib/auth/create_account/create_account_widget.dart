@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
 import '/auth/firebase_auth/auth_util.dart';
+import '/auth/firebase_auth/kakao_auth.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -446,7 +448,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                         await UsersRecord.collection
                                             .doc(user.uid)
                                             .update(createUsersRecordData(
-                                              email: '',
+                                          email: _model.emailAddressTextController.text,
                                             ));
 
                                         if (currentUserDisplayName == '') {
@@ -548,10 +550,19 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                         0.0, 0.0, 0.0, 16.0),
                                     child: FFButtonWidget(
                                       onPressed: () async {
+                                        print(await KakaoSdk.origin);
                                         if (await isKakaoTalkInstalled()) {
                                           try {
-                                            await UserApi.instance.loginWithKakaoTalk();
+                                            var provider = OAuthProvider("oidc.problemdictionary");
+                                            OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
+                                            var credential = provider.credential(
+                                              idToken: token.idToken,
+                                              accessToken: token.accessToken,
+                                            );
+                                            FirebaseAuth.instance.signInWithCredential(credential);
                                             print('카카오톡으로 로그인 성공');
+
+                                            await KakaoAuthManager().handleKakaoLogin(context);
                                           } catch (error) {
                                             print('카카오톡으로 로그인 실패 $error');
 
@@ -562,16 +573,30 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                             }
                                             // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
                                             try {
-                                              await UserApi.instance.loginWithKakaoAccount();
+                                              var provider = OAuthProvider("oidc.problemdictionary");
+                                              OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
+                                              var credential = provider.credential(
+                                                idToken: token.idToken,
+                                                accessToken: token.accessToken,
+                                              );
+                                              FirebaseAuth.instance.signInWithCredential(credential);
                                               print('카카오계정으로 로그인 성공');
+                                              await KakaoAuthManager().handleKakaoLogin(context);
                                             } catch (error) {
                                               print('카카오계정으로 로그인 실패 $error');
                                             }
                                           }
                                         } else {
                                           try {
-                                            await UserApi.instance.loginWithKakaoAccount();
+                                            var provider = OAuthProvider("oidc.problemdictionary");
+                                            OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
+                                            var credential = provider.credential(
+                                              idToken: token.idToken,
+                                              accessToken: token.accessToken,
+                                            );
+                                            FirebaseAuth.instance.signInWithCredential(credential);
                                             print('카카오계정으로 로그인 성공');
+                                            await KakaoAuthManager().handleKakaoLogin(context);
                                           } catch (error) {
                                             print('카카오계정으로 로그인 실패 $error');
                                           }

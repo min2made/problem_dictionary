@@ -215,7 +215,12 @@ class _CreateProfileWidgetState extends State<CreateProfileWidget> {
                                 child: CachedNetworkImage(
                                   fadeInDuration: const Duration(milliseconds: 500),
                                   fadeOutDuration: const Duration(milliseconds: 500),
-                                  imageUrl: _model.uploadedFileUrl2,
+                                  imageUrl: _model.uploadedFileUrl2 == null ||
+                                      _model.uploadedFileUrl2 == ''
+                                      ? (currentUserPhoto == null || currentUserPhoto == ''
+                                      ? 'https://i.ibb.co/vV93kgy/35cf059d31c96e31aaf0a5326ad513d2.jpg'
+                                      : currentUserPhoto)
+                                      : _model.uploadedFileUrl2,
                                   fit: BoxFit.fitWidth,
                                 ),
                               );
@@ -386,12 +391,15 @@ class _CreateProfileWidgetState extends State<CreateProfileWidget> {
                           !_model.formKey.currentState!.validate()) {
                         return;
                       }
-
-                      await currentUserReference!.update(createUsersRecordData(
-                        displayName: _model.yourNameTextController.text,
-                      ));
-
-                      context.pushNamed('ListPage');
+                      if (currentUserReference != null) {
+                        // displayName을 Firestore 문서에 업데이트
+                        await currentUserReference!.update(createUsersRecordData(
+                          displayName: _model.yourNameTextController.text,
+                        ));
+                        context.pushNamed('ListPage');  // ListPage로 이동
+                      } else {
+                        print("현재 사용자 정보가 없습니다.");
+                      }
                     },
                     text: '생성하기',
                     options: FFButtonOptions(

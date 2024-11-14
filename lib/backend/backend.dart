@@ -7,6 +7,7 @@ import 'schema/util/firestore_util.dart';
 
 import 'schema/users_record.dart';
 import 'schema/posts_record.dart';
+import 'schema/dictions_record.dart';
 
 export 'dart:async' show StreamSubscription;
 export 'package:cloud_firestore/cloud_firestore.dart' hide Order;
@@ -17,6 +18,7 @@ export 'schema/util/schema_util.dart';
 
 export 'schema/users_record.dart';
 export 'schema/posts_record.dart';
+export 'schema/dictions_record.dart';
 
 /// Functions to query UsersRecords (as a Stream and as a Future).
 Future<int> queryUsersRecordCount({
@@ -92,11 +94,48 @@ Future<List<PostsRecord>> queryPostsRecordOnce({
       singleRecord: singleRecord,
     );
 
-Future<int> queryCollectionCount(
-  Query collection, {
+/// Functions to query DictionsRecords (as a Stream and as a Future).
+Future<int> queryDictionsRecordCount({
   Query Function(Query)? queryBuilder,
   int limit = -1,
-}) {
+}) =>
+    queryCollectionCount(
+      DictionsRecord.collection,
+      queryBuilder: queryBuilder,
+      limit: limit,
+    );
+
+Stream<List<DictionsRecord>> queryDictionsRecord({
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+  bool singleRecord = false,
+}) =>
+    queryCollection(
+      DictionsRecord.collection,
+      DictionsRecord.fromSnapshot,
+      queryBuilder: queryBuilder,
+      limit: limit,
+      singleRecord: singleRecord,
+    );
+
+Future<List<DictionsRecord>> queryDictionsRecordOnce({
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+  bool singleRecord = false,
+}) =>
+    queryCollectionOnce(
+      DictionsRecord.collection,
+      DictionsRecord.fromSnapshot,
+      queryBuilder: queryBuilder,
+      limit: limit,
+      singleRecord: singleRecord,
+    );
+
+Future<int> queryCollectionCount(
+    Query collection, {
+      Query Function(Query)? queryBuilder,
+      int limit = -1,
+    }) {
   final builder = queryBuilder ?? (q) => q;
   var query = builder(collection);
   if (limit > 0) {
@@ -109,12 +148,12 @@ Future<int> queryCollectionCount(
 }
 
 Stream<List<T>> queryCollection<T>(
-  Query collection,
-  RecordBuilder<T> recordBuilder, {
-  Query Function(Query)? queryBuilder,
-  int limit = -1,
-  bool singleRecord = false,
-}) {
+    Query collection,
+    RecordBuilder<T> recordBuilder, {
+      Query Function(Query)? queryBuilder,
+      int limit = -1,
+      bool singleRecord = false,
+    }) {
   final builder = queryBuilder ?? (q) => q;
   var query = builder(collection);
   if (limit > 0 || singleRecord) {
@@ -127,20 +166,20 @@ Stream<List<T>> queryCollection<T>(
         (d) => safeGet(
           () => recordBuilder(d),
           (e) => print('Error serializing doc ${d.reference.path}:\n$e'),
-        ),
-      )
+    ),
+  )
       .where((d) => d != null)
       .map((d) => d!)
       .toList());
 }
 
 Future<List<T>> queryCollectionOnce<T>(
-  Query collection,
-  RecordBuilder<T> recordBuilder, {
-  Query Function(Query)? queryBuilder,
-  int limit = -1,
-  bool singleRecord = false,
-}) {
+    Query collection,
+    RecordBuilder<T> recordBuilder, {
+      Query Function(Query)? queryBuilder,
+      int limit = -1,
+      bool singleRecord = false,
+    }) {
   final builder = queryBuilder ?? (q) => q;
   var query = builder(collection);
   if (limit > 0 || singleRecord) {
@@ -151,8 +190,8 @@ Future<List<T>> queryCollectionOnce<T>(
         (d) => safeGet(
           () => recordBuilder(d),
           (e) => print('Error serializing doc ${d.reference.path}:\n$e'),
-        ),
-      )
+    ),
+  )
       .where((d) => d != null)
       .map((d) => d!)
       .toList());
@@ -191,13 +230,13 @@ class FFFirestorePage<T> {
 }
 
 Future<FFFirestorePage<T>> queryCollectionPage<T>(
-  Query collection,
-  RecordBuilder<T> recordBuilder, {
-  Query Function(Query)? queryBuilder,
-  DocumentSnapshot? nextPageMarker,
-  required int pageSize,
-  required bool isStream,
-}) async {
+    Query collection,
+    RecordBuilder<T> recordBuilder, {
+      Query Function(Query)? queryBuilder,
+      DocumentSnapshot? nextPageMarker,
+      required int pageSize,
+      required bool isStream,
+    }) async {
   final builder = queryBuilder ?? (q) => q;
   var query = builder(collection).limit(pageSize);
   if (nextPageMarker != null) {
@@ -211,13 +250,13 @@ Future<FFFirestorePage<T>> queryCollectionPage<T>(
   } else {
     docSnapshot = await query.get();
   }
-  getDocs(QuerySnapshot s) => s.docs
+  final getDocs = (QuerySnapshot s) => s.docs
       .map(
         (d) => safeGet(
           () => recordBuilder(d),
           (e) => print('Error serializing doc ${d.reference.path}:\n$e'),
-        ),
-      )
+    ),
+  )
       .where((d) => d != null)
       .map((d) => d!)
       .toList();
@@ -241,7 +280,7 @@ Future maybeCreateUser(User user) async {
         FirebaseAuth.instance.currentUser?.email ??
         user.providerData.firstOrNull?.email,
     displayName:
-        user.displayName ?? FirebaseAuth.instance.currentUser?.displayName,
+    user.displayName ?? FirebaseAuth.instance.currentUser?.displayName,
     photoUrl: user.photoURL,
     uid: user.uid,
     phoneNumber: user.phoneNumber,

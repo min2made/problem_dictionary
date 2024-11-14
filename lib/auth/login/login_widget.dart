@@ -473,7 +473,6 @@ class _LoginWidgetState extends State<LoginWidget> {
                                             );
                                             FirebaseAuth.instance.signInWithCredential(credential);
                                             print('카카오톡으로 로그인 성공');
-
                                             await KakaoAuthManager().handleKakaoLogin(context);
                                           } catch (error) {
                                             print('카카오톡으로 로그인 실패 $error');
