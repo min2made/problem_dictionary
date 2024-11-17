@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'ai_chat_component_model.dart';
 export 'ai_chat_component_model.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class AiChatComponentWidget extends StatefulWidget {
   const AiChatComponentWidget({super.key});
@@ -173,7 +175,7 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                                                                     BoxDecoration(
                                                                   color: FlutterFlowTheme.of(
                                                                           context)
-                                                                      .accent1,
+                                                                      .primary,
                                                                   borderRadius:
                                                                       const BorderRadius
                                                                           .only(
@@ -572,25 +574,55 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                               functions
                                   .convertToJSON(_model.textController.text));
                           safeSetState(() {});
+
                           // The "chatHistory" is the generated JSON -- we send the whole chat history to AI in order for it to understand context.
                           _model.chatGPTResponse =
-                              await OpenAIChatGPTGroup.sendFullPromptCall.call(
-                            apiKey: ' ',
+                          await OpenAIChatGPTGroup.sendFullPromptCall.call(
+                            apiKey: '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',
                             promptJson: _model.chatHistory,
                           );
-
                           if ((_model.chatGPTResponse?.succeeded ?? true)) {
                             _model.aiResponding = false;
+                            final responseJson = _model.chatGPTResponse?.jsonBody;
+                            print('API Response: $responseJson'); // 디버깅
+                            print('API Response: $responseJson'); //
+
+
+                            final rawMessage = getJsonField(
+                              responseJson,
+                              r'''$['choices'][0]['message']''',
+                            );
+
+                            dynamic chatResponse;
+                            if (rawMessage != null) {
+                              try {
+                                if (rawMessage is Map) {
+                                  chatResponse = {
+                                    ...rawMessage,
+                                    'content': utf8.decode(rawMessage['content'].toString().runes.toList()),
+                                  };
+                                } else {
+                                  chatResponse = utf8.decode(rawMessage.toString().runes.toList());
+                                }
+                              } catch (e) {
+                                print('Decoding error: $e');
+                                chatResponse = rawMessage;
+                              }
+                            } else {
+                              chatResponse = {'error': 'AI 응답을 가져오는 데 실패했습니다.'};
+                            }
+
+                            // chatHistory에 chatResponse 추가
                             _model.chatHistory = functions.saveChatHistory(
-                                _model.chatHistory,
-                                getJsonField(
-                                  (_model.chatGPTResponse?.jsonBody ?? ''),
-                                  r'''$['choices'][0]['message']''',
-                                ));
+                              _model.chatHistory,
+                              chatResponse,
+                            );
+
                             safeSetState(() {});
                             safeSetState(() {
                               _model.textController?.clear();
                             });
+
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
