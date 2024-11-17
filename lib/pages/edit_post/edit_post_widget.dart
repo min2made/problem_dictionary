@@ -70,7 +70,7 @@ class _EditPostWidgetState extends State<EditPostWidget>
     });
     setupAnimations(
       animationsMap.values.where((anim) =>
-          anim.trigger == AnimationTrigger.onActionTrigger ||
+      anim.trigger == AnimationTrigger.onActionTrigger ||
           !anim.applyInitialState),
       this,
     );
@@ -148,9 +148,9 @@ class _EditPostWidgetState extends State<EditPostWidget>
                         style: FlutterFlowTheme.of(context)
                             .headlineMedium
                             .override(
-                              fontFamily: 'Inter Tight',
-                              letterSpacing: 0.0,
-                            ),
+                          fontFamily: 'Inter Tight',
+                          letterSpacing: 0.0,
+                        ),
                       ),
                       Column(
                         mainAxisSize: MainAxisSize.max,
@@ -158,8 +158,8 @@ class _EditPostWidgetState extends State<EditPostWidget>
                           TextFormField(
                             controller: _model.textController1 ??=
                                 TextEditingController(
-                              text: editPostPostsRecord.postTitle,
-                            ),
+                                  text: editPostPostsRecord.postTitle,
+                                ),
                             focusNode: _model.textFieldFocusNode1,
                             autofocus: true,
                             obscureText: false,
@@ -167,19 +167,19 @@ class _EditPostWidgetState extends State<EditPostWidget>
                               labelStyle: FlutterFlowTheme.of(context)
                                   .headlineSmall
                                   .override(
-                                    fontFamily: 'Inter Tight',
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                fontFamily: 'Inter Tight',
+                                color: FlutterFlowTheme.of(context)
+                                    .secondaryText,
+                                letterSpacing: 0.0,
+                                fontWeight: FontWeight.w500,
+                              ),
                               hintText: '제목 입력하기...',
                               hintStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
-                                    fontFamily: 'Inter',
-                                    letterSpacing: 0.0,
-                                  ),
+                                fontFamily: 'Inter',
+                                letterSpacing: 0.0,
+                              ),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                   color: FlutterFlowTheme.of(context).alternate,
@@ -214,9 +214,9 @@ class _EditPostWidgetState extends State<EditPostWidget>
                             style: FlutterFlowTheme.of(context)
                                 .headlineSmall
                                 .override(
-                                  fontFamily: 'Inter Tight',
-                                  letterSpacing: 0.0,
-                                ),
+                              fontFamily: 'Inter Tight',
+                              letterSpacing: 0.0,
+                            ),
                             maxLength: 30,
                             maxLengthEnforcement: MaxLengthEnforcement.enforced,
                             cursorColor: FlutterFlowTheme.of(context).primary,
@@ -226,8 +226,8 @@ class _EditPostWidgetState extends State<EditPostWidget>
                           TextFormField(
                             controller: _model.textController2 ??=
                                 TextEditingController(
-                              text: editPostPostsRecord.postDescription,
-                            ),
+                                  text: editPostPostsRecord.postDescription,
+                                ),
                             focusNode: _model.textFieldFocusNode2,
                             autofocus: true,
                             obscureText: false,
@@ -235,16 +235,16 @@ class _EditPostWidgetState extends State<EditPostWidget>
                               labelStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
-                                    fontFamily: 'Inter',
-                                    letterSpacing: 0.0,
-                                  ),
+                                fontFamily: 'Inter',
+                                letterSpacing: 0.0,
+                              ),
                               hintText: '텍스트 입력하기...',
                               hintStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
-                                    fontFamily: 'Inter',
-                                    letterSpacing: 0.0,
-                                  ),
+                                fontFamily: 'Inter',
+                                letterSpacing: 0.0,
+                              ),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                   color: FlutterFlowTheme.of(context).alternate,
@@ -279,9 +279,9 @@ class _EditPostWidgetState extends State<EditPostWidget>
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
-                                  fontFamily: 'Inter',
-                                  letterSpacing: 0.0,
-                                ),
+                              fontFamily: 'Inter',
+                              letterSpacing: 0.0,
+                            ),
                             maxLines: 16,
                             minLines: 6,
                             maxLength: 1000,
@@ -301,25 +301,25 @@ class _EditPostWidgetState extends State<EditPostWidget>
                                 child: Column(
                                   mainAxisSize: MainAxisSize.max,
                                   children: List.generate(images.length,
-                                      (imagesIndex) {
-                                    final imagesItem = images[imagesIndex];
-                                    return Visibility(
-                                      visible: imagesItem != null &&
-                                          imagesItem != '',
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 5.0, 0.0, 5.0),
-                                        child: ClipRRect(
-                                          borderRadius:
+                                          (imagesIndex) {
+                                        final imagesItem = images[imagesIndex];
+                                        return Visibility(
+                                          visible: imagesItem != null &&
+                                              imagesItem != '',
+                                          child: Padding(
+                                            padding: EdgeInsetsDirectional.fromSTEB(
+                                                0.0, 5.0, 0.0, 5.0),
+                                            child: ClipRRect(
+                                              borderRadius:
                                               BorderRadius.circular(8.0),
-                                          child: Image.network(
-                                            imagesItem,
-                                            fit: BoxFit.cover,
+                                              child: Image.network(
+                                                imagesItem,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                    );
-                                  }),
+                                        );
+                                      }),
                                 ),
                               );
                             },
@@ -330,7 +330,7 @@ class _EditPostWidgetState extends State<EditPostWidget>
                       ),
                       Padding(
                         padding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+                        EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
                         child: Container(
                           width: double.infinity,
                           constraints: BoxConstraints(
@@ -363,26 +363,26 @@ class _EditPostWidgetState extends State<EditPostWidget>
                                         validateFileFormat(
                                             m.storagePath, context))) {
                                   safeSetState(
-                                      () => _model.isDataUploading = true);
+                                          () => _model.isDataUploading = true);
                                   var selectedUploadedFiles =
-                                      <FFUploadedFile>[];
+                                  <FFUploadedFile>[];
 
                                   var downloadUrls = <String>[];
                                   try {
                                     selectedUploadedFiles = selectedMedia
                                         .map((m) => FFUploadedFile(
-                                              name:
-                                                  m.storagePath.split('/').last,
-                                              bytes: m.bytes,
-                                              height: m.dimensions?.height,
-                                              width: m.dimensions?.width,
-                                              blurHash: m.blurHash,
-                                            ))
+                                      name:
+                                      m.storagePath.split('/').last,
+                                      bytes: m.bytes,
+                                      height: m.dimensions?.height,
+                                      width: m.dimensions?.width,
+                                      blurHash: m.blurHash,
+                                    ))
                                         .toList();
 
                                     downloadUrls = (await Future.wait(
                                       selectedMedia.map(
-                                        (m) async => await uploadData(
+                                            (m) async => await uploadData(
                                             m.storagePath, m.bytes),
                                       ),
                                     ))
@@ -393,7 +393,7 @@ class _EditPostWidgetState extends State<EditPostWidget>
                                     _model.isDataUploading = false;
                                   }
                                   if (selectedUploadedFiles.length ==
-                                          selectedMedia.length &&
+                                      selectedMedia.length &&
                                       downloadUrls.length ==
                                           selectedMedia.length) {
                                     safeSetState(() {
@@ -407,18 +407,15 @@ class _EditPostWidgetState extends State<EditPostWidget>
                                   }
                                 }
 
-                                if ((_model.uploadedFileUrls.isNotEmpty) ==
-                                    false) {
+                                if (_model.uploadedFileUrls.isNotEmpty) {
                                   await editPostPostsRecord.reference.update({
                                     ...mapToFirestore(
                                       {
                                         'post_mutiple_photos':
-                                            _model.uploadedFileUrls,
+                                        _model.uploadedFileUrls,
                                       },
                                     ),
                                   });
-                                } else {
-                                  Navigator.pop(context);
                                 }
                               },
                               child: Row(
@@ -438,9 +435,9 @@ class _EditPostWidgetState extends State<EditPostWidget>
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
-                                            fontFamily: 'Inter',
-                                            letterSpacing: 0.0,
-                                          ),
+                                        fontFamily: 'Inter',
+                                        letterSpacing: 0.0,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -473,21 +470,21 @@ class _EditPostWidgetState extends State<EditPostWidget>
                               );
                             }
                             List<PostsRecord> buttonPostsRecordList =
-                                snapshot.data!;
+                            snapshot.data!;
                             // Return an empty Container when the item does not exist.
                             if (snapshot.data!.isEmpty) {
                               return Container();
                             }
                             final buttonPostsRecord =
-                                buttonPostsRecordList.isNotEmpty
-                                    ? buttonPostsRecordList.first
-                                    : null;
+                            buttonPostsRecordList.isNotEmpty
+                                ? buttonPostsRecordList.first
+                                : null;
 
                             return FFButtonWidget(
                               onPressed: () async {
+                                context.safePop();
+                                context.safePop();
                                 await editPostPostsRecord.reference.delete();
-
-                                context.pushNamed('ListPage');
                               },
                               text: '삭제',
                               options: FFButtonOptions(
@@ -500,11 +497,11 @@ class _EditPostWidgetState extends State<EditPostWidget>
                                 textStyle: FlutterFlowTheme.of(context)
                                     .titleSmall
                                     .override(
-                                      fontFamily: 'Inter Tight',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                      letterSpacing: 0.0,
-                                    ),
+                                  fontFamily: 'Inter Tight',
+                                  color: FlutterFlowTheme.of(context)
+                                      .primaryText,
+                                  letterSpacing: 0.0,
+                                ),
                                 elevation: 4.0,
                                 borderSide: BorderSide(
                                   color: Colors.transparent,
@@ -539,15 +536,15 @@ class _EditPostWidgetState extends State<EditPostWidget>
                               );
                             }
                             List<PostsRecord> buttonPostsRecordList =
-                                snapshot.data!;
+                            snapshot.data!;
                             // Return an empty Container when the item does not exist.
                             if (snapshot.data!.isEmpty) {
                               return Container();
                             }
                             final buttonPostsRecord =
-                                buttonPostsRecordList.isNotEmpty
-                                    ? buttonPostsRecordList.first
-                                    : null;
+                            buttonPostsRecordList.isNotEmpty
+                                ? buttonPostsRecordList.first
+                                : null;
 
                             return FFButtonWidget(
                               onPressed: () async {
@@ -570,11 +567,11 @@ class _EditPostWidgetState extends State<EditPostWidget>
                                 textStyle: FlutterFlowTheme.of(context)
                                     .titleSmall
                                     .override(
-                                      fontFamily: 'Inter Tight',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                      letterSpacing: 0.0,
-                                    ),
+                                  fontFamily: 'Inter Tight',
+                                  color: FlutterFlowTheme.of(context)
+                                      .primaryText,
+                                  letterSpacing: 0.0,
+                                ),
                                 elevation: 4.0,
                                 borderSide: BorderSide(
                                   color: Colors.transparent,
