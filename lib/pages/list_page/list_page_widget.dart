@@ -1,7 +1,9 @@
+import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/chat/ai_chat_component/ai_chat_component_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_toggle_icon.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:easy_debounce/easy_debounce.dart';
@@ -10,7 +12,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:text_search/text_search.dart';
-
 import 'list_page_model.dart';
 export 'list_page_model.dart';
 
@@ -67,7 +68,7 @@ class _ListPageWidgetState extends State<ListPageWidget>
               children: [
                 Padding(
                   padding:
-                  EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 12.0),
+                      EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 12.0),
                   child: Container(
                     width: double.infinity,
                     height: 60.0,
@@ -90,7 +91,7 @@ class _ListPageWidgetState extends State<ListPageWidget>
                     ),
                     child: Padding(
                       padding:
-                      EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 12.0, 0.0),
+                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 12.0, 0.0),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
@@ -111,31 +112,31 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                   onChanged: (_) => EasyDebounce.debounce(
                                     '_model.textController',
                                     Duration(milliseconds: 2000),
-                                        () async {
+                                    () async {
                                       await queryPostsRecordOnce()
                                           .then(
                                             (records) =>
-                                        _model.simpleSearchResults =
-                                            TextSearch(
+                                                _model.simpleSearchResults =
+                                                    TextSearch(
                                               records
                                                   .map(
                                                     (record) => TextSearchItem
-                                                    .fromTerms(record, [
-                                                  record.postTitle!,
-                                                  record.postDescription!,
-                                                  record.tag!
-                                                ]),
-                                              )
+                                                        .fromTerms(record, [
+                                                      record.postTitle!,
+                                                      record.postDescription!,
+                                                      record.tag!
+                                                    ]),
+                                                  )
                                                   .toList(),
                                             )
-                                                .search(_model
-                                                .textController
-                                                .text)
-                                                .map((r) => r.object)
-                                                .toList(),
-                                      )
+                                                        .search(_model
+                                                            .textController
+                                                            .text)
+                                                        .map((r) => r.object)
+                                                        .toList(),
+                                          )
                                           .onError((_, __) =>
-                                      _model.simpleSearchResults = [])
+                                              _model.simpleSearchResults = [])
                                           .whenComplete(
                                               () => safeSetState(() {}));
                                     },
@@ -147,16 +148,16 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                     labelStyle: FlutterFlowTheme.of(context)
                                         .labelMedium
                                         .override(
-                                      fontFamily: 'Inter',
-                                      fontSize: 16.0,
-                                      letterSpacing: 0.0,
-                                    ),
+                                          fontFamily: 'Inter',
+                                          fontSize: 16.0,
+                                          letterSpacing: 0.0,
+                                        ),
                                     hintStyle: FlutterFlowTheme.of(context)
                                         .labelMedium
                                         .override(
-                                      fontFamily: 'Inter',
-                                      letterSpacing: 0.0,
-                                    ),
+                                          fontFamily: 'Inter',
+                                          letterSpacing: 0.0,
+                                        ),
                                     enabledBorder: InputBorder.none,
                                     focusedBorder: InputBorder.none,
                                     errorBorder: InputBorder.none,
@@ -168,11 +169,11 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                    fontFamily: 'Inter',
-                                    letterSpacing: 0.0,
-                                  ),
+                                        fontFamily: 'Inter',
+                                        letterSpacing: 0.0,
+                                      ),
                                   cursorColor:
-                                  FlutterFlowTheme.of(context).primary,
+                                      FlutterFlowTheme.of(context).primary,
                                   validator: _model.textControllerValidator
                                       .asValidator(context),
                                 ),
@@ -192,13 +193,13 @@ class _ListPageWidgetState extends State<ListPageWidget>
                         child: TabBar(
                           labelColor: FlutterFlowTheme.of(context).primaryText,
                           unselectedLabelColor:
-                          FlutterFlowTheme.of(context).secondaryText,
+                              FlutterFlowTheme.of(context).secondaryText,
                           labelStyle:
-                          FlutterFlowTheme.of(context).labelSmall.override(
-                            fontFamily: 'Inter',
-                            fontSize: 15.0,
-                            letterSpacing: 0.0,
-                          ),
+                              FlutterFlowTheme.of(context).labelSmall.override(
+                                    fontFamily: 'Inter',
+                                    fontSize: 15.0,
+                                    letterSpacing: 0.0,
+                                  ),
                           unselectedLabelStyle: TextStyle(),
                           indicatorColor: FlutterFlowTheme.of(context).primary,
                           padding: EdgeInsets.all(4.0),
@@ -252,26 +253,26 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                   padding: EdgeInsets.zero,
                                                   shrinkWrap: true,
                                                   scrollDirection:
-                                                  Axis.vertical,
+                                                      Axis.vertical,
                                                   itemCount:
-                                                  searchResults.length,
+                                                      searchResults.length,
                                                   itemBuilder: (context,
                                                       searchResultsIndex) {
                                                     final searchResultsItem =
-                                                    searchResults[
-                                                    searchResultsIndex];
+                                                        searchResults[
+                                                            searchResultsIndex];
                                                     return Padding(
                                                       padding:
-                                                      EdgeInsetsDirectional
-                                                          .fromSTEB(
-                                                          16.0,
-                                                          0.0,
-                                                          16.0,
-                                                          0.0),
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  16.0,
+                                                                  0.0,
+                                                                  16.0,
+                                                                  0.0),
                                                       child: Container(
                                                         width: double.infinity,
                                                         decoration:
-                                                        BoxDecoration(
+                                                            BoxDecoration(
                                                           color: Colors.white,
                                                           boxShadow: [
                                                             BoxShadow(
@@ -285,45 +286,45 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                             )
                                                           ],
                                                           borderRadius:
-                                                          BorderRadius
-                                                              .circular(
-                                                              8.0),
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
                                                         ),
                                                         child: Padding(
                                                           padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                              16.0,
-                                                              12.0,
-                                                              16.0,
-                                                              12.0),
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      16.0,
+                                                                      12.0,
+                                                                      16.0,
+                                                                      12.0),
                                                           child: Column(
                                                             mainAxisSize:
-                                                            MainAxisSize
-                                                                .max,
+                                                                MainAxisSize
+                                                                    .max,
                                                             crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                                CrossAxisAlignment
+                                                                    .start,
                                                             children: [
                                                               Text(
                                                                 searchResultsItem
                                                                     .tag,
                                                                 style: FlutterFlowTheme.of(
-                                                                    context)
+                                                                        context)
                                                                     .bodyMedium
                                                                     .override(
-                                                                  fontFamily:
-                                                                  'Plus Jakarta Sans',
-                                                                  color: Color(
-                                                                      0xFF39D2C0),
-                                                                  fontSize:
-                                                                  14.0,
-                                                                  letterSpacing:
-                                                                  0.0,
-                                                                  fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                                ),
+                                                                      fontFamily:
+                                                                          'Plus Jakarta Sans',
+                                                                      color: Color(
+                                                                          0xFF39D2C0),
+                                                                      fontSize:
+                                                                          14.0,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                    ),
                                                               ),
                                                               Divider(
                                                                 height: 16.0,
@@ -335,48 +336,48 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                 searchResultsItem
                                                                     .postTitle,
                                                                 style: FlutterFlowTheme.of(
-                                                                    context)
+                                                                        context)
                                                                     .bodyLarge
                                                                     .override(
-                                                                  fontFamily:
-                                                                  'Plus Jakarta Sans',
-                                                                  color: Color(
-                                                                      0xFF14181B),
-                                                                  fontSize:
-                                                                  16.0,
-                                                                  letterSpacing:
-                                                                  0.0,
-                                                                  fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                                ),
+                                                                      fontFamily:
+                                                                          'Plus Jakarta Sans',
+                                                                      color: Color(
+                                                                          0xFF14181B),
+                                                                      fontSize:
+                                                                          16.0,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                    ),
                                                               ),
                                                               Padding(
                                                                 padding:
-                                                                EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                    0.0,
-                                                                    4.0,
-                                                                    0.0,
-                                                                    0.0),
+                                                                    EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            0.0,
+                                                                            4.0,
+                                                                            0.0,
+                                                                            0.0),
                                                                 child: Text(
                                                                   searchResultsItem
                                                                       .postDescription,
                                                                   style: FlutterFlowTheme.of(
-                                                                      context)
+                                                                          context)
                                                                       .labelMedium
                                                                       .override(
-                                                                    fontFamily:
-                                                                    'Plus Jakarta Sans',
-                                                                    color: Color(
-                                                                        0xFF57636C),
-                                                                    fontSize:
-                                                                    14.0,
-                                                                    letterSpacing:
-                                                                    0.0,
-                                                                    fontWeight:
-                                                                    FontWeight.w500,
-                                                                  ),
+                                                                        fontFamily:
+                                                                            'Plus Jakarta Sans',
+                                                                        color: Color(
+                                                                            0xFF57636C),
+                                                                        fontSize:
+                                                                            14.0,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        fontWeight:
+                                                                            FontWeight.w500,
+                                                                      ),
                                                                 ),
                                                               ),
                                                             ],
@@ -400,12 +401,12 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                       width: 50.0,
                                                       height: 50.0,
                                                       child:
-                                                      CircularProgressIndicator(
+                                                          CircularProgressIndicator(
                                                         valueColor:
-                                                        AlwaysStoppedAnimation<
-                                                            Color>(
+                                                            AlwaysStoppedAnimation<
+                                                                Color>(
                                                           FlutterFlowTheme.of(
-                                                              context)
+                                                                  context)
                                                               .primary,
                                                         ),
                                                       ),
@@ -413,34 +414,34 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                   );
                                                 }
                                                 List<DictionsRecord>
-                                                listViewDictionsRecordList =
-                                                snapshot.data!;
+                                                    listViewDictionsRecordList =
+                                                    snapshot.data!;
 
                                                 return ListView.builder(
                                                   padding: EdgeInsets.zero,
                                                   shrinkWrap: true,
                                                   scrollDirection:
-                                                  Axis.vertical,
+                                                      Axis.vertical,
                                                   itemCount:
-                                                  listViewDictionsRecordList
-                                                      .length,
+                                                      listViewDictionsRecordList
+                                                          .length,
                                                   itemBuilder:
                                                       (context, listViewIndex) {
                                                     final listViewDictionsRecord =
-                                                    listViewDictionsRecordList[
-                                                    listViewIndex];
+                                                        listViewDictionsRecordList[
+                                                            listViewIndex];
                                                     return Padding(
                                                       padding:
-                                                      EdgeInsetsDirectional
-                                                          .fromSTEB(
-                                                          16.0,
-                                                          12.0,
-                                                          16.0,
-                                                          6.0),
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  16.0,
+                                                                  12.0,
+                                                                  16.0,
+                                                                  6.0),
                                                       child: Container(
                                                         width: double.infinity,
                                                         decoration:
-                                                        BoxDecoration(
+                                                            BoxDecoration(
                                                           color: Colors.white,
                                                           boxShadow: [
                                                             BoxShadow(
@@ -454,45 +455,45 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                             )
                                                           ],
                                                           borderRadius:
-                                                          BorderRadius
-                                                              .circular(
-                                                              8.0),
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
                                                         ),
                                                         child: Padding(
                                                           padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                              16.0,
-                                                              12.0,
-                                                              16.0,
-                                                              12.0),
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      16.0,
+                                                                      12.0,
+                                                                      16.0,
+                                                                      12.0),
                                                           child: Column(
                                                             mainAxisSize:
-                                                            MainAxisSize
-                                                                .max,
+                                                                MainAxisSize
+                                                                    .max,
                                                             crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                                CrossAxisAlignment
+                                                                    .start,
                                                             children: [
                                                               Text(
                                                                 listViewDictionsRecord
                                                                     .tag,
                                                                 style: FlutterFlowTheme.of(
-                                                                    context)
+                                                                        context)
                                                                     .bodyMedium
                                                                     .override(
-                                                                  fontFamily:
-                                                                  'Plus Jakarta Sans',
-                                                                  color: Color(
-                                                                      0xFF39D2C0),
-                                                                  fontSize:
-                                                                  14.0,
-                                                                  letterSpacing:
-                                                                  0.0,
-                                                                  fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                                ),
+                                                                      fontFamily:
+                                                                          'Plus Jakarta Sans',
+                                                                      color: Color(
+                                                                          0xFF39D2C0),
+                                                                      fontSize:
+                                                                          14.0,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                    ),
                                                               ),
                                                               Divider(
                                                                 height: 16.0,
@@ -504,21 +505,21 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                 listViewDictionsRecord
                                                                     .postTitle,
                                                                 style: FlutterFlowTheme.of(
-                                                                    context)
+                                                                        context)
                                                                     .bodyLarge
                                                                     .override(
-                                                                  fontFamily:
-                                                                  'Plus Jakarta Sans',
-                                                                  color: Color(
-                                                                      0xFF14181B),
-                                                                  fontSize:
-                                                                  16.0,
-                                                                  letterSpacing:
-                                                                  0.0,
-                                                                  fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                                ),
+                                                                      fontFamily:
+                                                                          'Plus Jakarta Sans',
+                                                                      color: Color(
+                                                                          0xFF14181B),
+                                                                      fontSize:
+                                                                          16.0,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                    ),
                                                               ),
                                                             ],
                                                           ),
@@ -580,26 +581,26 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                   padding: EdgeInsets.zero,
                                                   shrinkWrap: true,
                                                   scrollDirection:
-                                                  Axis.vertical,
+                                                      Axis.vertical,
                                                   itemCount:
-                                                  searchResults.length,
+                                                      searchResults.length,
                                                   itemBuilder: (context,
                                                       searchResultsIndex) {
                                                     final searchResultsItem =
-                                                    searchResults[
-                                                    searchResultsIndex];
+                                                        searchResults[
+                                                            searchResultsIndex];
                                                     return Padding(
                                                       padding:
-                                                      EdgeInsetsDirectional
-                                                          .fromSTEB(
-                                                          16.0,
-                                                          0.0,
-                                                          16.0,
-                                                          0.0),
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  16.0,
+                                                                  0.0,
+                                                                  16.0,
+                                                                  0.0),
                                                       child: Container(
                                                         width: double.infinity,
                                                         decoration:
-                                                        BoxDecoration(
+                                                            BoxDecoration(
                                                           color: Colors.white,
                                                           boxShadow: [
                                                             BoxShadow(
@@ -613,45 +614,45 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                             )
                                                           ],
                                                           borderRadius:
-                                                          BorderRadius
-                                                              .circular(
-                                                              8.0),
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
                                                         ),
                                                         child: Padding(
                                                           padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                              16.0,
-                                                              12.0,
-                                                              16.0,
-                                                              12.0),
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      16.0,
+                                                                      12.0,
+                                                                      16.0,
+                                                                      12.0),
                                                           child: Column(
                                                             mainAxisSize:
-                                                            MainAxisSize
-                                                                .max,
+                                                                MainAxisSize
+                                                                    .max,
                                                             crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                                CrossAxisAlignment
+                                                                    .start,
                                                             children: [
                                                               Text(
                                                                 searchResultsItem
                                                                     .tag,
                                                                 style: FlutterFlowTheme.of(
-                                                                    context)
+                                                                        context)
                                                                     .bodyMedium
                                                                     .override(
-                                                                  fontFamily:
-                                                                  'Plus Jakarta Sans',
-                                                                  color: Color(
-                                                                      0xFF39D2C0),
-                                                                  fontSize:
-                                                                  14.0,
-                                                                  letterSpacing:
-                                                                  0.0,
-                                                                  fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                                ),
+                                                                      fontFamily:
+                                                                          'Plus Jakarta Sans',
+                                                                      color: Color(
+                                                                          0xFF39D2C0),
+                                                                      fontSize:
+                                                                          14.0,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                    ),
                                                               ),
                                                               Divider(
                                                                 height: 16.0,
@@ -663,48 +664,48 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                 searchResultsItem
                                                                     .postTitle,
                                                                 style: FlutterFlowTheme.of(
-                                                                    context)
+                                                                        context)
                                                                     .bodyLarge
                                                                     .override(
-                                                                  fontFamily:
-                                                                  'Plus Jakarta Sans',
-                                                                  color: Color(
-                                                                      0xFF14181B),
-                                                                  fontSize:
-                                                                  16.0,
-                                                                  letterSpacing:
-                                                                  0.0,
-                                                                  fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                                ),
+                                                                      fontFamily:
+                                                                          'Plus Jakarta Sans',
+                                                                      color: Color(
+                                                                          0xFF14181B),
+                                                                      fontSize:
+                                                                          16.0,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                    ),
                                                               ),
                                                               Padding(
                                                                 padding:
-                                                                EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                    0.0,
-                                                                    4.0,
-                                                                    0.0,
-                                                                    0.0),
+                                                                    EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            0.0,
+                                                                            4.0,
+                                                                            0.0,
+                                                                            0.0),
                                                                 child: Text(
                                                                   searchResultsItem
                                                                       .postDescription,
                                                                   style: FlutterFlowTheme.of(
-                                                                      context)
+                                                                          context)
                                                                       .labelMedium
                                                                       .override(
-                                                                    fontFamily:
-                                                                    'Plus Jakarta Sans',
-                                                                    color: Color(
-                                                                        0xFF57636C),
-                                                                    fontSize:
-                                                                    14.0,
-                                                                    letterSpacing:
-                                                                    0.0,
-                                                                    fontWeight:
-                                                                    FontWeight.w500,
-                                                                  ),
+                                                                        fontFamily:
+                                                                            'Plus Jakarta Sans',
+                                                                        color: Color(
+                                                                            0xFF57636C),
+                                                                        fontSize:
+                                                                            14.0,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        fontWeight:
+                                                                            FontWeight.w500,
+                                                                      ),
                                                                 ),
                                                               ),
                                                             ],
@@ -717,282 +718,346 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                               },
                                             );
                                           } else {
-                                            return Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                StreamBuilder<
-                                                    List<PostsRecord>>(
-                                                  stream: queryPostsRecord(),
-                                                  builder: (context, snapshot) {
-                                                    // Customize what your widget looks like when it's loading.
-                                                    if (!snapshot.hasData) {
-                                                      return Center(
-                                                        child: SizedBox(
-                                                          width: 50.0,
-                                                          height: 50.0,
-                                                          child:
-                                                          CircularProgressIndicator(
-                                                            valueColor:
-                                                            AlwaysStoppedAnimation<
-                                                                Color>(
-                                                              FlutterFlowTheme.of(
-                                                                  context)
-                                                                  .primary,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }
-                                                    List<PostsRecord>
-                                                    listViewPostsRecordList =
-                                                    snapshot.data!;
-
-                                                    return ListView.builder(
-                                                      padding: EdgeInsets.zero,
-                                                      shrinkWrap: true,
-                                                      scrollDirection:
-                                                      Axis.vertical,
-                                                      itemCount:
-                                                      listViewPostsRecordList
-                                                          .length,
-                                                      itemBuilder: (context,
-                                                          listViewIndex) {
-                                                        final listViewPostsRecord =
-                                                        listViewPostsRecordList[
-                                                        listViewIndex];
-                                                        return Padding(
-                                                          padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                              16.0,
-                                                              4.0,
-                                                              16.0,
-                                                              4.0),
-                                                          child: Container(
-                                                            width:
-                                                            double.infinity,
-                                                            decoration:
-                                                            BoxDecoration(
-                                                              color:
-                                                              Colors.white,
-                                                              boxShadow: [
-                                                                BoxShadow(
-                                                                  blurRadius:
-                                                                  7.0,
-                                                                  color: Color(
-                                                                      0x2F1D2429),
-                                                                  offset:
-                                                                  Offset(
-                                                                    0.0,
-                                                                    3.0,
-                                                                  ),
-                                                                )
-                                                              ],
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                  8.0),
-                                                            ),
-                                                            child: Padding(
-                                                              padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                  16.0,
-                                                                  12.0,
-                                                                  16.0,
-                                                                  12.0),
-                                                              child: Column(
-                                                                mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
-                                                                crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                                children: [
-                                                                  Padding(
-                                                                    padding: EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                        0.0,
-                                                                        10.0,
-                                                                        0.0,
-                                                                        0.0),
-                                                                    child: Row(
-                                                                      mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .max,
-                                                                      mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceBetween,
-                                                                      children: [
-                                                                        Text(
-                                                                          listViewPostsRecord
-                                                                              .tag,
-                                                                          style: FlutterFlowTheme.of(context)
-                                                                              .bodyMedium
-                                                                              .override(
-                                                                            fontFamily: 'Plus Jakarta Sans',
-                                                                            color: Color(0xFF39D2C0),
-                                                                            fontSize: 14.0,
-                                                                            letterSpacing: 0.0,
-                                                                            fontWeight: FontWeight.w500,
-                                                                          ),
-                                                                        ),
-                                                                        Text(
-                                                                          listViewPostsRecord
-                                                                              .author,
-                                                                          style: FlutterFlowTheme.of(context)
-                                                                              .bodyMedium
-                                                                              .override(
-                                                                            fontFamily: 'Inter',
-                                                                            color: FlutterFlowTheme.of(context).secondaryText,
-                                                                            letterSpacing: 0.0,
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                  Divider(
-                                                                    height:
-                                                                    16.0,
-                                                                    thickness:
-                                                                    2.0,
-                                                                    color: Color(
-                                                                        0xFFF1F4F8),
-                                                                  ),
-                                                                  Text(
-                                                                    listViewPostsRecord
-                                                                        .postTitle,
-                                                                    style: FlutterFlowTheme.of(
+                                            return SingleChildScrollView(
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  StreamBuilder<
+                                                      List<PostsRecord>>(
+                                                    stream: queryPostsRecord(
+                                                      queryBuilder:
+                                                          (postsRecord) =>
+                                                              postsRecord.orderBy(
+                                                                  'time_posted',
+                                                                  descending:
+                                                                      true),
+                                                    ),
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      // Customize what your widget looks like when it's loading.
+                                                      if (!snapshot.hasData) {
+                                                        return Center(
+                                                          child: SizedBox(
+                                                            width: 50.0,
+                                                            height: 50.0,
+                                                            child:
+                                                                CircularProgressIndicator(
+                                                              valueColor:
+                                                                  AlwaysStoppedAnimation<
+                                                                      Color>(
+                                                                FlutterFlowTheme.of(
                                                                         context)
-                                                                        .titleMedium
-                                                                        .override(
-                                                                      fontFamily:
-                                                                      'Inter Tight',
-                                                                      letterSpacing:
-                                                                      0.0,
-                                                                    ),
-                                                                  ),
-                                                                  Text(
-                                                                    listViewPostsRecord
-                                                                        .postDescription,
-                                                                    style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                        .bodyLarge
-                                                                        .override(
-                                                                      fontFamily:
-                                                                      'Inter',
-                                                                      letterSpacing:
-                                                                      0.0,
-                                                                    ),
-                                                                  ),
-                                                                  Padding(
-                                                                    padding: EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                        0.0,
-                                                                        10.0,
-                                                                        0.0,
-                                                                        0.0),
-                                                                    child:
-                                                                    ClipRRect(
-                                                                      borderRadius:
-                                                                      BorderRadius.circular(
-                                                                          8.0),
-                                                                      child: Image
-                                                                          .network(
-                                                                        listViewPostsRecord
-                                                                            .postPhoto,
-                                                                        width: MediaQuery.sizeOf(context).width *
-                                                                            1.0,
-                                                                        height:
-                                                                        200.0,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  Padding(
-                                                                    padding: EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                        0.0,
-                                                                        10.0,
-                                                                        0.0,
-                                                                        0.0),
-                                                                    child: Row(
-                                                                      mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .max,
-                                                                      mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceBetween,
-                                                                      children: [
-                                                                        Row(
-                                                                          mainAxisSize:
-                                                                          MainAxisSize.max,
-                                                                          children:
-                                                                          [
-                                                                            Row(
-                                                                              mainAxisSize: MainAxisSize.max,
-                                                                              children: [
-                                                                                Icon(
-                                                                                  Icons.thumb_up,
-                                                                                  color: Color(0xFF6994FD),
-                                                                                  size: 15.0,
-                                                                                ),
-                                                                                Text(
-                                                                                  listViewPostsRecord.like.toString(),
-                                                                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                    fontFamily: 'Inter',
-                                                                                    letterSpacing: 0.0,
-                                                                                  ),
-                                                                                ),
-                                                                              ].divide(SizedBox(width: 4.0)),
-                                                                            ),
-                                                                            Row(
-                                                                              mainAxisSize: MainAxisSize.max,
-                                                                              children: [
-                                                                                Icon(
-                                                                                  Icons.thumb_down,
-                                                                                  color: FlutterFlowTheme.of(context).error,
-                                                                                  size: 15.0,
-                                                                                ),
-                                                                                Text(
-                                                                                  listViewPostsRecord.dislike.toString(),
-                                                                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                    fontFamily: 'Inter',
-                                                                                    letterSpacing: 0.0,
-                                                                                  ),
-                                                                                ),
-                                                                              ].divide(SizedBox(width: 4.0)),
-                                                                            ),
-                                                                          ].divide(SizedBox(width: 16.0)),
-                                                                        ),
-                                                                        Text(
-                                                                          valueOrDefault<
-                                                                              String>(
-                                                                            listViewPostsRecord.timePosted?.toString(),
-                                                                            '0',
-                                                                          ),
-                                                                          style: FlutterFlowTheme.of(context)
-                                                                              .bodyMedium
-                                                                              .override(
-                                                                            fontFamily: 'Inter',
-                                                                            color: FlutterFlowTheme.of(context).secondaryText,
-                                                                            letterSpacing: 0.0,
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                ],
+                                                                    .primary,
                                                               ),
                                                             ),
                                                           ),
                                                         );
-                                                      },
-                                                    );
-                                                  },
-                                                ),
-                                              ],
+                                                      }
+                                                      List<PostsRecord>
+                                                          listViewPostsRecordList =
+                                                          snapshot.data!;
+
+                                                      return ListView.builder(
+                                                        padding:
+                                                            EdgeInsets.zero,
+                                                        shrinkWrap: true,
+                                                        scrollDirection:
+                                                            Axis.vertical,
+                                                        itemCount:
+                                                            listViewPostsRecordList
+                                                                .length,
+                                                        itemBuilder: (context,
+                                                            listViewIndex) {
+                                                          final listViewPostsRecord =
+                                                              listViewPostsRecordList[
+                                                                  listViewIndex];
+                                                          return Padding(
+                                                            padding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        16.0,
+                                                                        4.0,
+                                                                        16.0,
+                                                                        4.0),
+                                                            child: InkWell(
+                                                              splashColor: Colors
+                                                                  .transparent,
+                                                              focusColor: Colors
+                                                                  .transparent,
+                                                              hoverColor: Colors
+                                                                  .transparent,
+                                                              highlightColor:
+                                                                  Colors
+                                                                      .transparent,
+                                                              onTap: () async {
+                                                                context
+                                                                    .pushNamed(
+                                                                  'DetailPost',
+                                                                  queryParameters:
+                                                                      {
+                                                                    'postDetail':
+                                                                        serializeParam(
+                                                                      listViewPostsRecord,
+                                                                      ParamType
+                                                                          .Document,
+                                                                    ),
+                                                                  }.withoutNulls,
+                                                                  extra: <String,
+                                                                      dynamic>{
+                                                                    'postDetail':
+                                                                        listViewPostsRecord,
+                                                                  },
+                                                                );
+                                                              },
+                                                              child: Container(
+                                                                width: double
+                                                                    .infinity,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  boxShadow: [
+                                                                    BoxShadow(
+                                                                      blurRadius:
+                                                                          7.0,
+                                                                      color: Color(
+                                                                          0x2F1D2429),
+                                                                      offset:
+                                                                          Offset(
+                                                                        0.0,
+                                                                        3.0,
+                                                                      ),
+                                                                    )
+                                                                  ],
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              8.0),
+                                                                ),
+                                                                child: Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          16.0,
+                                                                          12.0,
+                                                                          16.0,
+                                                                          12.0),
+                                                                  child: Column(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .max,
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            0.0,
+                                                                            10.0,
+                                                                            0.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            Row(
+                                                                          mainAxisSize:
+                                                                              MainAxisSize.max,
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.spaceBetween,
+                                                                          children: [
+                                                                            Text(
+                                                                              listViewPostsRecord.tag,
+                                                                              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                    fontFamily: 'Plus Jakarta Sans',
+                                                                                    color: Color(0xFF39D2C0),
+                                                                                    fontSize: 14.0,
+                                                                                    letterSpacing: 0.0,
+                                                                                    fontWeight: FontWeight.w500,
+                                                                                  ),
+                                                                            ),
+                                                                            Text(
+                                                                              listViewPostsRecord.author,
+                                                                              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                    fontFamily: 'Inter',
+                                                                                    color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                    letterSpacing: 0.0,
+                                                                                  ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                      Divider(
+                                                                        height:
+                                                                            16.0,
+                                                                        thickness:
+                                                                            2.0,
+                                                                        color: Color(
+                                                                            0xFFF1F4F8),
+                                                                      ),
+                                                                      Text(
+                                                                        listViewPostsRecord
+                                                                            .postTitle,
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .titleMedium
+                                                                            .override(
+                                                                              fontFamily: 'Inter Tight',
+                                                                              letterSpacing: 0.0,
+                                                                            ),
+                                                                      ),
+                                                                      Text(
+                                                                        listViewPostsRecord
+                                                                            .postDescription,
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyLarge
+                                                                            .override(
+                                                                              fontFamily: 'Inter',
+                                                                              letterSpacing: 0.0,
+                                                                            ),
+                                                                      ),
+                                                                      Builder(
+                                                                        builder:
+                                                                            (context) {
+                                                                          final images = listViewPostsRecord
+                                                                              .postMutiplePhotos
+                                                                              .map((e) => e)
+                                                                              .toList();
+
+                                                                          return SingleChildScrollView(
+                                                                            scrollDirection:
+                                                                                Axis.horizontal,
+                                                                            child:
+                                                                                Row(
+                                                                              mainAxisSize: MainAxisSize.max,
+                                                                              children: List.generate(images.length, (imagesIndex) {
+                                                                                final imagesItem = images[imagesIndex];
+                                                                                return Visibility(
+                                                                                  visible: imagesItem != null && imagesItem != '',
+                                                                                  child: Padding(
+                                                                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
+                                                                                    child: ClipRRect(
+                                                                                      borderRadius: BorderRadius.circular(8.0),
+                                                                                      child: Image.network(
+                                                                                        imagesItem,
+                                                                                        width: MediaQuery.sizeOf(context).width * 1.0,
+                                                                                        height: 200.0,
+                                                                                        fit: BoxFit.cover,
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                );
+                                                                              }),
+                                                                            ),
+                                                                          );
+                                                                        },
+                                                                      ),
+                                                                      Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            0.0,
+                                                                            10.0,
+                                                                            0.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            Row(
+                                                                          mainAxisSize:
+                                                                              MainAxisSize.max,
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.spaceBetween,
+                                                                          children: [
+                                                                            Row(
+                                                                              mainAxisSize: MainAxisSize.max,
+                                                                              children: [
+                                                                                Row(
+                                                                                  mainAxisSize: MainAxisSize.max,
+                                                                                  children: [
+                                                                                    ToggleIcon(
+                                                                                      onPressed: () async {
+                                                                                        final likeElement = currentUserReference;
+                                                                                        final likeUpdate = listViewPostsRecord.like.contains(likeElement) ? FieldValue.arrayRemove([likeElement]) : FieldValue.arrayUnion([likeElement]);
+                                                                                        await listViewPostsRecord.reference.update({
+                                                                                          ...mapToFirestore(
+                                                                                            {
+                                                                                              'like': likeUpdate,
+                                                                                            },
+                                                                                          ),
+                                                                                        });
+                                                                                      },
+                                                                                      value: listViewPostsRecord.like.contains(currentUserReference),
+                                                                                      onIcon: Icon(
+                                                                                        Icons.thumb_up_rounded,
+                                                                                        color: Color(0xFFFF0000),
+                                                                                        size: 24.0,
+                                                                                      ),
+                                                                                      offIcon: Icon(
+                                                                                        Icons.thumb_up_outlined,
+                                                                                        color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                        size: 24.0,
+                                                                                      ),
+                                                                                    ),
+                                                                                    Text(
+                                                                                      listViewPostsRecord.like.length.toString(),
+                                                                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                            fontFamily: 'Inter',
+                                                                                            letterSpacing: 0.0,
+                                                                                          ),
+                                                                                    ),
+                                                                                  ].divide(SizedBox(width: 4.0)),
+                                                                                ),
+                                                                                ToggleIcon(
+                                                                                  onPressed: () async {
+                                                                                    final dislikeElement = currentUserReference;
+                                                                                    final dislikeUpdate = listViewPostsRecord.dislike.contains(dislikeElement) ? FieldValue.arrayRemove([dislikeElement]) : FieldValue.arrayUnion([dislikeElement]);
+                                                                                    await listViewPostsRecord.reference.update({
+                                                                                      ...mapToFirestore(
+                                                                                        {
+                                                                                          'dislike': dislikeUpdate,
+                                                                                        },
+                                                                                      ),
+                                                                                    });
+                                                                                  },
+                                                                                  value: listViewPostsRecord.dislike.contains(currentUserReference),
+                                                                                  onIcon: Icon(
+                                                                                    Icons.thumb_down_rounded,
+                                                                                    color: Color(0xFF0B00FF),
+                                                                                    size: 24.0,
+                                                                                  ),
+                                                                                  offIcon: Icon(
+                                                                                    Icons.thumb_down_outlined,
+                                                                                    color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                    size: 24.0,
+                                                                                  ),
+                                                                                ),
+                                                                                Text(
+                                                                                  listViewPostsRecord.dislike.length.toString(),
+                                                                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                        fontFamily: 'Inter',
+                                                                                        letterSpacing: 0.0,
+                                                                                      ),
+                                                                                ),
+                                                                              ].divide(SizedBox(width: 16.0)),
+                                                                            ),
+                                                                            Text(
+                                                                              valueOrDefault<String>(
+                                                                                listViewPostsRecord.timePosted?.toString(),
+                                                                                '0',
+                                                                              ),
+                                                                              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                    fontFamily: 'Inter',
+                                                                                    color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                    letterSpacing: 0.0,
+                                                                                  ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      );
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
                                             );
                                           }
                                         },
@@ -1042,7 +1107,7 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                         ),
                                         child: Container(
                                           height: MediaQuery.sizeOf(context)
-                                              .height *
+                                                  .height *
                                               0.7,
                                           child: Opacity(
                                             opacity: 0.9,
@@ -1051,7 +1116,7 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                   0.0, 0.0),
                                               child: wrapWithModel(
                                                 model:
-                                                _model.aiChatComponentModel,
+                                                    _model.aiChatComponentModel,
                                                 updateCallback: () =>
                                                     safeSetState(() {}),
                                                 updateOnChange: true,

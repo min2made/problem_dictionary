@@ -1,10 +1,12 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/backend/firebase_storage/storage.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/flutter_flow/upload_data.dart';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +15,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
 import 'create_post_model.dart';
 export 'create_post_model.dart';
 
@@ -66,7 +67,7 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
     });
     setupAnimations(
       animationsMap.values.where((anim) =>
-      anim.trigger == AnimationTrigger.onActionTrigger ||
+          anim.trigger == AnimationTrigger.onActionTrigger ||
           !anim.applyInitialState),
       this,
     );
@@ -119,9 +120,9 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                   Text(
                     '글 작성하기',
                     style: FlutterFlowTheme.of(context).headlineMedium.override(
-                      fontFamily: 'Inter Tight',
-                      letterSpacing: 0.0,
-                    ),
+                          fontFamily: 'Inter Tight',
+                          letterSpacing: 0.0,
+                        ),
                   ),
                   Column(
                     mainAxisSize: MainAxisSize.max,
@@ -135,18 +136,18 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                           labelStyle: FlutterFlowTheme.of(context)
                               .headlineSmall
                               .override(
-                            fontFamily: 'Inter Tight',
-                            color:
-                            FlutterFlowTheme.of(context).secondaryText,
-                            letterSpacing: 0.0,
-                            fontWeight: FontWeight.w500,
-                          ),
+                                fontFamily: 'Inter Tight',
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                                letterSpacing: 0.0,
+                                fontWeight: FontWeight.w500,
+                              ),
                           hintText: '제목 입력하기...',
                           hintStyle:
-                          FlutterFlowTheme.of(context).labelMedium.override(
-                            fontFamily: 'Inter',
-                            letterSpacing: 0.0,
-                          ),
+                              FlutterFlowTheme.of(context).labelMedium.override(
+                                    fontFamily: 'Inter',
+                                    letterSpacing: 0.0,
+                                  ),
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
                               color: FlutterFlowTheme.of(context).alternate,
@@ -179,10 +180,10 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                               16.0, 12.0, 16.0, 12.0),
                         ),
                         style:
-                        FlutterFlowTheme.of(context).headlineSmall.override(
-                          fontFamily: 'Inter Tight',
-                          letterSpacing: 0.0,
-                        ),
+                            FlutterFlowTheme.of(context).headlineSmall.override(
+                                  fontFamily: 'Inter Tight',
+                                  letterSpacing: 0.0,
+                                ),
                         maxLength: 30,
                         maxLengthEnforcement: MaxLengthEnforcement.enforced,
                         cursorColor: FlutterFlowTheme.of(context).primary,
@@ -196,16 +197,16 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                         obscureText: false,
                         decoration: InputDecoration(
                           labelStyle:
-                          FlutterFlowTheme.of(context).labelMedium.override(
-                            fontFamily: 'Inter',
-                            letterSpacing: 0.0,
-                          ),
+                              FlutterFlowTheme.of(context).labelMedium.override(
+                                    fontFamily: 'Inter',
+                                    letterSpacing: 0.0,
+                                  ),
                           hintText: '텍스트 입력하기...',
                           hintStyle:
-                          FlutterFlowTheme.of(context).labelMedium.override(
-                            fontFamily: 'Inter',
-                            letterSpacing: 0.0,
-                          ),
+                              FlutterFlowTheme.of(context).labelMedium.override(
+                                    fontFamily: 'Inter',
+                                    letterSpacing: 0.0,
+                                  ),
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
                               color: FlutterFlowTheme.of(context).alternate,
@@ -238,9 +239,9 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                               16.0, 24.0, 16.0, 12.0),
                         ),
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
-                          fontFamily: 'Inter',
-                          letterSpacing: 0.0,
-                        ),
+                              fontFamily: 'Inter',
+                              letterSpacing: 0.0,
+                            ),
                         maxLines: 16,
                         minLines: 6,
                         maxLength: 1000,
@@ -249,13 +250,42 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                         validator: _model.textController2Validator
                             .asValidator(context),
                       ),
+                      if (_model.uploadedFileUrls.length >= 1)
+                        Builder(
+                          builder: (context) {
+                            final imagesuploaded =
+                                _model.uploadedFileUrls.toList();
+
+                            return ListView.builder(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: imagesuploaded.length,
+                              itemBuilder: (context, imagesuploadedIndex) {
+                                final imagesuploadedItem =
+                                    imagesuploaded[imagesuploadedIndex];
+                                return Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 5.0, 0.0, 5.0),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    child: Image.network(
+                                      imagesuploadedItem,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
                     ]
                         .divide(SizedBox(height: 16.0))
                         .addToStart(SizedBox(height: 12.0)),
                   ),
                   Padding(
                     padding:
-                    EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+                        EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
                     child: Container(
                       width: double.infinity,
                       constraints: BoxConstraints(
@@ -271,29 +301,85 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                       ),
                       child: Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Icon(
-                              Icons.add_a_photo_rounded,
-                              color: Colors.black,
-                              size: 32.0,
-                            ),
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 0.0, 0.0),
-                              child: Text(
-                                '이미지 넣기',
-                                textAlign: TextAlign.center,
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                  fontFamily: 'Inter',
-                                  letterSpacing: 0.0,
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () async {
+                            final selectedMedia = await selectMedia(
+                              imageQuality: 100,
+                              mediaSource: MediaSource.photoGallery,
+                              multiImage: true,
+                            );
+                            if (selectedMedia != null &&
+                                selectedMedia.every((m) => validateFileFormat(
+                                    m.storagePath, context))) {
+                              safeSetState(() => _model.isDataUploading = true);
+                              var selectedUploadedFiles = <FFUploadedFile>[];
+
+                              var downloadUrls = <String>[];
+                              try {
+                                selectedUploadedFiles = selectedMedia
+                                    .map((m) => FFUploadedFile(
+                                          name: m.storagePath.split('/').last,
+                                          bytes: m.bytes,
+                                          height: m.dimensions?.height,
+                                          width: m.dimensions?.width,
+                                          blurHash: m.blurHash,
+                                        ))
+                                    .toList();
+
+                                downloadUrls = (await Future.wait(
+                                  selectedMedia.map(
+                                    (m) async => await uploadData(
+                                        m.storagePath, m.bytes),
+                                  ),
+                                ))
+                                    .where((u) => u != null)
+                                    .map((u) => u!)
+                                    .toList();
+                              } finally {
+                                _model.isDataUploading = false;
+                              }
+                              if (selectedUploadedFiles.length ==
+                                      selectedMedia.length &&
+                                  downloadUrls.length == selectedMedia.length) {
+                                safeSetState(() {
+                                  _model.uploadedLocalFiles =
+                                      selectedUploadedFiles;
+                                  _model.uploadedFileUrls = downloadUrls;
+                                });
+                              } else {
+                                safeSetState(() {});
+                                return;
+                              }
+                            }
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Icon(
+                                Icons.add_a_photo_rounded,
+                                color: Colors.black,
+                                size: 32.0,
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    16.0, 0.0, 0.0, 0.0),
+                                child: Text(
+                                  '이미지 넣기',
+                                  textAlign: TextAlign.center,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'Inter',
+                                        letterSpacing: 0.0,
+                                      ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ).animateOnPageLoad(
@@ -301,7 +387,7 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                   ),
                   Padding(
                     padding:
-                    EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 12.0),
+                        EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 12.0),
                     child: StreamBuilder<List<PostsRecord>>(
                       stream: queryPostsRecord(
                         singleRecord: true,
@@ -322,33 +408,34 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                           );
                         }
                         List<PostsRecord> buttonPostsRecordList =
-                        snapshot.data!;
+                            snapshot.data!;
                         // Return an empty Container when the item does not exist.
                         if (snapshot.data!.isEmpty) {
                           return Container();
                         }
                         final buttonPostsRecord =
-                        buttonPostsRecordList.isNotEmpty
-                            ? buttonPostsRecordList.first
-                            : null;
+                            buttonPostsRecordList.isNotEmpty
+                                ? buttonPostsRecordList.first
+                                : null;
 
                         return FFButtonWidget(
                           onPressed: () async {
-                            await buttonPostsRecord!.reference
-                                .update(createPostsRecordData(
-                              postTitle: _model.textController1.text,
-                              postDescription: _model.textController2.text,
-                              author: currentUserDisplayName,
-                            ));
-
-                            await PostsRecord.collection
-                                .doc()
-                                .set(createPostsRecordData(
-                              postTitle: buttonPostsRecord?.postTitle,
-                              postDescription:
-                              buttonPostsRecord?.postDescription,
-                              author: currentUserDisplayName,
-                            ));
+                            await PostsRecord.collection.doc().set({
+                              ...createPostsRecordData(
+                                postTitle: _model.textController1.text,
+                                postDescription: _model.textController2.text,
+                                timePosted: getCurrentTimestamp,
+                                author: currentUserDisplayName,
+                                postUser: currentUserReference,
+                              ),
+                              ...mapToFirestore(
+                                {
+                                  'post_mutiple_photos':
+                                      _model.uploadedFileUrls,
+                                },
+                              ),
+                            });
+                            context.safePop();
                           },
                           text: '완료',
                           options: FFButtonOptions(
@@ -361,11 +448,11 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                             textStyle: FlutterFlowTheme.of(context)
                                 .titleSmall
                                 .override(
-                              fontFamily: 'Inter Tight',
-                              color:
-                              FlutterFlowTheme.of(context).primaryText,
-                              letterSpacing: 0.0,
-                            ),
+                                  fontFamily: 'Inter Tight',
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                  letterSpacing: 0.0,
+                                ),
                             elevation: 4.0,
                             borderSide: BorderSide(
                               color: Colors.transparent,
@@ -376,56 +463,6 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                         );
                       },
                     ),
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 12.0, 0.0, 0.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12.0),
-                            child: Image.network(
-                              '',
-                              width: double.infinity,
-                              height: 200.0,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 12.0, 0.0, 0.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12.0),
-                            child: Image.network(
-                              '',
-                              width: double.infinity,
-                              height: 200.0,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 12.0, 0.0, 0.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12.0),
-                            child: Image.network(
-                              '',
-                              width: double.infinity,
-                              height: 200.0,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
                   ),
                 ],
               ),

@@ -1,13 +1,20 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import '/backend/backend.dart';
 
 import '/auth/base_auth_user_provider.dart';
 
 import '/index.dart';
+import '/main.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/lat_lng.dart';
+import '/flutter_flow/place.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import 'serialization_util.dart';
 
 export 'package:go_router/go_router.dart';
 export 'serialization_util.dart';
@@ -72,58 +79,84 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
       errorBuilder: (context, state) =>
-          appStateNotifier.loggedIn ? const ListPageWidget() : const StartPageWidget(),
+          appStateNotifier.loggedIn ? ListPageWidget() : StartPageWidget(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
           builder: (context, _) =>
-              appStateNotifier.loggedIn ? const ListPageWidget() : const StartPageWidget(),
+              appStateNotifier.loggedIn ? ListPageWidget() : StartPageWidget(),
         ),
         FFRoute(
           name: 'StartPage',
           path: '/startPage',
-          builder: (context, params) => const StartPageWidget(),
+          builder: (context, params) => StartPageWidget(),
         ),
         FFRoute(
           name: 'CreateAccount',
           path: '/createAccount',
-          builder: (context, params) => const CreateAccountWidget(),
+          builder: (context, params) => CreateAccountWidget(),
         ),
         FFRoute(
           name: 'Login',
           path: '/login',
-          builder: (context, params) => const LoginWidget(),
+          builder: (context, params) => LoginWidget(),
         ),
         FFRoute(
           name: 'ForgotPassword',
           path: '/forgotPassword',
-          builder: (context, params) => const ForgotPasswordWidget(),
+          builder: (context, params) => ForgotPasswordWidget(),
         ),
         FFRoute(
           name: 'ListPage',
           path: '/listPage',
-          builder: (context, params) => const ListPageWidget(),
+          builder: (context, params) => ListPageWidget(),
         ),
         FFRoute(
           name: 'chat_ai_Screen',
           path: '/chatAiScreen',
-          builder: (context, params) => const ChatAiScreenWidget(),
+          builder: (context, params) => ChatAiScreenWidget(),
         ),
         FFRoute(
           name: 'CreateProfile',
           path: '/createProfile',
-          builder: (context, params) => const CreateProfileWidget(),
+          builder: (context, params) => CreateProfileWidget(),
         ),
         FFRoute(
           name: 'ChangeProflie',
           path: '/changeProflie',
-          builder: (context, params) => const ChangeProflieWidget(),
+          builder: (context, params) => ChangeProflieWidget(),
+        ),
+        FFRoute(
+          name: 'DetailPost',
+          path: '/detailPost',
+          asyncParams: {
+            'postDetail': getDoc(['posts'], PostsRecord.fromSnapshot),
+          },
+          builder: (context, params) => DetailPostWidget(
+            postDetail: params.getParam(
+              'postDetail',
+              ParamType.Document,
+            ),
+          ),
         ),
         FFRoute(
           name: 'CreatePost',
           path: '/createPost',
-          builder: (context, params) => const CreatePostWidget(),
+          builder: (context, params) => CreatePostWidget(),
+        ),
+        FFRoute(
+          name: 'EditPost',
+          path: '/editPost',
+          asyncParams: {
+            'postDetails': getDoc(['posts'], PostsRecord.fromSnapshot),
+          },
+          builder: (context, params) => EditPostWidget(
+            postDetails: params.getParam(
+              'postDetails',
+              ParamType.Document,
+            ),
+          ),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
@@ -361,7 +394,7 @@ class TransitionInfo {
   final Duration duration;
   final Alignment? alignment;
 
-  static TransitionInfo appDefault() => const TransitionInfo(hasTransition: false);
+  static TransitionInfo appDefault() => TransitionInfo(hasTransition: false);
 }
 
 class RootPageContext {

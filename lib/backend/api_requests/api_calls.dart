@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 
 import '/flutter_flow/flutter_flow_util.dart';
@@ -21,7 +22,7 @@ class OpenAIChatGPTGroup {
 class SendFullPromptCall {
   Future<ApiCallResponse> call({
     String? apiKey = '',
-    dynamic promptJson,
+    dynamic? promptJson,
   }) async {
     final baseUrl = OpenAIChatGPTGroup.getBaseUrl();
 
@@ -29,15 +30,15 @@ class SendFullPromptCall {
     final ffApiRequestBody = '''
 {
   "model": "gpt-4",
-  "messages": $prompt
+  "messages": ${prompt}
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'Send Full Prompt',
-      apiUrl: '$baseUrl/chat/completions',
+      apiUrl: '${baseUrl}/chat/completions',
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $apiKey',
+        'Authorization': 'Bearer ${apiKey}',
       },
       params: {},
       body: ffApiRequestBody,

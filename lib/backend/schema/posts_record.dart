@@ -3,15 +3,16 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 
 import '/backend/schema/util/firestore_util.dart';
+import '/backend/schema/util/schema_util.dart';
 
 import 'index.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 
 class PostsRecord extends FirestoreRecord {
   PostsRecord._(
-    super.reference,
-    super.data,
-  ) {
+    DocumentReference reference,
+    Map<String, dynamic> data,
+  ) : super(reference, data) {
     _initializeFields();
   }
 
@@ -51,14 +52,19 @@ class PostsRecord extends FirestoreRecord {
   bool hasPostPhoto() => _postPhoto != null;
 
   // "like" field.
-  int? _like;
-  int get like => _like ?? 0;
+  List<DocumentReference>? _like;
+  List<DocumentReference> get like => _like ?? const [];
   bool hasLike() => _like != null;
 
   // "dislike" field.
-  int? _dislike;
-  int get dislike => _dislike ?? 0;
+  List<DocumentReference>? _dislike;
+  List<DocumentReference> get dislike => _dislike ?? const [];
   bool hasDislike() => _dislike != null;
+
+  // "post_mutiple_photos" field.
+  List<String>? _postMutiplePhotos;
+  List<String> get postMutiplePhotos => _postMutiplePhotos ?? const [];
+  bool hasPostMutiplePhotos() => _postMutiplePhotos != null;
 
   void _initializeFields() {
     _postTitle = snapshotData['post_title'] as String?;
@@ -68,8 +74,9 @@ class PostsRecord extends FirestoreRecord {
     _tag = snapshotData['tag'] as String?;
     _author = snapshotData['author'] as String?;
     _postPhoto = snapshotData['post_photo'] as String?;
-    _like = castToType<int>(snapshotData['like']);
-    _dislike = castToType<int>(snapshotData['dislike']);
+    _like = getDataList(snapshotData['like']);
+    _dislike = getDataList(snapshotData['dislike']);
+    _postMutiplePhotos = getDataList(snapshotData['post_mutiple_photos']);
   }
 
   static CollectionReference get collection =>
@@ -113,8 +120,6 @@ Map<String, dynamic> createPostsRecordData({
   String? tag,
   String? author,
   String? postPhoto,
-  int? like,
-  int? dislike,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -125,8 +130,6 @@ Map<String, dynamic> createPostsRecordData({
       'tag': tag,
       'author': author,
       'post_photo': postPhoto,
-      'like': like,
-      'dislike': dislike,
     }.withoutNulls,
   );
 
@@ -138,6 +141,7 @@ class PostsRecordDocumentEquality implements Equality<PostsRecord> {
 
   @override
   bool equals(PostsRecord? e1, PostsRecord? e2) {
+    const listEquality = ListEquality();
     return e1?.postTitle == e2?.postTitle &&
         e1?.postDescription == e2?.postDescription &&
         e1?.postUser == e2?.postUser &&
@@ -145,8 +149,9 @@ class PostsRecordDocumentEquality implements Equality<PostsRecord> {
         e1?.tag == e2?.tag &&
         e1?.author == e2?.author &&
         e1?.postPhoto == e2?.postPhoto &&
-        e1?.like == e2?.like &&
-        e1?.dislike == e2?.dislike;
+        listEquality.equals(e1?.like, e2?.like) &&
+        listEquality.equals(e1?.dislike, e2?.dislike) &&
+        listEquality.equals(e1?.postMutiplePhotos, e2?.postMutiplePhotos);
   }
 
   @override
@@ -159,7 +164,8 @@ class PostsRecordDocumentEquality implements Equality<PostsRecord> {
         e?.author,
         e?.postPhoto,
         e?.like,
-        e?.dislike
+        e?.dislike,
+        e?.postMutiplePhotos
       ]);
 
   @override

@@ -12,4 +12,6 @@ export '/profile/create_profile/create_profile_widget.dart'
     show CreateProfileWidget;
 export '/profile/change_proflie/change_proflie_widget.dart'
     show ChangeProflieWidget;
+export '/pages/detail_post/detail_post_widget.dart' show DetailPostWidget;
 export '/pages/create_post/create_post_widget.dart' show CreatePostWidget;
+export '/pages/edit_post/edit_post_widget.dart' show EditPostWidget;

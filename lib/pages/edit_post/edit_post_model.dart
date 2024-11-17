@@ -8,7 +8,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/upload_data.dart';
 import 'dart:math';
-import 'create_post_widget.dart' show CreatePostWidget;
+import 'edit_post_widget.dart' show EditPostWidget;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -17,7 +17,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class CreatePostModel extends FlutterFlowModel<CreatePostWidget> {
+class EditPostModel extends FlutterFlowModel<EditPostWidget> {
   ///  State fields for stateful widgets in this page.
 
   // State field(s) for TextField widget.

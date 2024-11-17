@@ -32,6 +32,9 @@ class KakaoAuthManager {
         if (context.mounted) {
           context.pushNamedAuth('CreateProfile', context.mounted);
         }
+        await userDoc.set({
+          'displayName': '임시'
+        });
       } else {
         // 이미 로그인한 사용자의 경우
         print("이미 한번이라도 로그인: 사용자 문서 존재");

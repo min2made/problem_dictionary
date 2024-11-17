@@ -132,10 +132,10 @@ Future<List<DictionsRecord>> queryDictionsRecordOnce({
     );
 
 Future<int> queryCollectionCount(
-    Query collection, {
-      Query Function(Query)? queryBuilder,
-      int limit = -1,
-    }) {
+  Query collection, {
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+}) {
   final builder = queryBuilder ?? (q) => q;
   var query = builder(collection);
   if (limit > 0) {
@@ -148,12 +148,12 @@ Future<int> queryCollectionCount(
 }
 
 Stream<List<T>> queryCollection<T>(
-    Query collection,
-    RecordBuilder<T> recordBuilder, {
-      Query Function(Query)? queryBuilder,
-      int limit = -1,
-      bool singleRecord = false,
-    }) {
+  Query collection,
+  RecordBuilder<T> recordBuilder, {
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+  bool singleRecord = false,
+}) {
   final builder = queryBuilder ?? (q) => q;
   var query = builder(collection);
   if (limit > 0 || singleRecord) {
@@ -166,20 +166,20 @@ Stream<List<T>> queryCollection<T>(
         (d) => safeGet(
           () => recordBuilder(d),
           (e) => print('Error serializing doc ${d.reference.path}:\n$e'),
-    ),
-  )
+        ),
+      )
       .where((d) => d != null)
       .map((d) => d!)
       .toList());
 }
 
 Future<List<T>> queryCollectionOnce<T>(
-    Query collection,
-    RecordBuilder<T> recordBuilder, {
-      Query Function(Query)? queryBuilder,
-      int limit = -1,
-      bool singleRecord = false,
-    }) {
+  Query collection,
+  RecordBuilder<T> recordBuilder, {
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+  bool singleRecord = false,
+}) {
   final builder = queryBuilder ?? (q) => q;
   var query = builder(collection);
   if (limit > 0 || singleRecord) {
@@ -190,8 +190,8 @@ Future<List<T>> queryCollectionOnce<T>(
         (d) => safeGet(
           () => recordBuilder(d),
           (e) => print('Error serializing doc ${d.reference.path}:\n$e'),
-    ),
-  )
+        ),
+      )
       .where((d) => d != null)
       .map((d) => d!)
       .toList());
@@ -230,13 +230,13 @@ class FFFirestorePage<T> {
 }
 
 Future<FFFirestorePage<T>> queryCollectionPage<T>(
-    Query collection,
-    RecordBuilder<T> recordBuilder, {
-      Query Function(Query)? queryBuilder,
-      DocumentSnapshot? nextPageMarker,
-      required int pageSize,
-      required bool isStream,
-    }) async {
+  Query collection,
+  RecordBuilder<T> recordBuilder, {
+  Query Function(Query)? queryBuilder,
+  DocumentSnapshot? nextPageMarker,
+  required int pageSize,
+  required bool isStream,
+}) async {
   final builder = queryBuilder ?? (q) => q;
   var query = builder(collection).limit(pageSize);
   if (nextPageMarker != null) {
@@ -255,8 +255,8 @@ Future<FFFirestorePage<T>> queryCollectionPage<T>(
         (d) => safeGet(
           () => recordBuilder(d),
           (e) => print('Error serializing doc ${d.reference.path}:\n$e'),
-    ),
-  )
+        ),
+      )
       .where((d) => d != null)
       .map((d) => d!)
       .toList();
@@ -280,7 +280,7 @@ Future maybeCreateUser(User user) async {
         FirebaseAuth.instance.currentUser?.email ??
         user.providerData.firstOrNull?.email,
     displayName:
-    user.displayName ?? FirebaseAuth.instance.currentUser?.displayName,
+        user.displayName ?? FirebaseAuth.instance.currentUser?.displayName,
     photoUrl: user.photoURL,
     uid: user.uid,
     phoneNumber: user.phoneNumber,

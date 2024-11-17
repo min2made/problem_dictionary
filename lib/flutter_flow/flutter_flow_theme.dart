@@ -148,11 +148,11 @@ class LightModeTheme extends FlutterFlowTheme {
   late Color error = const Color(0xFFFF5963);
   late Color info = const Color(0xFFFFFFFF);
 
-  late Color teaGreen = const Color(0xFFCCD5AE);
-  late Color beige = const Color(0xFFE9EDC9);
-  late Color cornsilk = const Color(0xFFFEFAE0);
-  late Color papayaWhip = const Color(0xFFFAEDCD);
-  late Color buff = const Color(0xFFD4A373);
+  late Color teaGreen = Color(0xFFCCD5AE);
+  late Color beige = Color(0xFFE9EDC9);
+  late Color cornsilk = Color(0xFFFEFAE0);
+  late Color papayaWhip = Color(0xFFFAEDCD);
+  late Color buff = Color(0xFFD4A373);
 }
 
 abstract class Typography {
@@ -325,11 +325,11 @@ class DarkModeTheme extends FlutterFlowTheme {
   late Color error = const Color(0xFFFF5963);
   late Color info = const Color(0xFFFFFFFF);
 
-  late Color teaGreen = const Color(0xFFCCD5AE);
-  late Color beige = const Color(0xFFE9EDC9);
-  late Color cornsilk = const Color(0xFFFEFAE0);
-  late Color papayaWhip = const Color(0xFFFAEDCD);
-  late Color buff = const Color(0xFFD4A373);
+  late Color teaGreen = Color(0xFFCCD5AE);
+  late Color beige = Color(0xFFE9EDC9);
+  late Color cornsilk = Color(0xFFFEFAE0);
+  late Color papayaWhip = Color(0xFFFAEDCD);
+  late Color buff = Color(0xFFD4A373);
 }
 
 extension TextStyleHelper on TextStyle {
