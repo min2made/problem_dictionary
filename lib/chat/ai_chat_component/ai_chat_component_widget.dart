@@ -271,7 +271,7 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                                                                       SnackBar(
                                                                         content:
                                                                             Text(
-                                                                          'Response copied to clipboard.',
+                                                                          '클립보드에 복사되었습니다',
                                                                           style: FlutterFlowTheme.of(context)
                                                                               .bodyMedium
                                                                               .override(
@@ -325,7 +325,7 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                                                                                 0.0),
                                                                             child:
                                                                                 Text(
-                                                                              'Copy response',
+                                                                              '답변 복사하기',
                                                                               style: FlutterFlowTheme.of(context).labelSmall.override(
                                                                                     fontFamily: 'Inter',
                                                                                     letterSpacing: 0.0,
@@ -497,7 +497,7 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                         textCapitalization: TextCapitalization.sentences,
                         obscureText: false,
                         decoration: InputDecoration(
-                          hintText: 'Type something...',
+                          hintText: '여기에 질문해주세요!',
                           hintStyle:
                               FlutterFlowTheme.of(context).labelLarge.override(
                                     fontFamily: 'Inter',
