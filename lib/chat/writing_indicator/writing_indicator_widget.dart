@@ -179,7 +179,7 @@ class _WritingIndicatorWidgetState extends State<WritingIndicatorWidget>
         width: 77.0,
         height: 32.0,
         decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).accent1,
+          color: FlutterFlowTheme.of(context).warning,
           borderRadius: BorderRadius.circular(12.0),
           border: Border.all(
             color: FlutterFlowTheme.of(context).primary,
