@@ -64,7 +64,7 @@ class _ChatAiScreenWidgetState extends State<ChatAiScreenWidget> {
                 borderRadius: 12.0,
                 borderWidth: 1.0,
                 buttonSize: 40.0,
-                fillColor: FlutterFlowTheme.of(context).accent1,
+                fillColor: FlutterFlowTheme.of(context).primary,
                 icon: Icon(
                   Icons.refresh_rounded,
                   color: FlutterFlowTheme.of(context).primaryText,
