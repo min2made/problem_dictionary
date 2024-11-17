@@ -392,13 +392,31 @@ class _CreateProfileWidgetState extends State<CreateProfileWidget> {
                         return;
                       }
                       if (currentUserReference != null) {
-                        // displayName을 Firestore 문서에 업데이트
-                        await currentUserReference!.update(createUsersRecordData(
-                          displayName: _model.yourNameTextController.text,
-                        ));
-                        context.pushNamed('ListPage');  // ListPage로 이동
-                      } else {
-                        print("현재 사용자 정보가 없습니다.");
+                        try {
+                          // Firestore 문서 업데이트 시도
+                          await currentUserReference!.update(createUsersRecordData(
+                            displayName: _model.yourNameTextController.text,
+                          ));
+                          context.pushNamed('ListPage');
+                        } catch (e) {
+                          // 문서가 없어서 업데이트 실패 시 새 문서 생성
+                          if (e is FirebaseException && e.code == 'not-found') {
+                            print('문서가 존재하지 않아서 새로 생성합니다.');
+
+                            // 새 문서 생성
+                            await currentUserReference!.set({
+                              'display_name': _model.yourNameTextController.text,
+                              'uid': currentUserReference!.id,
+                              'email': 'kakao',
+                              'created_time': FieldValue.serverTimestamp(),
+                            });
+                            context.pushNamed('ListPage');
+                          } else {
+                            // 기타 오류 처리
+                            print('문서 업데이트 중 오류 발생: $e');
+                            rethrow; // 필요에 따라 오류를 다시 던질 수도 있음
+                          }
+                        }
                       }
                     },
                     text: '생성하기',

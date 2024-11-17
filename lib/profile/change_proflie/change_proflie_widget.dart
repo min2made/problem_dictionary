@@ -396,10 +396,7 @@ class _ChangeProflieWidgetState extends State<ChangeProflieWidget> {
                         textCapitalization: TextCapitalization.words,
                         obscureText: false,
                         decoration: InputDecoration(
-                          labelText: valueOrDefault<String>(
-                            yourNameUsersRecord?.displayName,
-                            '닉네임 입력하기...',
-                          ),
+                          labelText: '닉네임 입력하기...',
                           labelStyle:
                           FlutterFlowTheme.of(context).labelMedium.override(
                             fontFamily: 'Inter',
