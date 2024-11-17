@@ -10,9 +10,9 @@ import '/flutter_flow/flutter_flow_util.dart';
 
 class DictionsRecord extends FirestoreRecord {
   DictionsRecord._(
-    DocumentReference reference,
-    Map<String, dynamic> data,
-  ) : super(reference, data) {
+      DocumentReference reference,
+      Map<String, dynamic> data,
+      ) : super(reference, data) {
     _initializeFields();
   }
 
@@ -41,12 +41,18 @@ class DictionsRecord extends FirestoreRecord {
   String get tag => _tag ?? '';
   bool hasTag() => _tag != null;
 
+  // "post_multiple_photos" field.
+  List<String>? _postMultiplePhotos;
+  List<String> get postMultiplePhotos => _postMultiplePhotos ?? const [];
+  bool hasPostMultiplePhotos() => _postMultiplePhotos != null;
+
   void _initializeFields() {
     _postPhoto = snapshotData['post_photo'] as String?;
     _postTitle = snapshotData['post_title'] as String?;
     _postDescription = snapshotData['post_description'] as String?;
     _timePosted = snapshotData['time_posted'] as DateTime?;
     _tag = snapshotData['tag'] as String?;
+    _postMultiplePhotos = getDataList(snapshotData['post_multiple_photos']);
   }
 
   static CollectionReference get collection =>
@@ -65,9 +71,9 @@ class DictionsRecord extends FirestoreRecord {
       );
 
   static DictionsRecord getDocumentFromData(
-    Map<String, dynamic> data,
-    DocumentReference reference,
-  ) =>
+      Map<String, dynamic> data,
+      DocumentReference reference,
+      ) =>
       DictionsRecord._(reference, mapFromFirestore(data));
 
   @override
@@ -80,7 +86,7 @@ class DictionsRecord extends FirestoreRecord {
   @override
   bool operator ==(other) =>
       other is DictionsRecord &&
-      reference.path.hashCode == other.reference.path.hashCode;
+          reference.path.hashCode == other.reference.path.hashCode;
 }
 
 Map<String, dynamic> createDictionsRecordData({
@@ -108,16 +114,24 @@ class DictionsRecordDocumentEquality implements Equality<DictionsRecord> {
 
   @override
   bool equals(DictionsRecord? e1, DictionsRecord? e2) {
+    const listEquality = ListEquality();
     return e1?.postPhoto == e2?.postPhoto &&
         e1?.postTitle == e2?.postTitle &&
         e1?.postDescription == e2?.postDescription &&
         e1?.timePosted == e2?.timePosted &&
-        e1?.tag == e2?.tag;
+        e1?.tag == e2?.tag &&
+        listEquality.equals(e1?.postMultiplePhotos, e2?.postMultiplePhotos);
   }
 
   @override
-  int hash(DictionsRecord? e) => const ListEquality().hash(
-      [e?.postPhoto, e?.postTitle, e?.postDescription, e?.timePosted, e?.tag]);
+  int hash(DictionsRecord? e) => const ListEquality().hash([
+    e?.postPhoto,
+    e?.postTitle,
+    e?.postDescription,
+    e?.timePosted,
+    e?.tag,
+    e?.postMultiplePhotos
+  ]);
 
   @override
   bool isValidKey(Object? o) => o is DictionsRecord;

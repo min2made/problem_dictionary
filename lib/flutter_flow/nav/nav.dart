@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import '../../pages/detail_diction/detail_diction_widget.dart';
 import '/backend/backend.dart';
 
 import '/auth/base_auth_user_provider.dart';
@@ -154,6 +155,19 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => EditPostWidget(
             postDetails: params.getParam(
               'postDetails',
+              ParamType.Document,
+            ),
+          ),
+        ),
+        FFRoute(
+          name: 'DetailDiction',
+          path: '/detailDiction',
+          asyncParams: {
+            'dictionDetails': getDoc(['dictions'], DictionsRecord.fromSnapshot),
+          },
+          builder: (context, params) => DetailDictionWidget(
+            dictionDetails: params.getParam(
+              'dictionDetails',
               ParamType.Document,
             ),
           ),
