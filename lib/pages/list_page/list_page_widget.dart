@@ -261,218 +261,227 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                 Column(
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
-                                    StreamBuilder<List<DictionsRecord>>(
-                                      stream: queryDictionsRecord(),
-                                      builder: (context, snapshot) {
-                                        // Customize what your widget looks like when it's loading.
-                                        if (!snapshot.hasData) {
-                                          return Center(
-                                            child: SizedBox(
-                                              width: 50.0,
-                                              height: 50.0,
-                                              child: CircularProgressIndicator(
-                                                valueColor:
-                                                AlwaysStoppedAnimation<
-                                                    Color>(
-                                                  FlutterFlowTheme.of(context)
-                                                      .primary,
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                        List<DictionsRecord>
-                                        listViewDictionsRecordList =
-                                        snapshot.data!;
-
-                                        return ListView.builder(
-                                          padding: EdgeInsets.zero,
-                                          shrinkWrap: true,
-                                          scrollDirection: Axis.vertical,
-                                          itemCount:
-                                          listViewDictionsRecordList.length,
-                                          itemBuilder:
-                                              (context, listViewIndex) {
-                                            final listViewDictionsRecord =
-                                            listViewDictionsRecordList[
-                                            listViewIndex];
-                                            return Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                  16.0, 4.0, 16.0, 4.0),
-                                              child: InkWell(
-                                                splashColor: Colors.transparent,
-                                                focusColor: Colors.transparent,
-                                                hoverColor: Colors.transparent,
-                                                highlightColor:
-                                                Colors.transparent,
-                                                onTap: () async {
-                                                  context.pushNamed(
-                                                    'DetailDiction',
-                                                    queryParameters: {
-                                                      'dictionDetails':
-                                                      serializeParam(
-                                                        listViewDictionsRecord,
-                                                        ParamType.Document,
-                                                      ),
-                                                    }.withoutNulls,
-                                                    extra: <String, dynamic>{
-                                                      'dictionDetails':
-                                                      listViewDictionsRecord,
-                                                    },
-                                                  );
-                                                },
-                                                child: Container(
-                                                  width: double.infinity,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        blurRadius: 7.0,
-                                                        color:
-                                                        Color(0x2F1D2429),
-                                                        offset: Offset(
-                                                          0.0,
-                                                          3.0,
-                                                        ),
-                                                      )
-                                                    ],
-                                                    borderRadius:
-                                                    BorderRadius.circular(
-                                                        8.0),
-                                                  ),
-                                                  child: Padding(
-                                                    padding:
-                                                    EdgeInsetsDirectional
-                                                        .fromSTEB(
-                                                        16.0,
-                                                        12.0,
-                                                        16.0,
-                                                        12.0),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                      MainAxisSize.max,
-                                                      crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .start,
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                              0.0,
-                                                              10.0,
-                                                              0.0,
-                                                              0.0),
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                            MainAxisSize
-                                                                .max,
-                                                            mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                            children: [
-                                                              Text(
-                                                                listViewDictionsRecord
-                                                                    .postTitle,
-                                                                style: FlutterFlowTheme.of(
-                                                                    context)
-                                                                    .titleMedium
-                                                                    .override(
-                                                                  fontFamily:
-                                                                  'Inter Tight',
-                                                                  letterSpacing:
-                                                                  0.0,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        Divider(
-                                                          height: 16.0,
-                                                          thickness: 2.0,
-                                                          color:
-                                                          Color(0xFFF1F4F8),
-                                                        ),
-                                                        Text(
-                                                          listViewDictionsRecord
-                                                              .postDescription,
-                                                          style: FlutterFlowTheme
-                                                              .of(context)
-                                                              .bodyLarge
-                                                              .override(
-                                                            fontFamily:
-                                                            'Inter',
-                                                            letterSpacing:
-                                                            0.0,
-                                                          ),
-                                                        ),
-                                                        Builder(
-                                                          builder: (context) {
-                                                            final dictionImgs =
-                                                            listViewDictionsRecord
-                                                                .postMultiplePhotos
-                                                                .map((e) =>
-                                                            e)
-                                                                .toList();
-
-                                                            return SingleChildScrollView(
-                                                              scrollDirection:
-                                                              Axis.horizontal,
-                                                              child: Row(
-                                                                mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
-                                                                children: List.generate(
-                                                                    dictionImgs
-                                                                        .length,
-                                                                        (dictionImgsIndex) {
-                                                                      final dictionImgsItem =
-                                                                      dictionImgs[
-                                                                      dictionImgsIndex];
-                                                                      return Visibility(
-                                                                        visible: dictionImgsItem !=
-                                                                            null &&
-                                                                            dictionImgsItem !=
-                                                                                '',
-                                                                        child:
-                                                                        Padding(
-                                                                          padding: EdgeInsetsDirectional.fromSTEB(
-                                                                              0.0,
-                                                                              10.0,
-                                                                              0.0,
-                                                                              0.0),
-                                                                          child:
-                                                                          ClipRRect(
-                                                                            borderRadius:
-                                                                            BorderRadius.circular(8.0),
-                                                                            child: Image
-                                                                                .network(
-                                                                              dictionImgsItem,
-                                                                              width:
-                                                                              MediaQuery.sizeOf(context).width * 1.0,
-                                                                              height:
-                                                                              200.0,
-                                                                              fit: BoxFit
-                                                                                  .cover,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      );
-                                                                    }),
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
-                                                      ],
-                                                    ),
+                                    Expanded(
+                                      child:
+                                      StreamBuilder<List<DictionsRecord>>(
+                                        stream: queryDictionsRecord(),
+                                        builder: (context, snapshot) {
+                                          // Customize what your widget looks like when it's loading.
+                                          if (!snapshot.hasData) {
+                                            return Center(
+                                              child: SizedBox(
+                                                width: 50.0,
+                                                height: 50.0,
+                                                child:
+                                                CircularProgressIndicator(
+                                                  valueColor:
+                                                  AlwaysStoppedAnimation<
+                                                      Color>(
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
                                                   ),
                                                 ),
                                               ),
                                             );
-                                          },
-                                        );
-                                      },
+                                          }
+                                          List<DictionsRecord>
+                                          listViewDictionsRecordList =
+                                          snapshot.data!;
+
+                                          return ListView.builder(
+                                            padding: EdgeInsets.zero,
+                                            shrinkWrap: true,
+                                            scrollDirection: Axis.vertical,
+                                            itemCount:
+                                            listViewDictionsRecordList
+                                                .length,
+                                            itemBuilder:
+                                                (context, listViewIndex) {
+                                              final listViewDictionsRecord =
+                                              listViewDictionsRecordList[
+                                              listViewIndex];
+                                              return Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                    16.0, 4.0, 16.0, 4.0),
+                                                child: InkWell(
+                                                  splashColor:
+                                                  Colors.transparent,
+                                                  focusColor:
+                                                  Colors.transparent,
+                                                  hoverColor:
+                                                  Colors.transparent,
+                                                  highlightColor:
+                                                  Colors.transparent,
+                                                  onTap: () async {
+                                                    context.pushNamed(
+                                                      'DetailDiction',
+                                                      queryParameters: {
+                                                        'dictionDetails':
+                                                        serializeParam(
+                                                          listViewDictionsRecord,
+                                                          ParamType.Document,
+                                                        ),
+                                                      }.withoutNulls,
+                                                      extra: <String, dynamic>{
+                                                        'dictionDetails':
+                                                        listViewDictionsRecord,
+                                                      },
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    width: double.infinity,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          blurRadius: 7.0,
+                                                          color:
+                                                          Color(0x2F1D2429),
+                                                          offset: Offset(
+                                                            0.0,
+                                                            3.0,
+                                                          ),
+                                                        )
+                                                      ],
+                                                      borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),
+                                                    ),
+                                                    child: Padding(
+                                                      padding:
+                                                      EdgeInsetsDirectional
+                                                          .fromSTEB(
+                                                          16.0,
+                                                          12.0,
+                                                          16.0,
+                                                          12.0),
+                                                      child: Column(
+                                                        mainAxisSize:
+                                                        MainAxisSize.max,
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                0.0,
+                                                                10.0,
+                                                                0.0,
+                                                                0.0),
+                                                            child: Row(
+                                                              mainAxisSize:
+                                                              MainAxisSize
+                                                                  .max,
+                                                              mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  listViewDictionsRecord
+                                                                      .postTitle,
+                                                                  style: FlutterFlowTheme.of(
+                                                                      context)
+                                                                      .titleMedium
+                                                                      .override(
+                                                                    fontFamily:
+                                                                    'Inter Tight',
+                                                                    letterSpacing:
+                                                                    0.0,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          Divider(
+                                                            height: 16.0,
+                                                            thickness: 2.0,
+                                                            color: Color(
+                                                                0xFFF1F4F8),
+                                                          ),
+                                                          Text(
+                                                            listViewDictionsRecord
+                                                                .postDescription,
+                                                            style: FlutterFlowTheme
+                                                                .of(context)
+                                                                .bodyLarge
+                                                                .override(
+                                                              fontFamily:
+                                                              'Inter',
+                                                              letterSpacing:
+                                                              0.0,
+                                                            ),
+                                                          ),
+                                                          Builder(
+                                                            builder: (context) {
+                                                              final dictionImgs =
+                                                              listViewDictionsRecord
+                                                                  .postMultiplePhotos
+                                                                  .map(
+                                                                      (e) =>
+                                                                  e)
+                                                                  .toList();
+
+                                                              return SingleChildScrollView(
+                                                                scrollDirection:
+                                                                Axis.horizontal,
+                                                                child: Row(
+                                                                  mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                                  children: List.generate(
+                                                                      dictionImgs
+                                                                          .length,
+                                                                          (dictionImgsIndex) {
+                                                                        final dictionImgsItem =
+                                                                        dictionImgs[
+                                                                        dictionImgsIndex];
+                                                                        return Visibility(
+                                                                          visible: dictionImgsItem !=
+                                                                              null &&
+                                                                              dictionImgsItem !=
+                                                                                  '',
+                                                                          child:
+                                                                          Padding(
+                                                                            padding: EdgeInsetsDirectional.fromSTEB(
+                                                                                0.0,
+                                                                                10.0,
+                                                                                0.0,
+                                                                                0.0),
+                                                                            child:
+                                                                            ClipRRect(
+                                                                              borderRadius:
+                                                                              BorderRadius.circular(8.0),
+                                                                              child:
+                                                                              Image.network(
+                                                                                dictionImgsItem,
+                                                                                width:
+                                                                                MediaQuery.sizeOf(context).width * 1.0,
+                                                                                height:
+                                                                                200.0,
+                                                                                fit:
+                                                                                BoxFit.cover,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        );
+                                                                      }),
+                                                                ),
+                                                              );
+                                                            },
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        },
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -480,11 +489,11 @@ class _ListPageWidgetState extends State<ListPageWidget>
                             ),
                             Stack(
                               children: [
-                                SingleChildScrollView(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Builder(
+                                Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Expanded(
+                                      child: Builder(
                                         builder: (context) {
                                           if (_model
                                               .simpleSearchResults.isNotEmpty) {
@@ -635,11 +644,11 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                               },
                                             );
                                           } else {
-                                            return SingleChildScrollView(
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  StreamBuilder<
+                                            return Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Expanded(
+                                                  child: StreamBuilder<
                                                       List<PostsRecord>>(
                                                     stream: queryPostsRecord(
                                                       queryBuilder:
@@ -973,14 +982,14 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                       );
                                                     },
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             );
                                           }
                                         },
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                                 Align(
                                   alignment: AlignmentDirectional(1.0, 1.0),
