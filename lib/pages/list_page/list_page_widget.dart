@@ -235,29 +235,6 @@ class _ListPageWidgetState extends State<ListPageWidget>
                           children: [
                             Stack(
                               children: [
-                                Align(
-                                  alignment: AlignmentDirectional(1.0, 1.0),
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 15.0, 10.0),
-                                    child: FlutterFlowIconButton(
-                                      borderColor: Color(0xFF747474),
-                                      borderRadius: 30.0,
-                                      borderWidth: 3.0,
-                                      buttonSize: 60.0,
-                                      fillColor: Colors.white,
-                                      icon: Icon(
-                                        Icons.settings_sharp,
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                        size: 30.0,
-                                      ),
-                                      onPressed: () async {
-                                        context.pushNamed('ChangeProflie');
-                                      },
-                                    ),
-                                  ),
-                                ),
                                 Column(
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
@@ -484,6 +461,29 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                       ),
                                     ),
                                   ],
+                                ),
+                                Align(
+                                  alignment: AlignmentDirectional(1.0, 1.0),
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 15.0, 10.0),
+                                    child: FlutterFlowIconButton(
+                                      borderColor: Color(0xFF747474),
+                                      borderRadius: 30.0,
+                                      borderWidth: 3.0,
+                                      buttonSize: 60.0,
+                                      fillColor: Colors.white,
+                                      icon: Icon(
+                                        Icons.settings_sharp,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        size: 30.0,
+                                      ),
+                                      onPressed: () async {
+                                        context.pushNamed('ChangeProflie');
+                                      },
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
