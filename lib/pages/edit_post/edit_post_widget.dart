@@ -74,6 +74,8 @@ class _EditPostWidgetState extends State<EditPostWidget>
           !anim.applyInitialState),
       this,
     );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -493,7 +495,7 @@ class _EditPostWidgetState extends State<EditPostWidget>
                                 padding: EdgeInsets.all(0.0),
                                 iconPadding: EdgeInsetsDirectional.fromSTEB(
                                     0.0, 0.0, 0.0, 0.0),
-                                color: Color(0xFFFF0006),
+                                color: Color(0xFFFF8B8E),
                                 textStyle: FlutterFlowTheme.of(context)
                                     .titleSmall
                                     .override(
