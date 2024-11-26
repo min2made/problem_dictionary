@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:text_search/text_search.dart';
 import 'list_page_model.dart';
 export 'list_page_model.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class ListPageWidget extends StatefulWidget {
   const ListPageWidget({super.key});
@@ -25,6 +26,8 @@ class ListPageWidget extends StatefulWidget {
 class _ListPageWidgetState extends State<ListPageWidget>
     with TickerProviderStateMixin {
   late ListPageModel _model;
+  final stt.SpeechToText _speech = stt.SpeechToText();
+  bool _isListening = false;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -32,6 +35,7 @@ class _ListPageWidgetState extends State<ListPageWidget>
   void initState() {
     super.initState();
     _model = createModel(context, () => ListPageModel());
+    _initSpeech();
 
     _model.textController ??= TextEditingController();
     _model.textFieldFocusNode ??= FocusNode();
@@ -41,6 +45,73 @@ class _ListPageWidgetState extends State<ListPageWidget>
       length: 3,
       initialIndex: 0,
     )..addListener(() => safeSetState(() {}));
+  }
+
+  void _initSpeech() async {
+    bool available = await _speech.initialize();
+    if (available) {
+      setState(() {});
+    }
+  }
+
+  void _startListening() async {
+    if (!_isListening) {
+      bool available = await _speech.initialize();
+      if (available) {
+        setState(() => _isListening = true);
+        _speech.listen(
+          onResult: (result) {
+            setState(() {
+              _model.textController?.text = result.recognizedWords;
+            });
+
+            // 음성 인식이 끝나면 (말하기를 멈추면) 자동으로 검색 실행
+            if (!_speech.isListening) {
+              setState(() => _isListening = false);
+
+              // 검색 실행
+              EasyDebounce.debounce(
+                '_model.textController',
+                Duration(milliseconds: 2000),
+                    () async {
+                  await queryPostsRecordOnce()
+                      .then(
+                        (records) => _model.simpleSearchResults = TextSearch(
+                      records
+                          .map(
+                            (record) => TextSearchItem.fromTerms(record, [
+                          record.postTitle!,
+                          record.postDescription!,
+                          record.tag!
+                        ]),
+                      )
+                          .toList(),
+                    )
+                        .search(_model.textController!.text)
+                        .map((r) => r.object)
+                        .toList(),
+                  )
+                      .onError((_, __) => _model.simpleSearchResults = [])
+                      .whenComplete(() => safeSetState(() {}));
+                },
+              );
+            }
+          },
+          listenFor: Duration(seconds: 3), // 5초간 음성 인식 후 자동 중지
+          pauseFor: Duration(seconds: 3),  // 3초간 말하지 않으면 인식 중지
+          onSoundLevelChange: (level) {
+            // 소리 레벨이 변경될 때마다 호출
+            // 여기서 사용자가 말하고 있는지 체크할 수 있음
+          },
+          cancelOnError: true,
+          partialResults: true,
+          localeId: 'ko_KR', // 한국어로 설정
+        );
+      }
+    } else {
+      setState(() => _isListening = false);
+      _speech.stop();
+    }
   }
 
   @override
@@ -179,6 +250,15 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                 ),
                               ),
                             ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              _isListening ? Icons.mic : Icons.mic_none,
+                              color: _isListening
+                                  ? FlutterFlowTheme.of(context).primary
+                                  : FlutterFlowTheme.of(context).secondaryText,
+                            ),
+                            onPressed: _startListening,
                           ),
                         ],
                       ),
