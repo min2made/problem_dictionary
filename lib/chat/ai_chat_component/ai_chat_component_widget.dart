@@ -14,6 +14,53 @@ export 'ai_chat_component_model.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+
+class AnimatedChatText extends StatefulWidget {
+  final String fullText; // 출력할 전체 텍스트
+  final Duration delay;  // 글자 간 지연 시간
+
+  const AnimatedChatText({
+    required this.fullText,
+    this.delay = const Duration(milliseconds: 50),
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  _AnimatedChatTextState createState() => _AnimatedChatTextState();
+}
+
+class _AnimatedChatTextState extends State<AnimatedChatText> {
+  String displayedText = ""; // 현재 출력된 텍스트
+
+  @override
+  void initState() {
+    super.initState();
+    _startTypingAnimation();
+  }
+
+  void _startTypingAnimation() async {
+    for (int i = 0; i < widget.fullText.length; i++) {
+      await Future.delayed(widget.delay); // 각 글자 출력 간의 지연
+      setState(() {
+        displayedText = widget.fullText.substring(0, i + 1);
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      displayedText,
+      style: FlutterFlowTheme.of(context).bodyMedium.override(
+        fontFamily: 'Inter',
+        letterSpacing: 0.0,
+        lineHeight: 1.5,
+      ),
+    );
+  }
+}
+
+
 class AiChatComponentWidget extends StatefulWidget {
   const AiChatComponentWidget({super.key});
 
@@ -217,19 +264,14 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                                                                     children: [
                                                                       SelectionArea(
                                                                           child:
-                                                                              AutoSizeText(
-                                                                        getJsonField(
-                                                                          chatItem,
-                                                                          r'''$['content']''',
-                                                                        ).toString(),
-                                                                        style: FlutterFlowTheme.of(context)
-                                                                            .bodyMedium
-                                                                            .override(
-                                                                              fontFamily: 'Inter',
-                                                                              letterSpacing: 0.0,
-                                                                              lineHeight: 1.5,
-                                                                            ),
-                                                                      )),
+                                                                              AnimatedChatText(
+                                                                                fullText: getJsonField(
+                                                                                  chatItem,
+                                                                                  r'''$['content']''',
+                                                                                ).toString(),
+                                                                                delay: const Duration(milliseconds: 50), // 텍스트 애니메이션 속도 조정 가능
+                                                                              ),
+                                                                      ),
                                                                     ],
                                                                   ),
                                                                 ),
@@ -579,7 +621,10 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                           _model.chatGPTResponse =
                           await OpenAIChatGPTGroup.sendFullPromptCall.call(
                             apiKey: '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',
-                            promptJson: _model.chatHistory,
+                            promptJson: [
+                              {"role": "system", "content": "답변은 간단하게 하는데 필요에 따라 길게 해도 됍니다. 그러나 200자를 넘기지 않는 방향으로 답변하세요"},
+                              ..._model.chatHistory
+                            ]
                           );
                           if ((_model.chatGPTResponse?.succeeded ?? true)) {
                             _model.aiResponding = false;
