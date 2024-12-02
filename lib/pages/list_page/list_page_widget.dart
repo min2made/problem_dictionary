@@ -15,7 +15,6 @@ import 'package:text_search/text_search.dart';
 import 'list_page_model.dart';
 export 'list_page_model.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
-import '/utils/rustdesk_launcher.dart';
 
 class ListPageWidget extends StatefulWidget {
   const ListPageWidget({super.key});
@@ -98,12 +97,14 @@ class _ListPageWidgetState extends State<ListPageWidget>
               );
             }
           },
-          listenFor: Duration(seconds: 3), // 3초간 음성 인식 후 자동 중지
+          listenFor: Duration(seconds: 3), // 5초간 음성 인식 후 자동 중지
           pauseFor: Duration(seconds: 3),  // 3초간 말하지 않으면 인식 중지
           onSoundLevelChange: (level) {
             // 소리 레벨이 변경될 때마다 호출
             // 여기서 사용자가 말하고 있는지 체크할 수 있음
           },
+          cancelOnError: true,
+          partialResults: true,
           localeId: 'ko_KR', // 한국어로 설정
         );
       }
@@ -544,48 +545,23 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                 Align(
                                   alignment: AlignmentDirectional(1.0, 1.0),
                                   child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 15.0, 10.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 10.0, 0.0),
-                                          child: FlutterFlowIconButton(
-                                            borderColor: Color(0xFF747474),
-                                            borderRadius: 30.0,
-                                            borderWidth: 3.0,
-                                            buttonSize: 60.0,
-                                            fillColor: Colors.white,
-                                            icon: Icon(
-                                              Icons.desktop_windows,
-                                              color: FlutterFlowTheme.of(context).primaryText,
-                                              size: 30.0,
-                                            ),
-                                            onPressed: () async {
-                                              try {
-                                                await RustDeskLauncher.launchRustDesk();
-                                              } catch (e) {
-                                                print('Failed to launch RustDesk: $e');
-                                              }
-                                            },
-                                          ),
-                                        ),
-                                        FlutterFlowIconButton(
-                                          borderColor: Color(0xFF747474),
-                                          borderRadius: 30.0,
-                                          borderWidth: 3.0,
-                                          buttonSize: 60.0,
-                                          fillColor: Colors.white,
-                                          icon: Icon(
-                                            Icons.settings_sharp,
-                                            color: FlutterFlowTheme.of(context).primaryText,
-                                            size: 30.0,
-                                          ),
-                                          onPressed: () async {
-                                            context.pushNamed('ChangeProflie');
-                                          },
-                                        ),
-                                      ],
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 15.0, 10.0),
+                                    child: FlutterFlowIconButton(
+                                      borderColor: Color(0xFF747474),
+                                      borderRadius: 30.0,
+                                      borderWidth: 3.0,
+                                      buttonSize: 60.0,
+                                      fillColor: Colors.white,
+                                      icon: Icon(
+                                        Icons.settings_sharp,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        size: 30.0,
+                                      ),
+                                      onPressed: () async {
+                                        context.pushNamed('ChangeProflie');
+                                      },
                                     ),
                                   ),
                                 ),
@@ -1098,42 +1074,23 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                 Align(
                                   alignment: AlignmentDirectional(1.0, 1.0),
                                   child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 15.0, 10.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 10.0, 0.0),
-                                          child: FlutterFlowIconButton(
-                                            borderColor: Color(0xFF747474),
-                                            borderRadius: 30.0,
-                                            borderWidth: 3.0,
-                                            buttonSize: 60.0,
-                                            fillColor: Colors.white,
-                                            icon: Icon(
-                                              Icons.desktop_windows,
-                                              color: FlutterFlowTheme.of(context).primaryText,
-                                              size: 30.0,
-                                            ),
-                                            onPressed: RustDeskLauncher.launchRustDesk,
-                                          ),
-                                        ),
-                                        FlutterFlowIconButton(
-                                          borderColor: Color(0xFF747474),
-                                          borderRadius: 3.0,
-                                          borderWidth: 3.0,
-                                          buttonSize: 60.0,
-                                          fillColor: Colors.white,
-                                          icon: Icon(
-                                            Icons.add_circle_outline,
-                                            color: FlutterFlowTheme.of(context).primaryText,
-                                            size: 30.0,
-                                          ),
-                                          onPressed: () async {
-                                            context.pushNamed('CreatePost');
-                                          },
-                                        ),
-                                      ],
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 15.0, 10.0),
+                                    child: FlutterFlowIconButton(
+                                      borderColor: Color(0xFF747474),
+                                      borderRadius: 3.0,
+                                      borderWidth: 3.0,
+                                      buttonSize: 60.0,
+                                      fillColor: Colors.white,
+                                      icon: Icon(
+                                        Icons.add_circle_outline,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        size: 30.0,
+                                      ),
+                                      onPressed: () async {
+                                        context.pushNamed('CreatePost');
+                                      },
                                     ),
                                   ),
                                 ),
