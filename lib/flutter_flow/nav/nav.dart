@@ -76,147 +76,152 @@ class AppStateNotifier extends ChangeNotifier {
 }
 
 GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
-      initialLocation: '/',
-      debugLogDiagnostics: true,
-      refreshListenable: appStateNotifier,
-      errorBuilder: (context, state) =>
-          appStateNotifier.loggedIn ? ListPageWidget() : StartPageWidget(),
-      routes: [
-        FFRoute(
-          name: '_initialize',
-          path: '/',
-          builder: (context, _) =>
-              appStateNotifier.loggedIn ? ListPageWidget() : StartPageWidget(),
+  initialLocation: '/',
+  debugLogDiagnostics: true,
+  refreshListenable: appStateNotifier,
+  errorBuilder: (context, state) =>
+  appStateNotifier.loggedIn ? ListPageWidget() : StartPageWidget(),
+  routes: [
+    FFRoute(
+      name: '_initialize',
+      path: '/',
+      builder: (context, _) =>
+      appStateNotifier.loggedIn ? ListPageWidget() : StartPageWidget(),
+    ),
+    FFRoute(
+      name: 'StartPage',
+      path: '/startPage',
+      builder: (context, params) => StartPageWidget(),
+    ),
+    FFRoute(
+      name: 'CreateAccount',
+      path: '/createAccount',
+      builder: (context, params) => CreateAccountWidget(),
+    ),
+    FFRoute(
+      name: 'Login',
+      path: '/login',
+      builder: (context, params) => LoginWidget(),
+    ),
+    FFRoute(
+      name: 'ForgotPassword',
+      path: '/forgotPassword',
+      builder: (context, params) => ForgotPasswordWidget(),
+    ),
+    FFRoute(
+      name: 'ListPage',
+      path: '/listPage',
+      builder: (context, params) => ListPageWidget(
+        tabIndexRef: params.getParam(
+          'tabIndexRef',
+          ParamType.int,
         ),
-        FFRoute(
-          name: 'StartPage',
-          path: '/startPage',
-          builder: (context, params) => StartPageWidget(),
+      ),
+    ),
+    FFRoute(
+      name: 'chat_ai_Screen',
+      path: '/chatAiScreen',
+      builder: (context, params) => ChatAiScreenWidget(),
+    ),
+    FFRoute(
+      name: 'CreateProfile',
+      path: '/createProfile',
+      builder: (context, params) => CreateProfileWidget(),
+    ),
+    FFRoute(
+      name: 'ChangeProflie',
+      path: '/changeProflie',
+      builder: (context, params) => ChangeProflieWidget(),
+    ),
+    FFRoute(
+      name: 'DetailPost',
+      path: '/detailPost',
+      asyncParams: {
+        'postDetail': getDoc(['posts'], PostsRecord.fromSnapshot),
+      },
+      builder: (context, params) => DetailPostWidget(
+        postDetail: params.getParam(
+          'postDetail',
+          ParamType.Document,
         ),
-        FFRoute(
-          name: 'CreateAccount',
-          path: '/createAccount',
-          builder: (context, params) => CreateAccountWidget(),
+      ),
+    ),
+    FFRoute(
+      name: 'CreatePost',
+      path: '/createPost',
+      builder: (context, params) => CreatePostWidget(),
+    ),
+    FFRoute(
+      name: 'EditPost',
+      path: '/editPost',
+      asyncParams: {
+        'postDetails': getDoc(['posts'], PostsRecord.fromSnapshot),
+      },
+      builder: (context, params) => EditPostWidget(
+        postDetails: params.getParam(
+          'postDetails',
+          ParamType.Document,
         ),
-        FFRoute(
-          name: 'Login',
-          path: '/login',
-          builder: (context, params) => LoginWidget(),
+      ),
+    ),
+    FFRoute(
+      name: 'DetailDiction',
+      path: '/detailDiction',
+      asyncParams: {
+        'dictionDetails': getDoc(['dictions'], DictionsRecord.fromSnapshot),
+      },
+      builder: (context, params) => DetailDictionWidget(
+        dictionDetails: params.getParam(
+          'dictionDetails',
+          ParamType.Document,
         ),
-        FFRoute(
-          name: 'ForgotPassword',
-          path: '/forgotPassword',
-          builder: (context, params) => ForgotPasswordWidget(),
-        ),
-        FFRoute(
-          name: 'ListPage',
-          path: '/listPage',
-          builder: (context, params) => ListPageWidget(),
-        ),
-        FFRoute(
-          name: 'chat_ai_Screen',
-          path: '/chatAiScreen',
-          builder: (context, params) => ChatAiScreenWidget(),
-        ),
-        FFRoute(
-          name: 'CreateProfile',
-          path: '/createProfile',
-          builder: (context, params) => CreateProfileWidget(),
-        ),
-        FFRoute(
-          name: 'ChangeProflie',
-          path: '/changeProflie',
-          builder: (context, params) => ChangeProflieWidget(),
-        ),
-        FFRoute(
-          name: 'DetailPost',
-          path: '/detailPost',
-          asyncParams: {
-            'postDetail': getDoc(['posts'], PostsRecord.fromSnapshot),
-          },
-          builder: (context, params) => DetailPostWidget(
-            postDetail: params.getParam(
-              'postDetail',
-              ParamType.Document,
-            ),
-          ),
-        ),
-        FFRoute(
-          name: 'CreatePost',
-          path: '/createPost',
-          builder: (context, params) => CreatePostWidget(),
-        ),
-        FFRoute(
-          name: 'EditPost',
-          path: '/editPost',
-          asyncParams: {
-            'postDetails': getDoc(['posts'], PostsRecord.fromSnapshot),
-          },
-          builder: (context, params) => EditPostWidget(
-            postDetails: params.getParam(
-              'postDetails',
-              ParamType.Document,
-            ),
-          ),
-        ),
-        FFRoute(
-          name: 'DetailDiction',
-          path: '/detailDiction',
-          asyncParams: {
-            'dictionDetails': getDoc(['dictions'], DictionsRecord.fromSnapshot),
-          },
-          builder: (context, params) => DetailDictionWidget(
-            dictionDetails: params.getParam(
-              'dictionDetails',
-              ParamType.Document,
-            ),
-          ),
-        )
-      ].map((r) => r.toRoute(appStateNotifier)).toList(),
-    );
+      ),
+    )
+  ].map((r) => r.toRoute(appStateNotifier)).toList(),
+);
 
 extension NavParamExtensions on Map<String, String?> {
   Map<String, String> get withoutNulls => Map.fromEntries(
-        entries
-            .where((e) => e.value != null)
-            .map((e) => MapEntry(e.key, e.value!)),
-      );
+    entries
+        .where((e) => e.value != null)
+        .map((e) => MapEntry(e.key, e.value!)),
+  );
 }
 
 extension NavigationExtensions on BuildContext {
   void goNamedAuth(
-    String name,
-    bool mounted, {
-    Map<String, String> pathParameters = const <String, String>{},
-    Map<String, String> queryParameters = const <String, String>{},
-    Object? extra,
-    bool ignoreRedirect = false,
-  }) =>
+      String name,
+      bool mounted, {
+        Map<String, String> pathParameters = const <String, String>{},
+        Map<String, String> queryParameters = const <String, String>{},
+        Object? extra,
+        bool ignoreRedirect = false,
+      }) =>
       !mounted || GoRouter.of(this).shouldRedirect(ignoreRedirect)
           ? null
           : goNamed(
-              name,
-              pathParameters: pathParameters,
-              queryParameters: queryParameters,
-              extra: extra,
-            );
+        name,
+        pathParameters: pathParameters,
+        queryParameters: queryParameters,
+        extra: extra,
+      );
 
   void pushNamedAuth(
-    String name,
-    bool mounted, {
-    Map<String, String> pathParameters = const <String, String>{},
-    Map<String, String> queryParameters = const <String, String>{},
-    Object? extra,
-    bool ignoreRedirect = false,
-  }) =>
+      String name,
+      bool mounted, {
+        Map<String, String> pathParameters = const <String, String>{},
+        Map<String, String> queryParameters = const <String, String>{},
+        Object? extra,
+        bool ignoreRedirect = false,
+      }) =>
       !mounted || GoRouter.of(this).shouldRedirect(ignoreRedirect)
           ? null
           : pushNamed(
-              name,
-              pathParameters: pathParameters,
-              queryParameters: queryParameters,
-              extra: extra,
-            );
+        name,
+        pathParameters: pathParameters,
+        queryParameters: queryParameters,
+        extra: extra,
+      );
 
   void safePop() {
     // If there is only one route on the stack, navigate to the initial
@@ -266,31 +271,31 @@ class FFParameters {
   // present is the special extra parameter reserved for the transition info.
   bool get isEmpty =>
       state.allParams.isEmpty ||
-      (state.allParams.length == 1 &&
-          state.extraMap.containsKey(kTransitionInfoKey));
+          (state.allParams.length == 1 &&
+              state.extraMap.containsKey(kTransitionInfoKey));
   bool isAsyncParam(MapEntry<String, dynamic> param) =>
       asyncParams.containsKey(param.key) && param.value is String;
   bool get hasFutures => state.allParams.entries.any(isAsyncParam);
   Future<bool> completeFutures() => Future.wait(
-        state.allParams.entries.where(isAsyncParam).map(
+    state.allParams.entries.where(isAsyncParam).map(
           (param) async {
-            final doc = await asyncParams[param.key]!(param.value)
-                .onError((_, __) => null);
-            if (doc != null) {
-              futureParamValues[param.key] = doc;
-              return true;
-            }
-            return false;
-          },
-        ),
-      ).onError((_, __) => [false]).then((v) => v.every((e) => e));
+        final doc = await asyncParams[param.key]!(param.value)
+            .onError((_, __) => null);
+        if (doc != null) {
+          futureParamValues[param.key] = doc;
+          return true;
+        }
+        return false;
+      },
+    ),
+  ).onError((_, __) => [false]).then((v) => v.every((e) => e));
 
   dynamic getParam<T>(
-    String paramName,
-    ParamType type, {
-    bool isList = false,
-    List<String>? collectionNamePath,
-  }) {
+      String paramName,
+      ParamType type, {
+        bool isList = false,
+        List<String>? collectionNamePath,
+      }) {
     if (futureParamValues.containsKey(paramName)) {
       return futureParamValues[paramName];
     }
@@ -330,69 +335,69 @@ class FFRoute {
   final List<GoRoute> routes;
 
   GoRoute toRoute(AppStateNotifier appStateNotifier) => GoRoute(
-        name: name,
-        path: path,
-        redirect: (context, state) {
-          if (appStateNotifier.shouldRedirect) {
-            final redirectLocation = appStateNotifier.getRedirectLocation();
-            appStateNotifier.clearRedirectLocation();
-            return redirectLocation;
-          }
+    name: name,
+    path: path,
+    redirect: (context, state) {
+      if (appStateNotifier.shouldRedirect) {
+        final redirectLocation = appStateNotifier.getRedirectLocation();
+        appStateNotifier.clearRedirectLocation();
+        return redirectLocation;
+      }
 
-          if (requireAuth && !appStateNotifier.loggedIn) {
-            appStateNotifier.setRedirectLocationIfUnset(state.uri.toString());
-            return '/startPage';
-          }
-          return null;
-        },
-        pageBuilder: (context, state) {
-          fixStatusBarOniOS16AndBelow(context);
-          final ffParams = FFParameters(state, asyncParams);
-          final page = ffParams.hasFutures
-              ? FutureBuilder(
-                  future: ffParams.completeFutures(),
-                  builder: (context, _) => builder(context, ffParams),
-                )
-              : builder(context, ffParams);
-          final child = appStateNotifier.loading
-              ? Center(
-                  child: SizedBox(
-                    width: 50.0,
-                    height: 50.0,
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        FlutterFlowTheme.of(context).primary,
-                      ),
-                    ),
-                  ),
-                )
-              : page;
+      if (requireAuth && !appStateNotifier.loggedIn) {
+        appStateNotifier.setRedirectLocationIfUnset(state.uri.toString());
+        return '/startPage';
+      }
+      return null;
+    },
+    pageBuilder: (context, state) {
+      fixStatusBarOniOS16AndBelow(context);
+      final ffParams = FFParameters(state, asyncParams);
+      final page = ffParams.hasFutures
+          ? FutureBuilder(
+        future: ffParams.completeFutures(),
+        builder: (context, _) => builder(context, ffParams),
+      )
+          : builder(context, ffParams);
+      final child = appStateNotifier.loading
+          ? Center(
+        child: SizedBox(
+          width: 50.0,
+          height: 50.0,
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(
+              FlutterFlowTheme.of(context).primary,
+            ),
+          ),
+        ),
+      )
+          : page;
 
-          final transitionInfo = state.transitionInfo;
-          return transitionInfo.hasTransition
-              ? CustomTransitionPage(
-                  key: state.pageKey,
-                  child: child,
-                  transitionDuration: transitionInfo.duration,
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) =>
-                          PageTransition(
-                    type: transitionInfo.transitionType,
-                    duration: transitionInfo.duration,
-                    reverseDuration: transitionInfo.duration,
-                    alignment: transitionInfo.alignment,
-                    child: child,
-                  ).buildTransitions(
-                    context,
-                    animation,
-                    secondaryAnimation,
-                    child,
-                  ),
-                )
-              : MaterialPage(key: state.pageKey, child: child);
-        },
-        routes: routes,
-      );
+      final transitionInfo = state.transitionInfo;
+      return transitionInfo.hasTransition
+          ? CustomTransitionPage(
+        key: state.pageKey,
+        child: child,
+        transitionDuration: transitionInfo.duration,
+        transitionsBuilder:
+            (context, animation, secondaryAnimation, child) =>
+            PageTransition(
+              type: transitionInfo.transitionType,
+              duration: transitionInfo.duration,
+              reverseDuration: transitionInfo.duration,
+              alignment: transitionInfo.alignment,
+              child: child,
+            ).buildTransitions(
+              context,
+              animation,
+              secondaryAnimation,
+              child,
+            ),
+      )
+          : MaterialPage(key: state.pageKey, child: child);
+    },
+    routes: routes,
+  );
 }
 
 class TransitionInfo {
@@ -426,9 +431,9 @@ class RootPageContext {
   }
 
   static Widget wrap(Widget child, {String? errorRoute}) => Provider.value(
-        value: RootPageContext(true, errorRoute),
-        child: child,
-      );
+    value: RootPageContext(true, errorRoute),
+    child: child,
+  );
 }
 
 extension GoRouterLocationExtension on GoRouter {

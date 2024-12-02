@@ -32,6 +32,8 @@ class _DetailPostWidgetState extends State<DetailPostWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => DetailPostModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -101,7 +103,7 @@ class _DetailPostWidgetState extends State<DetailPostWidget> {
                   children: [
                     Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
+                      EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
                       child: SingleChildScrollView(
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
@@ -112,20 +114,20 @@ class _DetailPostWidgetState extends State<DetailPostWidget> {
                               style: FlutterFlowTheme.of(context)
                                   .headlineMedium
                                   .override(
-                                    fontFamily: 'Inter Tight',
-                                    letterSpacing: 0.0,
-                                  ),
+                                fontFamily: 'Inter Tight',
+                                letterSpacing: 0.0,
+                              ),
                             ),
                             Text(
                               detailPostPostsRecord.author,
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
                                   .override(
-                                    fontFamily: 'Inter',
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    letterSpacing: 0.0,
-                                  ),
+                                fontFamily: 'Inter',
+                                color: FlutterFlowTheme.of(context)
+                                    .secondaryText,
+                                letterSpacing: 0.0,
+                              ),
                             ),
                             Divider(
                               thickness: 2.0,
@@ -139,9 +141,9 @@ class _DetailPostWidgetState extends State<DetailPostWidget> {
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        fontFamily: 'Inter',
-                                        letterSpacing: 0.0,
-                                      ),
+                                    fontFamily: 'Inter',
+                                    letterSpacing: 0.0,
+                                  ),
                                 ),
                               ]
                                   .divide(SizedBox(height: 16.0))
@@ -161,7 +163,7 @@ class _DetailPostWidgetState extends State<DetailPostWidget> {
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             children:
-                                List.generate(images.length, (imagesIndex) {
+                            List.generate(images.length, (imagesIndex) {
                               final imagesItem = images[imagesIndex];
                               return Visibility(
                                 visible: imagesItem != null && imagesItem != '',
@@ -180,7 +182,7 @@ class _DetailPostWidgetState extends State<DetailPostWidget> {
                     ),
                     Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
+                      EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -195,12 +197,12 @@ class _DetailPostWidgetState extends State<DetailPostWidget> {
                                     onPressed: () async {
                                       final likeElement = currentUserReference;
                                       final likeUpdate = detailPostPostsRecord
-                                              .like
-                                              .contains(likeElement)
+                                          .like
+                                          .contains(likeElement)
                                           ? FieldValue.arrayRemove(
-                                              [likeElement])
+                                          [likeElement])
                                           : FieldValue.arrayUnion(
-                                              [likeElement]);
+                                          [likeElement]);
                                       await detailPostPostsRecord.reference
                                           .update({
                                         ...mapToFirestore(
@@ -224,59 +226,15 @@ class _DetailPostWidgetState extends State<DetailPostWidget> {
                                       size: 24.0,
                                     ),
                                   ),
-                                ].divide(SizedBox(width: 4.0)),
-                              ),
-                              Text(
-                                detailPostPostsRecord.like.length.toString(),
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'Inter',
-                                      letterSpacing: 0.0,
-                                    ),
-                              ),
-                              ToggleIcon(
-                                onPressed: () async {
-                                  final dislikeElement = currentUserReference;
-                                  final dislikeUpdate = detailPostPostsRecord
-                                          .dislike
-                                          .contains(dislikeElement)
-                                      ? FieldValue.arrayRemove([dislikeElement])
-                                      : FieldValue.arrayUnion([dislikeElement]);
-                                  await detailPostPostsRecord.reference.update({
-                                    ...mapToFirestore(
-                                      {
-                                        'dislike': dislikeUpdate,
-                                      },
-                                    ),
-                                  });
-                                },
-                                value: detailPostPostsRecord.dislike
-                                    .contains(currentUserReference),
-                                onIcon: Icon(
-                                  Icons.thumb_down_rounded,
-                                  color: Color(0xFF0B00FF),
-                                  size: 24.0,
-                                ),
-                                offIcon: Icon(
-                                  Icons.thumb_down_outlined,
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryText,
-                                  size: 24.0,
-                                ),
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
                                   Text(
-                                    detailPostPostsRecord.dislike.length
+                                    detailPostPostsRecord.like.length
                                         .toString(),
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
-                                          fontFamily: 'Inter',
-                                          letterSpacing: 0.0,
-                                        ),
+                                      fontFamily: 'Inter',
+                                      letterSpacing: 0.0,
+                                    ),
                                   ),
                                 ].divide(SizedBox(width: 4.0)),
                               ),
@@ -290,11 +248,11 @@ class _DetailPostWidgetState extends State<DetailPostWidget> {
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
-                                  fontFamily: 'Inter',
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryText,
-                                  letterSpacing: 0.0,
-                                ),
+                              fontFamily: 'Inter',
+                              color: FlutterFlowTheme.of(context)
+                                  .secondaryText,
+                              letterSpacing: 0.0,
+                            ),
                           ),
                         ],
                       ),
@@ -323,15 +281,15 @@ class _DetailPostWidgetState extends State<DetailPostWidget> {
                               );
                             }
                             List<PostsRecord> buttonPostsRecordList =
-                                snapshot.data!;
+                            snapshot.data!;
                             // Return an empty Container when the item does not exist.
                             if (snapshot.data!.isEmpty) {
                               return Container();
                             }
                             final buttonPostsRecord =
-                                buttonPostsRecordList.isNotEmpty
-                                    ? buttonPostsRecordList.first
-                                    : null;
+                            buttonPostsRecordList.isNotEmpty
+                                ? buttonPostsRecordList.first
+                                : null;
 
                             return FFButtonWidget(
                               onPressed: () async {
@@ -359,11 +317,11 @@ class _DetailPostWidgetState extends State<DetailPostWidget> {
                                 textStyle: FlutterFlowTheme.of(context)
                                     .titleSmall
                                     .override(
-                                      fontFamily: 'Inter Tight',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                      letterSpacing: 0.0,
-                                    ),
+                                  fontFamily: 'Inter Tight',
+                                  color: FlutterFlowTheme.of(context)
+                                      .primaryText,
+                                  letterSpacing: 0.0,
+                                ),
                                 elevation: 4.0,
                                 borderSide: BorderSide(
                                   color: Colors.transparent,

@@ -3,7 +3,6 @@ import '/backend/backend.dart';
 import '/chat/ai_chat_component/ai_chat_component_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_toggle_icon.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:easy_debounce/easy_debounce.dart';
@@ -14,10 +13,14 @@ import 'package:provider/provider.dart';
 import 'package:text_search/text_search.dart';
 import 'list_page_model.dart';
 export 'list_page_model.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class ListPageWidget extends StatefulWidget {
-  const ListPageWidget({super.key});
+  const ListPageWidget({
+    super.key,
+    int? tabIndexRef,
+  }) : this.tabIndexRef = tabIndexRef ?? 0;
+
+  final int tabIndexRef;
 
   @override
   State<ListPageWidget> createState() => _ListPageWidgetState();
@@ -26,8 +29,6 @@ class ListPageWidget extends StatefulWidget {
 class _ListPageWidgetState extends State<ListPageWidget>
     with TickerProviderStateMixin {
   late ListPageModel _model;
-  final stt.SpeechToText _speech = stt.SpeechToText();
-  bool _isListening = false;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -35,83 +36,24 @@ class _ListPageWidgetState extends State<ListPageWidget>
   void initState() {
     super.initState();
     _model = createModel(context, () => ListPageModel());
-    _initSpeech();
-
-    _model.textController ??= TextEditingController();
-    _model.textFieldFocusNode ??= FocusNode();
 
     _model.tabBarController = TabController(
       vsync: this,
       length: 3,
-      initialIndex: 0,
+      initialIndex: min(
+          valueOrDefault<int>(
+            widget!.tabIndexRef,
+            0,
+          ),
+          2),
     )..addListener(() => safeSetState(() {}));
-  }
+    _model.textController1 ??= TextEditingController();
+    _model.textFieldFocusNode1 ??= FocusNode();
 
-  void _initSpeech() async {
-    bool available = await _speech.initialize();
-    if (available) {
-      setState(() {});
-    }
-  }
+    _model.textController2 ??= TextEditingController();
+    _model.textFieldFocusNode2 ??= FocusNode();
 
-  void _startListening() async {
-    if (!_isListening) {
-      bool available = await _speech.initialize();
-      if (available) {
-        setState(() => _isListening = true);
-        _speech.listen(
-          onResult: (result) {
-            setState(() {
-              _model.textController?.text = result.recognizedWords;
-            });
-
-            // 음성 인식이 끝나면 (말하기를 멈추면) 자동으로 검색 실행
-            if (!_speech.isListening) {
-              setState(() => _isListening = false);
-
-              // 검색 실행
-              EasyDebounce.debounce(
-                '_model.textController',
-                Duration(milliseconds: 2000),
-                    () async {
-                  await queryPostsRecordOnce()
-                      .then(
-                        (records) => _model.simpleSearchResults = TextSearch(
-                      records
-                          .map(
-                            (record) => TextSearchItem.fromTerms(record, [
-                          record.postTitle!,
-                          record.postDescription!,
-                          record.tag!
-                        ]),
-                      )
-                          .toList(),
-                    )
-                        .search(_model.textController!.text)
-                        .map((r) => r.object)
-                        .toList(),
-                  )
-                      .onError((_, __) => _model.simpleSearchResults = [])
-                      .whenComplete(() => safeSetState(() {}));
-                },
-              );
-            }
-          },
-          listenFor: Duration(seconds: 3), // 5초간 음성 인식 후 자동 중지
-          pauseFor: Duration(seconds: 3),  // 3초간 말하지 않으면 인식 중지
-          onSoundLevelChange: (level) {
-            // 소리 레벨이 변경될 때마다 호출
-            // 여기서 사용자가 말하고 있는지 체크할 수 있음
-          },
-          cancelOnError: true,
-          partialResults: true,
-          localeId: 'ko_KR', // 한국어로 설정
-        );
-      }
-    } else {
-      setState(() => _isListening = false);
-      _speech.stop();
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -134,137 +76,9 @@ class _ListPageWidgetState extends State<ListPageWidget>
             alignment: AlignmentDirectional(0.0, 0.0),
             child: Column(
               mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding:
-                  EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 12.0),
-                  child: Container(
-                    width: double.infinity,
-                    height: 60.0,
-                    decoration: BoxDecoration(
-                      color: FlutterFlowTheme.of(context).secondaryBackground,
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 3.0,
-                          color: Color(0x33000000),
-                          offset: Offset(
-                            0.0,
-                            1.0,
-                          ),
-                        )
-                      ],
-                      borderRadius: BorderRadius.circular(40.0),
-                      border: Border.all(
-                        color: FlutterFlowTheme.of(context).alternate,
-                      ),
-                    ),
-                    child: Padding(
-                      padding:
-                      EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 12.0, 0.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Icon(
-                            Icons.search_rounded,
-                            color: FlutterFlowTheme.of(context).secondaryText,
-                            size: 24.0,
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  4.0, 0.0, 0.0, 0.0),
-                              child: Container(
-                                width: 200.0,
-                                child: TextFormField(
-                                  controller: _model.textController,
-                                  focusNode: _model.textFieldFocusNode,
-                                  onChanged: (_) => EasyDebounce.debounce(
-                                    '_model.textController',
-                                    Duration(milliseconds: 2000),
-                                        () async {
-                                      await queryPostsRecordOnce()
-                                          .then(
-                                            (records) =>
-                                        _model.simpleSearchResults =
-                                            TextSearch(
-                                              records
-                                                  .map(
-                                                    (record) => TextSearchItem
-                                                    .fromTerms(record, [
-                                                  record.postTitle!,
-                                                  record.postDescription!,
-                                                  record.tag!
-                                                ]),
-                                              )
-                                                  .toList(),
-                                            )
-                                                .search(_model
-                                                .textController
-                                                .text)
-                                                .map((r) => r.object)
-                                                .toList(),
-                                      )
-                                          .onError((_, __) =>
-                                      _model.simpleSearchResults = [])
-                                          .whenComplete(
-                                              () => safeSetState(() {}));
-                                    },
-                                  ),
-                                  autofocus: false,
-                                  obscureText: false,
-                                  decoration: InputDecoration(
-                                    labelText: '검색...',
-                                    labelStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .override(
-                                      fontFamily: 'Inter',
-                                      fontSize: 16.0,
-                                      letterSpacing: 0.0,
-                                    ),
-                                    hintStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .override(
-                                      fontFamily: 'Inter',
-                                      letterSpacing: 0.0,
-                                    ),
-                                    enabledBorder: InputBorder.none,
-                                    focusedBorder: InputBorder.none,
-                                    errorBorder: InputBorder.none,
-                                    focusedErrorBorder: InputBorder.none,
-                                    filled: true,
-                                    fillColor: FlutterFlowTheme.of(context)
-                                        .secondaryBackground,
-                                  ),
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                    fontFamily: 'Inter',
-                                    letterSpacing: 0.0,
-                                  ),
-                                  cursorColor:
-                                  FlutterFlowTheme.of(context).primary,
-                                  validator: _model.textControllerValidator
-                                      .asValidator(context),
-                                ),
-                              ),
-                            ),
-                          ),
-                          IconButton(
-                            icon: Icon(
-                              _isListening ? Icons.mic : Icons.mic_none,
-                              color: _isListening
-                                  ? FlutterFlowTheme.of(context).primary
-                                  : FlutterFlowTheme.of(context).secondaryText,
-                            ),
-                            onPressed: _startListening,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
                 Expanded(
                   child: Column(
                     children: [
@@ -315,192 +129,329 @@ class _ListPageWidgetState extends State<ListPageWidget>
                           children: [
                             Stack(
                               children: [
-                                Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Expanded(
-                                      child:
-                                      StreamBuilder<List<DictionsRecord>>(
-                                        stream: queryDictionsRecord(),
-                                        builder: (context, snapshot) {
-                                          // Customize what your widget looks like when it's loading.
-                                          if (!snapshot.hasData) {
-                                            return Center(
-                                              child: SizedBox(
-                                                width: 50.0,
-                                                height: 50.0,
-                                                child:
-                                                CircularProgressIndicator(
-                                                  valueColor:
-                                                  AlwaysStoppedAnimation<
-                                                      Color>(
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
+                                SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            16.0, 16.0, 16.0, 12.0),
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 60.0,
+                                          decoration: BoxDecoration(
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondaryBackground,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                blurRadius: 3.0,
+                                                color: Color(0x33000000),
+                                                offset: Offset(
+                                                  0.0,
+                                                  1.0,
+                                                ),
+                                              )
+                                            ],
+                                            borderRadius:
+                                            BorderRadius.circular(40.0),
+                                            border: Border.all(
+                                              color:
+                                              FlutterFlowTheme.of(context)
+                                                  .alternate,
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding:
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                16.0, 0.0, 12.0, 0.0),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Icon(
+                                                  Icons.search_rounded,
+                                                  color: FlutterFlowTheme.of(
+                                                      context)
+                                                      .secondaryText,
+                                                  size: 24.0,
+                                                ),
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding:
+                                                    EdgeInsetsDirectional
+                                                        .fromSTEB(4.0, 0.0,
+                                                        0.0, 0.0),
+                                                    child: Container(
+                                                      width: 200.0,
+                                                      child: TextFormField(
+                                                        controller: _model
+                                                            .textController1,
+                                                        focusNode: _model
+                                                            .textFieldFocusNode1,
+                                                        onChanged: (_) =>
+                                                            EasyDebounce
+                                                                .debounce(
+                                                              '_model.textController1',
+                                                              Duration(
+                                                                  milliseconds:
+                                                                  2000),
+                                                                  () async {
+                                                                await queryDictionsRecordOnce()
+                                                                    .then(
+                                                                      (records) => _model
+                                                                      .simpleSearchResults1 =
+                                                                      TextSearch(
+                                                                        records
+                                                                            .map(
+                                                                              (record) => TextSearchItem.fromTerms(
+                                                                              record,
+                                                                              [
+                                                                                record.postTitle!,
+                                                                                record.postDescription!,
+                                                                                record.tag!
+                                                                              ]),
+                                                                        )
+                                                                            .toList(),
+                                                                      )
+                                                                          .search(_model
+                                                                          .textController1
+                                                                          .text)
+                                                                          .map((r) =>
+                                                                      r.object)
+                                                                          .toList(),
+                                                                )
+                                                                    .onError((_,
+                                                                    __) =>
+                                                                _model.simpleSearchResults1 =
+                                                                [])
+                                                                    .whenComplete(() =>
+                                                                    safeSetState(
+                                                                            () {}));
+                                                              },
+                                                            ),
+                                                        autofocus: false,
+                                                        obscureText: false,
+                                                        decoration:
+                                                        InputDecoration(
+                                                          labelText: '검색...',
+                                                          labelStyle:
+                                                          FlutterFlowTheme.of(
+                                                              context)
+                                                              .labelMedium
+                                                              .override(
+                                                            fontFamily:
+                                                            'Inter',
+                                                            fontSize:
+                                                            16.0,
+                                                            letterSpacing:
+                                                            0.0,
+                                                          ),
+                                                          hintStyle:
+                                                          FlutterFlowTheme.of(
+                                                              context)
+                                                              .labelMedium
+                                                              .override(
+                                                            fontFamily:
+                                                            'Inter',
+                                                            letterSpacing:
+                                                            0.0,
+                                                          ),
+                                                          enabledBorder:
+                                                          InputBorder.none,
+                                                          focusedBorder:
+                                                          InputBorder.none,
+                                                          errorBorder:
+                                                          InputBorder.none,
+                                                          focusedErrorBorder:
+                                                          InputBorder.none,
+                                                          filled: true,
+                                                          fillColor: FlutterFlowTheme
+                                                              .of(context)
+                                                              .secondaryBackground,
+                                                        ),
+                                                        style:
+                                                        FlutterFlowTheme.of(
+                                                            context)
+                                                            .bodyMedium
+                                                            .override(
+                                                          fontFamily:
+                                                          'Inter',
+                                                          letterSpacing:
+                                                          0.0,
+                                                        ),
+                                                        cursorColor:
+                                                        FlutterFlowTheme.of(
+                                                            context)
+                                                            .primary,
+                                                        validator: _model
+                                                            .textController1Validator
+                                                            .asValidator(
+                                                            context),
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            );
-                                          }
-                                          List<DictionsRecord>
-                                          listViewDictionsRecordList =
-                                          snapshot.data!;
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Builder(
+                                        builder: (context) {
+                                          if (_model.simpleSearchResults1
+                                              .isNotEmpty) {
+                                            return SingleChildScrollView(
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  Builder(
+                                                    builder: (context) {
+                                                      final simpleResultdiction =
+                                                      _model
+                                                          .simpleSearchResults1
+                                                          .toList();
 
-                                          return ListView.builder(
-                                            padding: EdgeInsets.zero,
-                                            shrinkWrap: true,
-                                            scrollDirection: Axis.vertical,
-                                            itemCount:
-                                            listViewDictionsRecordList
-                                                .length,
-                                            itemBuilder:
-                                                (context, listViewIndex) {
-                                              final listViewDictionsRecord =
-                                              listViewDictionsRecordList[
-                                              listViewIndex];
-                                              return Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                    16.0, 4.0, 16.0, 4.0),
-                                                child: InkWell(
-                                                  splashColor:
-                                                  Colors.transparent,
-                                                  focusColor:
-                                                  Colors.transparent,
-                                                  hoverColor:
-                                                  Colors.transparent,
-                                                  highlightColor:
-                                                  Colors.transparent,
-                                                  onTap: () async {
-                                                    context.pushNamed(
-                                                      'DetailDiction',
-                                                      queryParameters: {
-                                                        'dictionDetails':
-                                                        serializeParam(
-                                                          listViewDictionsRecord,
-                                                          ParamType.Document,
-                                                        ),
-                                                      }.withoutNulls,
-                                                      extra: <String, dynamic>{
-                                                        'dictionDetails':
-                                                        listViewDictionsRecord,
-                                                      },
-                                                    );
-                                                  },
-                                                  child: Container(
-                                                    width: double.infinity,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          blurRadius: 7.0,
-                                                          color:
-                                                          Color(0x2F1D2429),
-                                                          offset: Offset(
-                                                            0.0,
-                                                            3.0,
-                                                          ),
-                                                        )
-                                                      ],
-                                                      borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0),
-                                                    ),
-                                                    child: Padding(
-                                                      padding:
-                                                      EdgeInsetsDirectional
-                                                          .fromSTEB(
-                                                          16.0,
-                                                          12.0,
-                                                          16.0,
-                                                          12.0),
-                                                      child: Column(
-                                                        mainAxisSize:
-                                                        MainAxisSize.max,
-                                                        crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                        children: [
-                                                          Padding(
+                                                      return ListView.builder(
+                                                        padding:
+                                                        EdgeInsets.zero,
+                                                        primary: false,
+                                                        shrinkWrap: true,
+                                                        scrollDirection:
+                                                        Axis.vertical,
+                                                        itemCount:
+                                                        simpleResultdiction
+                                                            .length,
+                                                        itemBuilder: (context,
+                                                            simpleResultdictionIndex) {
+                                                          final simpleResultdictionItem =
+                                                          simpleResultdiction[
+                                                          simpleResultdictionIndex];
+                                                          return Padding(
                                                             padding:
                                                             EdgeInsetsDirectional
                                                                 .fromSTEB(
-                                                                0.0,
-                                                                10.0,
-                                                                0.0,
-                                                                0.0),
-                                                            child: Row(
-                                                              mainAxisSize:
-                                                              MainAxisSize
-                                                                  .max,
-                                                              mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                              children: [
-                                                                Text(
-                                                                  listViewDictionsRecord
-                                                                      .postTitle,
-                                                                  style: FlutterFlowTheme.of(
-                                                                      context)
-                                                                      .titleMedium
-                                                                      .override(
-                                                                    fontFamily:
-                                                                    'Inter Tight',
-                                                                    letterSpacing:
-                                                                    0.0,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Divider(
-                                                            height: 16.0,
-                                                            thickness: 2.0,
-                                                            color: Color(
-                                                                0xFFF1F4F8),
-                                                          ),
-                                                          Text(
-                                                            listViewDictionsRecord
-                                                                .postDescription,
-                                                            style: FlutterFlowTheme
-                                                                .of(context)
-                                                                .bodyLarge
-                                                                .override(
-                                                              fontFamily:
-                                                              'Inter',
-                                                              letterSpacing:
-                                                              0.0,
-                                                            ),
-                                                          ),
-                                                          Builder(
-                                                            builder: (context) {
-                                                              final dictionImgs =
-                                                              listViewDictionsRecord
-                                                                  .postMultiplePhotos
-                                                                  .map(
-                                                                      (e) =>
-                                                                  e)
-                                                                  .toList();
+                                                                16.0,
+                                                                4.0,
+                                                                16.0,
+                                                                8.0),
+                                                            child: StreamBuilder<
+                                                                List<
+                                                                    DictionsRecord>>(
+                                                              stream:
+                                                              queryDictionsRecord(
+                                                                singleRecord:
+                                                                true,
+                                                              ),
+                                                              builder: (context,
+                                                                  snapshot) {
+                                                                // Customize what your widget looks like when it's loading.
+                                                                if (!snapshot
+                                                                    .hasData) {
+                                                                  return Center(
+                                                                    child:
+                                                                    SizedBox(
+                                                                      width:
+                                                                      50.0,
+                                                                      height:
+                                                                      50.0,
+                                                                      child:
+                                                                      CircularProgressIndicator(
+                                                                        valueColor:
+                                                                        AlwaysStoppedAnimation<Color>(
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .primary,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                }
+                                                                List<DictionsRecord>
+                                                                card8DictionsRecordList =
+                                                                snapshot
+                                                                    .data!;
+                                                                // Return an empty Container when the item does not exist.
+                                                                if (snapshot
+                                                                    .data!
+                                                                    .isEmpty) {
+                                                                  return Container();
+                                                                }
+                                                                final card8DictionsRecord =
+                                                                card8DictionsRecordList
+                                                                    .isNotEmpty
+                                                                    ? card8DictionsRecordList
+                                                                    .first
+                                                                    : null;
 
-                                                              return SingleChildScrollView(
-                                                                scrollDirection:
-                                                                Axis.horizontal,
-                                                                child: Row(
-                                                                  mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
-                                                                  children: List.generate(
-                                                                      dictionImgs
-                                                                          .length,
-                                                                          (dictionImgsIndex) {
-                                                                        final dictionImgsItem =
-                                                                        dictionImgs[
-                                                                        dictionImgsIndex];
-                                                                        return Visibility(
-                                                                          visible: dictionImgsItem !=
-                                                                              null &&
-                                                                              dictionImgsItem !=
-                                                                                  '',
-                                                                          child:
+                                                                return InkWell(
+                                                                  splashColor:
+                                                                  Colors
+                                                                      .transparent,
+                                                                  focusColor: Colors
+                                                                      .transparent,
+                                                                  hoverColor: Colors
+                                                                      .transparent,
+                                                                  highlightColor:
+                                                                  Colors
+                                                                      .transparent,
+                                                                  onTap:
+                                                                      () async {
+                                                                    context
+                                                                        .pushNamed(
+                                                                      'DetailDiction',
+                                                                      queryParameters:
+                                                                      {
+                                                                        'dictionDetails':
+                                                                        serializeParam(
+                                                                          simpleResultdictionItem,
+                                                                          ParamType
+                                                                              .Document,
+                                                                        ),
+                                                                      }.withoutNulls,
+                                                                      extra: <String,
+                                                                          dynamic>{
+                                                                        'dictionDetails':
+                                                                        simpleResultdictionItem,
+                                                                      },
+                                                                    );
+                                                                  },
+                                                                  child:
+                                                                  Container(
+                                                                    width: double
+                                                                        .infinity,
+                                                                    decoration:
+                                                                    BoxDecoration(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      boxShadow: [
+                                                                        BoxShadow(
+                                                                          blurRadius:
+                                                                          7.0,
+                                                                          color:
+                                                                          Color(0x2F1D2429),
+                                                                          offset:
+                                                                          Offset(
+                                                                            0.0,
+                                                                            3.0,
+                                                                          ),
+                                                                        )
+                                                                      ],
+                                                                      borderRadius:
+                                                                      BorderRadius.circular(
+                                                                          8.0),
+                                                                    ),
+                                                                    child:
+                                                                    Padding(
+                                                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                                                          16.0,
+                                                                          12.0,
+                                                                          16.0,
+                                                                          12.0),
+                                                                      child:
+                                                                      Column(
+                                                                        mainAxisSize:
+                                                                        MainAxisSize.max,
+                                                                        crossAxisAlignment:
+                                                                        CrossAxisAlignment.start,
+                                                                        children: [
                                                                           Padding(
                                                                             padding: EdgeInsetsDirectional.fromSTEB(
                                                                                 0.0,
@@ -508,39 +459,236 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                                 0.0,
                                                                                 0.0),
                                                                             child:
-                                                                            ClipRRect(
-                                                                              borderRadius:
-                                                                              BorderRadius.circular(8.0),
-                                                                              child:
-                                                                              Image.network(
-                                                                                dictionImgsItem,
-                                                                                width:
-                                                                                MediaQuery.sizeOf(context).width * 1.0,
-                                                                                height:
-                                                                                200.0,
-                                                                                fit:
-                                                                                BoxFit.cover,
-                                                                              ),
+                                                                            Row(
+                                                                              mainAxisSize: MainAxisSize.max,
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              children: [
+                                                                                Text(
+                                                                                  simpleResultdictionItem.postTitle,
+                                                                                  style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                    fontFamily: 'Inter Tight',
+                                                                                    letterSpacing: 0.0,
+                                                                                  ),
+                                                                                ),
+                                                                              ],
                                                                             ),
                                                                           ),
-                                                                        );
-                                                                      }),
-                                                                ),
-                                                              );
-                                                            },
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
+                                                                          Divider(
+                                                                            height:
+                                                                            16.0,
+                                                                            thickness:
+                                                                            2.0,
+                                                                            color:
+                                                                            Color(0xFFF1F4F8),
+                                                                          ),
+                                                                          Text(
+                                                                            simpleResultdictionItem.postDescription,
+                                                                            style: FlutterFlowTheme.of(context).bodyLarge.override(
+                                                                              fontFamily: 'Inter',
+                                                                              letterSpacing: 0.0,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              },
+                                                            ),
+                                                          );
+                                                        },
+                                                      );
+                                                    },
                                                   ),
-                                                ),
-                                              );
-                                            },
-                                          );
+                                                ],
+                                              ),
+                                            );
+                                          } else {
+                                            return SingleChildScrollView(
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  StreamBuilder<
+                                                      List<DictionsRecord>>(
+                                                    stream:
+                                                    queryDictionsRecord(),
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      // Customize what your widget looks like when it's loading.
+                                                      if (!snapshot.hasData) {
+                                                        return Center(
+                                                          child: SizedBox(
+                                                            width: 50.0,
+                                                            height: 50.0,
+                                                            child:
+                                                            CircularProgressIndicator(
+                                                              valueColor:
+                                                              AlwaysStoppedAnimation<
+                                                                  Color>(
+                                                                FlutterFlowTheme.of(
+                                                                    context)
+                                                                    .primary,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }
+                                                      List<DictionsRecord>
+                                                      listViewDictionsRecordList =
+                                                      snapshot.data!;
+
+                                                      return ListView.builder(
+                                                        padding:
+                                                        EdgeInsets.zero,
+                                                        primary: false,
+                                                        shrinkWrap: true,
+                                                        scrollDirection:
+                                                        Axis.vertical,
+                                                        itemCount:
+                                                        listViewDictionsRecordList
+                                                            .length,
+                                                        itemBuilder: (context,
+                                                            listViewIndex) {
+                                                          final listViewDictionsRecord =
+                                                          listViewDictionsRecordList[
+                                                          listViewIndex];
+                                                          return Padding(
+                                                            padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                16.0,
+                                                                4.0,
+                                                                16.0,
+                                                                8.0),
+                                                            child: InkWell(
+                                                              splashColor: Colors
+                                                                  .transparent,
+                                                              focusColor: Colors
+                                                                  .transparent,
+                                                              hoverColor: Colors
+                                                                  .transparent,
+                                                              highlightColor:
+                                                              Colors
+                                                                  .transparent,
+                                                              onTap: () async {
+                                                                context
+                                                                    .pushNamed(
+                                                                  'DetailDiction',
+                                                                  queryParameters:
+                                                                  {
+                                                                    'dictionDetails':
+                                                                    serializeParam(
+                                                                      listViewDictionsRecord,
+                                                                      ParamType
+                                                                          .Document,
+                                                                    ),
+                                                                  }.withoutNulls,
+                                                                  extra: <String,
+                                                                      dynamic>{
+                                                                    'dictionDetails':
+                                                                    listViewDictionsRecord,
+                                                                  },
+                                                                );
+                                                              },
+                                                              child: Container(
+                                                                width: double
+                                                                    .infinity,
+                                                                decoration:
+                                                                BoxDecoration(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  boxShadow: [
+                                                                    BoxShadow(
+                                                                      blurRadius:
+                                                                      7.0,
+                                                                      color: Color(
+                                                                          0x2F1D2429),
+                                                                      offset:
+                                                                      Offset(
+                                                                        0.0,
+                                                                        3.0,
+                                                                      ),
+                                                                    )
+                                                                  ],
+                                                                  borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                      8.0),
+                                                                ),
+                                                                child: Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                      16.0,
+                                                                      12.0,
+                                                                      16.0,
+                                                                      12.0),
+                                                                  child: Column(
+                                                                    mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .max,
+                                                                    crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            0.0,
+                                                                            10.0,
+                                                                            0.0,
+                                                                            0.0),
+                                                                        child:
+                                                                        Row(
+                                                                          mainAxisSize:
+                                                                          MainAxisSize.max,
+                                                                          mainAxisAlignment:
+                                                                          MainAxisAlignment.spaceBetween,
+                                                                          children: [
+                                                                            Text(
+                                                                              listViewDictionsRecord.postTitle,
+                                                                              style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                fontFamily: 'Inter Tight',
+                                                                                letterSpacing: 0.0,
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                      Divider(
+                                                                        height:
+                                                                        16.0,
+                                                                        thickness:
+                                                                        2.0,
+                                                                        color: Color(
+                                                                            0xFFF1F4F8),
+                                                                      ),
+                                                                      Text(
+                                                                        listViewDictionsRecord
+                                                                            .postDescription,
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyLarge
+                                                                            .override(
+                                                                          fontFamily: 'Inter',
+                                                                          letterSpacing: 0.0,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      );
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }
                                         },
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                                 Align(
                                   alignment: AlignmentDirectional(1.0, 1.0),
@@ -572,15 +720,169 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                 Column(
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          16.0, 16.0, 16.0, 12.0),
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 60.0,
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryBackground,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              blurRadius: 3.0,
+                                              color: Color(0x33000000),
+                                              offset: Offset(
+                                                0.0,
+                                                1.0,
+                                              ),
+                                            )
+                                          ],
+                                          borderRadius:
+                                          BorderRadius.circular(40.0),
+                                          border: Border.all(
+                                            color: FlutterFlowTheme.of(context)
+                                                .alternate,
+                                          ),
+                                        ),
+                                        child: Padding(
+                                          padding:
+                                          EdgeInsetsDirectional.fromSTEB(
+                                              16.0, 0.0, 12.0, 0.0),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Icon(
+                                                Icons.search_rounded,
+                                                color:
+                                                FlutterFlowTheme.of(context)
+                                                    .secondaryText,
+                                                size: 24.0,
+                                              ),
+                                              Expanded(
+                                                child: Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                      4.0, 0.0, 0.0, 0.0),
+                                                  child: Container(
+                                                    width: 200.0,
+                                                    child: TextFormField(
+                                                      controller: _model
+                                                          .textController2,
+                                                      focusNode: _model
+                                                          .textFieldFocusNode2,
+                                                      onChanged: (_) =>
+                                                          EasyDebounce.debounce(
+                                                            '_model.textController2',
+                                                            Duration(
+                                                                milliseconds: 2000),
+                                                                () async {
+                                                              await queryPostsRecordOnce()
+                                                                  .then(
+                                                                    (records) => _model
+                                                                    .simpleSearchResults2 =
+                                                                    TextSearch(
+                                                                      records
+                                                                          .map(
+                                                                            (record) => TextSearchItem.fromTerms(
+                                                                            record,
+                                                                            [
+                                                                              record.postTitle!,
+                                                                              record.postDescription!,
+                                                                              record.tag!
+                                                                            ]),
+                                                                      )
+                                                                          .toList(),
+                                                                    )
+                                                                        .search(_model
+                                                                        .textController2
+                                                                        .text)
+                                                                        .map((r) =>
+                                                                    r.object)
+                                                                        .toList(),
+                                                              )
+                                                                  .onError((_,
+                                                                  __) =>
+                                                              _model.simpleSearchResults2 =
+                                                              [])
+                                                                  .whenComplete(() =>
+                                                                  safeSetState(
+                                                                          () {}));
+                                                            },
+                                                          ),
+                                                      autofocus: false,
+                                                      obscureText: false,
+                                                      decoration:
+                                                      InputDecoration(
+                                                        labelText: '검색...',
+                                                        labelStyle:
+                                                        FlutterFlowTheme.of(
+                                                            context)
+                                                            .labelMedium
+                                                            .override(
+                                                          fontFamily:
+                                                          'Inter',
+                                                          fontSize:
+                                                          16.0,
+                                                          letterSpacing:
+                                                          0.0,
+                                                        ),
+                                                        hintStyle:
+                                                        FlutterFlowTheme.of(
+                                                            context)
+                                                            .labelMedium
+                                                            .override(
+                                                          fontFamily:
+                                                          'Inter',
+                                                          letterSpacing:
+                                                          0.0,
+                                                        ),
+                                                        enabledBorder:
+                                                        InputBorder.none,
+                                                        focusedBorder:
+                                                        InputBorder.none,
+                                                        errorBorder:
+                                                        InputBorder.none,
+                                                        focusedErrorBorder:
+                                                        InputBorder.none,
+                                                        filled: true,
+                                                        fillColor: FlutterFlowTheme
+                                                            .of(context)
+                                                            .secondaryBackground,
+                                                      ),
+                                                      style: FlutterFlowTheme
+                                                          .of(context)
+                                                          .bodyMedium
+                                                          .override(
+                                                        fontFamily: 'Inter',
+                                                        letterSpacing: 0.0,
+                                                      ),
+                                                      cursorColor:
+                                                      FlutterFlowTheme.of(
+                                                          context)
+                                                          .primary,
+                                                      validator: _model
+                                                          .textController2Validator
+                                                          .asValidator(context),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                     Expanded(
                                       child: Builder(
                                         builder: (context) {
-                                          if (_model
-                                              .simpleSearchResults.isNotEmpty) {
+                                          if (_model.simpleSearchResults2
+                                              .isNotEmpty) {
                                             return Builder(
                                               builder: (context) {
-                                                final searchResults = _model
-                                                    .simpleSearchResults
+                                                final simpleResult = _model
+                                                    .simpleSearchResults2
                                                     .toList();
 
                                                 return ListView.builder(
@@ -589,134 +891,257 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                   scrollDirection:
                                                   Axis.vertical,
                                                   itemCount:
-                                                  searchResults.length,
+                                                  simpleResult.length,
                                                   itemBuilder: (context,
-                                                      searchResultsIndex) {
-                                                    final searchResultsItem =
-                                                    searchResults[
-                                                    searchResultsIndex];
+                                                      simpleResultIndex) {
+                                                    final simpleResultItem =
+                                                    simpleResult[
+                                                    simpleResultIndex];
                                                     return Padding(
                                                       padding:
                                                       EdgeInsetsDirectional
                                                           .fromSTEB(
                                                           16.0,
-                                                          0.0,
+                                                          4.0,
                                                           16.0,
-                                                          0.0),
-                                                      child: Container(
-                                                        width: double.infinity,
-                                                        decoration:
-                                                        BoxDecoration(
-                                                          color: Colors.white,
-                                                          boxShadow: [
-                                                            BoxShadow(
-                                                              blurRadius: 7.0,
-                                                              color: Color(
-                                                                  0x2F1D2429),
-                                                              offset: Offset(
-                                                                0.0,
-                                                                3.0,
-                                                              ),
-                                                            )
-                                                          ],
-                                                          borderRadius:
-                                                          BorderRadius
-                                                              .circular(
-                                                              8.0),
+                                                          8.0),
+                                                      child: StreamBuilder<
+                                                          List<PostsRecord>>(
+                                                        stream:
+                                                        queryPostsRecord(
+                                                          singleRecord: true,
                                                         ),
-                                                        child: Padding(
-                                                          padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                              16.0,
-                                                              12.0,
-                                                              16.0,
-                                                              12.0),
-                                                          child: Column(
-                                                            mainAxisSize:
-                                                            MainAxisSize
-                                                                .max,
-                                                            crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                            children: [
-                                                              Text(
-                                                                searchResultsItem
-                                                                    .tag,
-                                                                style: FlutterFlowTheme.of(
-                                                                    context)
-                                                                    .bodyMedium
-                                                                    .override(
-                                                                  fontFamily:
-                                                                  'Plus Jakarta Sans',
-                                                                  color: Color(
-                                                                      0xFF39D2C0),
-                                                                  fontSize:
-                                                                  14.0,
-                                                                  letterSpacing:
-                                                                  0.0,
-                                                                  fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                                ),
-                                                              ),
-                                                              Divider(
-                                                                height: 16.0,
-                                                                thickness: 2.0,
-                                                                color: Color(
-                                                                    0xFFF1F4F8),
-                                                              ),
-                                                              Text(
-                                                                searchResultsItem
-                                                                    .postTitle,
-                                                                style: FlutterFlowTheme.of(
-                                                                    context)
-                                                                    .bodyLarge
-                                                                    .override(
-                                                                  fontFamily:
-                                                                  'Plus Jakarta Sans',
-                                                                  color: Color(
-                                                                      0xFF14181B),
-                                                                  fontSize:
-                                                                  16.0,
-                                                                  letterSpacing:
-                                                                  0.0,
-                                                                  fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                                ),
-                                                              ),
-                                                              Padding(
-                                                                padding:
-                                                                EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                    0.0,
-                                                                    4.0,
-                                                                    0.0,
-                                                                    0.0),
-                                                                child: Text(
-                                                                  searchResultsItem
-                                                                      .postDescription,
-                                                                  style: FlutterFlowTheme.of(
-                                                                      context)
-                                                                      .labelMedium
-                                                                      .override(
-                                                                    fontFamily:
-                                                                    'Plus Jakarta Sans',
-                                                                    color: Color(
-                                                                        0xFF57636C),
-                                                                    fontSize:
-                                                                    14.0,
-                                                                    letterSpacing:
-                                                                    0.0,
-                                                                    fontWeight:
-                                                                    FontWeight.w500,
+                                                        builder: (context,
+                                                            snapshot) {
+                                                          // Customize what your widget looks like when it's loading.
+                                                          if (!snapshot
+                                                              .hasData) {
+                                                            return Center(
+                                                              child: SizedBox(
+                                                                width: 50.0,
+                                                                height: 50.0,
+                                                                child:
+                                                                CircularProgressIndicator(
+                                                                  valueColor:
+                                                                  AlwaysStoppedAnimation<
+                                                                      Color>(
+                                                                    FlutterFlowTheme.of(
+                                                                        context)
+                                                                        .primary,
                                                                   ),
                                                                 ),
                                                               ),
-                                                            ],
-                                                          ),
-                                                        ),
+                                                            );
+                                                          }
+                                                          List<PostsRecord>
+                                                          card8PostsRecordList =
+                                                          snapshot.data!;
+                                                          // Return an empty Container when the item does not exist.
+                                                          if (snapshot
+                                                              .data!.isEmpty) {
+                                                            return Container();
+                                                          }
+                                                          final card8PostsRecord =
+                                                          card8PostsRecordList
+                                                              .isNotEmpty
+                                                              ? card8PostsRecordList
+                                                              .first
+                                                              : null;
+
+                                                          return InkWell(
+                                                            splashColor: Colors
+                                                                .transparent,
+                                                            focusColor: Colors
+                                                                .transparent,
+                                                            hoverColor: Colors
+                                                                .transparent,
+                                                            highlightColor:
+                                                            Colors
+                                                                .transparent,
+                                                            onTap: () async {
+                                                              context.pushNamed(
+                                                                'DetailPost',
+                                                                queryParameters:
+                                                                {
+                                                                  'postDetail':
+                                                                  serializeParam(
+                                                                    simpleResultItem,
+                                                                    ParamType
+                                                                        .Document,
+                                                                  ),
+                                                                }.withoutNulls,
+                                                                extra: <String,
+                                                                    dynamic>{
+                                                                  'postDetail':
+                                                                  simpleResultItem,
+                                                                },
+                                                              );
+                                                            },
+                                                            child: Container(
+                                                              width: double
+                                                                  .infinity,
+                                                              decoration:
+                                                              BoxDecoration(
+                                                                color: Colors
+                                                                    .white,
+                                                                boxShadow: [
+                                                                  BoxShadow(
+                                                                    blurRadius:
+                                                                    7.0,
+                                                                    color: Color(
+                                                                        0x2F1D2429),
+                                                                    offset:
+                                                                    Offset(
+                                                                      0.0,
+                                                                      3.0,
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                                borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                    8.0),
+                                                              ),
+                                                              child: Padding(
+                                                                padding: EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                    16.0,
+                                                                    12.0,
+                                                                    16.0,
+                                                                    12.0),
+                                                                child: Column(
+                                                                  mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                                  crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                                  children: [
+                                                                    Padding(
+                                                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                                                          0.0,
+                                                                          10.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                                      child:
+                                                                      Row(
+                                                                        mainAxisSize:
+                                                                        MainAxisSize.max,
+                                                                        mainAxisAlignment:
+                                                                        MainAxisAlignment.spaceBetween,
+                                                                        children: [
+                                                                          Text(
+                                                                            simpleResultItem.tag,
+                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                              fontFamily: 'Plus Jakarta Sans',
+                                                                              color: Color(0xFF39D2C0),
+                                                                              fontSize: 14.0,
+                                                                              letterSpacing: 0.0,
+                                                                              fontWeight: FontWeight.w500,
+                                                                            ),
+                                                                          ),
+                                                                          Text(
+                                                                            simpleResultItem.author,
+                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                              fontFamily: 'Inter',
+                                                                              color: FlutterFlowTheme.of(context).secondaryText,
+                                                                              letterSpacing: 0.0,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    Divider(
+                                                                      height:
+                                                                      16.0,
+                                                                      thickness:
+                                                                      2.0,
+                                                                      color: Color(
+                                                                          0xFFF1F4F8),
+                                                                    ),
+                                                                    Text(
+                                                                      simpleResultItem
+                                                                          .postTitle,
+                                                                      style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                          .titleMedium
+                                                                          .override(
+                                                                        fontFamily:
+                                                                        'Inter Tight',
+                                                                        letterSpacing:
+                                                                        0.0,
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      simpleResultItem
+                                                                          .postDescription,
+                                                                      style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                          .bodyLarge
+                                                                          .override(
+                                                                        fontFamily:
+                                                                        'Inter',
+                                                                        letterSpacing:
+                                                                        0.0,
+                                                                      ),
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                                                          0.0,
+                                                                          10.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                                      child:
+                                                                      Row(
+                                                                        mainAxisSize:
+                                                                        MainAxisSize.max,
+                                                                        mainAxisAlignment:
+                                                                        MainAxisAlignment.spaceBetween,
+                                                                        children:
+                                                                        [
+                                                                          Row(
+                                                                            mainAxisSize:
+                                                                            MainAxisSize.max,
+                                                                            mainAxisAlignment:
+                                                                            MainAxisAlignment.spaceBetween,
+                                                                            children:
+                                                                            [
+                                                                              Row(
+                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                                children: [
+                                                                                  if (simpleResultItem.like.contains(currentUserReference) != false)
+                                                                                    Icon(
+                                                                                      Icons.thumb_up_rounded,
+                                                                                      color: Color(0xFFFF0000),
+                                                                                      size: 24.0,
+                                                                                    ),
+                                                                                  if (simpleResultItem.like.contains(currentUserReference) == false)
+                                                                                    Icon(
+                                                                                      Icons.thumb_up_outlined,
+                                                                                      color: FlutterFlowTheme.of(context).primaryText,
+                                                                                      size: 24.0,
+                                                                                    ),
+                                                                                  Text(
+                                                                                    simpleResultItem.like.length.toString(),
+                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                      fontFamily: 'Inter',
+                                                                                      letterSpacing: 0.0,
+                                                                                    ),
+                                                                                  ),
+                                                                                ].divide(SizedBox(width: 4.0)),
+                                                                              ),
+                                                                            ].divide(SizedBox(width: 16.0)),
+                                                                          ),
+                                                                        ].divide(SizedBox(width: 20.0)),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
                                                       ),
                                                     );
                                                   },
@@ -784,7 +1209,7 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                 16.0,
                                                                 4.0,
                                                                 16.0,
-                                                                4.0),
+                                                                8.0),
                                                             child: InkWell(
                                                               splashColor: Colors
                                                                   .transparent,
@@ -917,42 +1342,6 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                           letterSpacing: 0.0,
                                                                         ),
                                                                       ),
-                                                                      Builder(
-                                                                        builder:
-                                                                            (context) {
-                                                                          final images = listViewPostsRecord
-                                                                              .postMutiplePhotos
-                                                                              .map((e) => e)
-                                                                              .toList();
-
-                                                                          return SingleChildScrollView(
-                                                                            scrollDirection:
-                                                                            Axis.horizontal,
-                                                                            child:
-                                                                            Row(
-                                                                              mainAxisSize: MainAxisSize.max,
-                                                                              children: List.generate(images.length, (imagesIndex) {
-                                                                                final imagesItem = images[imagesIndex];
-                                                                                return Visibility(
-                                                                                  visible: imagesItem != null && imagesItem != '',
-                                                                                  child: Padding(
-                                                                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
-                                                                                    child: ClipRRect(
-                                                                                      borderRadius: BorderRadius.circular(8.0),
-                                                                                      child: Image.network(
-                                                                                        imagesItem,
-                                                                                        width: MediaQuery.sizeOf(context).width * 1.0,
-                                                                                        height: 200.0,
-                                                                                        fit: BoxFit.cover,
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
-                                                                                );
-                                                                              }),
-                                                                            ),
-                                                                          );
-                                                                        },
-                                                                      ),
                                                                       Padding(
                                                                         padding: EdgeInsetsDirectional.fromSTEB(
                                                                             0.0,
@@ -965,37 +1354,28 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                           MainAxisSize.max,
                                                                           mainAxisAlignment:
                                                                           MainAxisAlignment.spaceBetween,
-                                                                          children: [
+                                                                          children:
+                                                                          [
                                                                             Row(
                                                                               mainAxisSize: MainAxisSize.max,
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                               children: [
                                                                                 Row(
                                                                                   mainAxisSize: MainAxisSize.max,
+                                                                                  mainAxisAlignment: MainAxisAlignment.start,
                                                                                   children: [
-                                                                                    ToggleIcon(
-                                                                                      onPressed: () async {
-                                                                                        final likeElement = currentUserReference;
-                                                                                        final likeUpdate = listViewPostsRecord.like.contains(likeElement) ? FieldValue.arrayRemove([likeElement]) : FieldValue.arrayUnion([likeElement]);
-                                                                                        await listViewPostsRecord.reference.update({
-                                                                                          ...mapToFirestore(
-                                                                                            {
-                                                                                              'like': likeUpdate,
-                                                                                            },
-                                                                                          ),
-                                                                                        });
-                                                                                      },
-                                                                                      value: listViewPostsRecord.like.contains(currentUserReference),
-                                                                                      onIcon: Icon(
+                                                                                    if (listViewPostsRecord.like.contains(currentUserReference) != false)
+                                                                                      Icon(
                                                                                         Icons.thumb_up_rounded,
                                                                                         color: Color(0xFFFF0000),
                                                                                         size: 24.0,
                                                                                       ),
-                                                                                      offIcon: Icon(
+                                                                                    if (listViewPostsRecord.like.contains(currentUserReference) == false)
+                                                                                      Icon(
                                                                                         Icons.thumb_up_outlined,
                                                                                         color: FlutterFlowTheme.of(context).secondaryText,
                                                                                         size: 24.0,
                                                                                       ),
-                                                                                    ),
                                                                                     Text(
                                                                                       listViewPostsRecord.like.length.toString(),
                                                                                       style: FlutterFlowTheme.of(context).bodyMedium.override(
@@ -1005,51 +1385,9 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                                     ),
                                                                                   ].divide(SizedBox(width: 4.0)),
                                                                                 ),
-                                                                                ToggleIcon(
-                                                                                  onPressed: () async {
-                                                                                    final dislikeElement = currentUserReference;
-                                                                                    final dislikeUpdate = listViewPostsRecord.dislike.contains(dislikeElement) ? FieldValue.arrayRemove([dislikeElement]) : FieldValue.arrayUnion([dislikeElement]);
-                                                                                    await listViewPostsRecord.reference.update({
-                                                                                      ...mapToFirestore(
-                                                                                        {
-                                                                                          'dislike': dislikeUpdate,
-                                                                                        },
-                                                                                      ),
-                                                                                    });
-                                                                                  },
-                                                                                  value: listViewPostsRecord.dislike.contains(currentUserReference),
-                                                                                  onIcon: Icon(
-                                                                                    Icons.thumb_down_rounded,
-                                                                                    color: Color(0xFF0B00FF),
-                                                                                    size: 24.0,
-                                                                                  ),
-                                                                                  offIcon: Icon(
-                                                                                    Icons.thumb_down_outlined,
-                                                                                    color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                    size: 24.0,
-                                                                                  ),
-                                                                                ),
-                                                                                Text(
-                                                                                  listViewPostsRecord.dislike.length.toString(),
-                                                                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                    fontFamily: 'Inter',
-                                                                                    letterSpacing: 0.0,
-                                                                                  ),
-                                                                                ),
                                                                               ].divide(SizedBox(width: 16.0)),
                                                                             ),
-                                                                            Text(
-                                                                              valueOrDefault<String>(
-                                                                                listViewPostsRecord.timePosted?.toString(),
-                                                                                '0',
-                                                                              ),
-                                                                              style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                fontFamily: 'Inter',
-                                                                                color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                letterSpacing: 0.0,
-                                                                              ),
-                                                                            ),
-                                                                          ],
+                                                                          ].divide(SizedBox(width: 20.0)),
                                                                         ),
                                                                       ),
                                                                     ],

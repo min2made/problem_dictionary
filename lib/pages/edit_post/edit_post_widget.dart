@@ -484,8 +484,16 @@ class _EditPostWidgetState extends State<EditPostWidget>
 
                             return FFButtonWidget(
                               onPressed: () async {
-                                context.safePop();
-                                context.safePop();
+                                context.pushNamed(
+                                  'ListPage',
+                                  queryParameters: {
+                                    'tabIndexRef': serializeParam(
+                                      1,
+                                      ParamType.int,
+                                    ),
+                                  }.withoutNulls,
+                                );
+
                                 await editPostPostsRecord.reference.delete();
                               },
                               text: '삭제',
@@ -556,7 +564,16 @@ class _EditPostWidgetState extends State<EditPostWidget>
                                   postDescription: _model.textController2.text,
                                   timePosted: getCurrentTimestamp,
                                 ));
-                                context.safePop();
+
+                                context.pushNamed(
+                                  'ListPage',
+                                  queryParameters: {
+                                    'tabIndexRef': serializeParam(
+                                      1,
+                                      ParamType.int,
+                                    ),
+                                  }.withoutNulls,
+                                );
                               },
                               text: '저장',
                               options: FFButtonOptions(

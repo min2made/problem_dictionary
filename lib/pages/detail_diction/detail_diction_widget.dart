@@ -30,6 +30,8 @@ class _DetailDictionWidgetState extends State<DetailDictionWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => DetailDictionModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
