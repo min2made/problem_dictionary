@@ -37,6 +37,7 @@ class ListPageModel extends FlutterFlowModel<ListPageWidget> {
   @override
   void initState(BuildContext context) {
     aiChatComponentModel = createModel(context, () => AiChatComponentModel());
+
   }
 
   @override

@@ -13,6 +13,8 @@ import 'package:provider/provider.dart';
 import 'package:text_search/text_search.dart';
 import 'list_page_model.dart';
 export 'list_page_model.dart';
+import '/utils/rustdesk_launcher.dart';
+import '/utils/speech_recognition_widget.dart';
 
 class ListPageWidget extends StatefulWidget {
   const ListPageWidget({
@@ -30,12 +32,14 @@ class _ListPageWidgetState extends State<ListPageWidget>
     with TickerProviderStateMixin {
   late ListPageModel _model;
 
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => ListPageModel());
+
 
     _model.tabBarController = TabController(
       vsync: this,
@@ -55,6 +59,7 @@ class _ListPageWidgetState extends State<ListPageWidget>
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
+
 
   @override
   void dispose() {
@@ -289,6 +294,30 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                       ),
                                                     ),
                                                   ),
+                                                ),
+                                                SpeechRecognitionWidget(
+                                                  textController: _model.textController1,
+                                                  onSearch: () async {
+                                                    await queryDictionsRecordOnce()
+                                                        .then(
+                                                          (records) => _model.simpleSearchResults1 = TextSearch(
+                                                        records
+                                                            .map(
+                                                              (record) => TextSearchItem.fromTerms(record, [
+                                                            record.postTitle!,
+                                                            record.postDescription!,
+                                                            record.tag!
+                                                          ]),
+                                                        )
+                                                            .toList(),
+                                                      )
+                                                          .search(_model.textController1?.text ?? '')
+                                                          .map((r) => r.object)
+                                                          .toList(),
+                                                    )
+                                                        .onError((_, __) => _model.simpleSearchResults1 = [])
+                                                        .whenComplete(() => setState(() {}));
+                                                  },
                                                 ),
                                               ],
                                             ),
@@ -693,23 +722,48 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                 Align(
                                   alignment: AlignmentDirectional(1.0, 1.0),
                                   child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 15.0, 10.0),
-                                    child: FlutterFlowIconButton(
-                                      borderColor: Color(0xFF747474),
-                                      borderRadius: 30.0,
-                                      borderWidth: 3.0,
-                                      buttonSize: 60.0,
-                                      fillColor: Colors.white,
-                                      icon: Icon(
-                                        Icons.settings_sharp,
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                        size: 30.0,
-                                      ),
-                                      onPressed: () async {
-                                        context.pushNamed('ChangeProflie');
-                                      },
+                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 15.0, 10.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 10.0, 0.0),
+                                          child: FlutterFlowIconButton(
+                                            borderColor: Color(0xFF747474),
+                                            borderRadius: 30.0,
+                                            borderWidth: 3.0,
+                                            buttonSize: 60.0,
+                                            fillColor: Colors.white,
+                                            icon: Icon(
+                                              Icons.desktop_windows,
+                                              color: FlutterFlowTheme.of(context).primaryText,
+                                              size: 30.0,
+                                            ),
+                                            onPressed: () async {
+                                              try {
+                                                await RustDeskLauncher.launchRustDesk();
+                                              } catch (e) {
+                                                print('Failed to launch RustDesk: $e');
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                        FlutterFlowIconButton(
+                                          borderColor: Color(0xFF747474),
+                                          borderRadius: 30.0,
+                                          borderWidth: 3.0,
+                                          buttonSize: 60.0,
+                                          fillColor: Colors.white,
+                                          icon: Icon(
+                                            Icons.settings_sharp,
+                                            color: FlutterFlowTheme.of(context).primaryText,
+                                            size: 30.0,
+                                          ),
+                                          onPressed: () async {
+                                            context.pushNamed('ChangeProflie');
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -868,6 +922,30 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                     ),
                                                   ),
                                                 ),
+                                              ),
+                                              SpeechRecognitionWidget(
+                                                textController: _model.textController2,
+                                                onSearch: () async {
+                                                  await queryPostsRecordOnce()
+                                                      .then(
+                                                        (records) => _model.simpleSearchResults2 = TextSearch(
+                                                      records
+                                                          .map(
+                                                            (record) => TextSearchItem.fromTerms(record, [
+                                                          record.postTitle!,
+                                                          record.postDescription!,
+                                                          record.tag!
+                                                        ]),
+                                                      )
+                                                          .toList(),
+                                                    )
+                                                        .search(_model.textController2?.text ?? '')
+                                                        .map((r) => r.object)
+                                                        .toList(),
+                                                  )
+                                                      .onError((_, __) => _model.simpleSearchResults2 = [])
+                                                      .whenComplete(() => setState(() {}));
+                                                },
                                               ),
                                             ],
                                           ),
@@ -1412,23 +1490,42 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                 Align(
                                   alignment: AlignmentDirectional(1.0, 1.0),
                                   child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 15.0, 10.0),
-                                    child: FlutterFlowIconButton(
-                                      borderColor: Color(0xFF747474),
-                                      borderRadius: 3.0,
-                                      borderWidth: 3.0,
-                                      buttonSize: 60.0,
-                                      fillColor: Colors.white,
-                                      icon: Icon(
-                                        Icons.add_circle_outline,
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                        size: 30.0,
-                                      ),
-                                      onPressed: () async {
-                                        context.pushNamed('CreatePost');
-                                      },
+                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 15.0, 10.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 10.0, 0.0),
+                                          child: FlutterFlowIconButton(
+                                            borderColor: Color(0xFF747474),
+                                            borderRadius: 30.0,
+                                            borderWidth: 3.0,
+                                            buttonSize: 60.0,
+                                            fillColor: Colors.white,
+                                            icon: Icon(
+                                              Icons.desktop_windows,
+                                              color: FlutterFlowTheme.of(context).primaryText,
+                                              size: 30.0,
+                                            ),
+                                            onPressed: RustDeskLauncher.launchRustDesk,
+                                          ),
+                                        ),
+                                        FlutterFlowIconButton(
+                                          borderColor: Color(0xFF747474),
+                                          borderRadius: 3.0,
+                                          borderWidth: 3.0,
+                                          buttonSize: 60.0,
+                                          fillColor: Colors.white,
+                                          icon: Icon(
+                                            Icons.add_circle_outline,
+                                            color: FlutterFlowTheme.of(context).primaryText,
+                                            size: 30.0,
+                                          ),
+                                          onPressed: () async {
+                                            context.pushNamed('CreatePost');
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
