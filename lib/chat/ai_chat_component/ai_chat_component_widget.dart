@@ -18,11 +18,12 @@ import 'package:http/http.dart' as http;
 class AnimatedChatText extends StatefulWidget {
   final String fullText; // 출력할 전체 텍스트
   final Duration delay;  // 글자 간 지연 시간
+  final bool isReplayEnabled; // 재실행 허용 여부 (옵션)
 
   const AnimatedChatText({
     required this.fullText,
     this.delay = const Duration(milliseconds: 50),
-    Key? key,
+    this.isReplayEnabled = false, // 기본적으로 재실행 불가
   }) : super(key: key);
 
   @override
@@ -30,21 +31,25 @@ class AnimatedChatText extends StatefulWidget {
 }
 
 class _AnimatedChatTextState extends State<AnimatedChatText> {
-  String displayedText = ""; // 현재 출력된 텍스트
-
+  String displayedText = ""; //
+  bool _animationCompleted = false; //
   @override
   void initState() {
     super.initState();
-    _startTypingAnimation();
+    if (!_animationCompleted || widget.isReplayEnabled) {
+      _startTypingAnimation();
+    }
   }
 
   void _startTypingAnimation() async {
     for (int i = 0; i < widget.fullText.length; i++) {
-      await Future.delayed(widget.delay); // 각 글자 출력 간의 지연
+      await Future.delayed(widget.delay);
+      if (!mounted) return; // 위젯이 제거되면 중단
       setState(() {
         displayedText = widget.fullText.substring(0, i + 1);
       });
     }
+    _animationCompleted = true; // 애니메이션 완료 표시
   }
 
   @override
@@ -81,7 +86,6 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => AiChatComponentModel());
-
     _model.textController ??= TextEditingController();
     _model.textFieldFocusNode ??= FocusNode();
   }
@@ -610,11 +614,14 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                         showLoadingIndicator: true,
                         onPressed: () async {
                           // addToChat_aiTyping
+
+                          var chattext =_model.textController.text;
+                          _model.textController?.clear();
                           _model.aiResponding = true;
                           _model.chatHistory = functions.saveChatHistory(
                               _model.chatHistory,
                               functions
-                                  .convertToJSON(_model.textController.text));
+                                  .convertToJSON(chattext));
                           safeSetState(() {});
 
                           // The "chatHistory" is the generated JSON -- we send the whole chat history to AI in order for it to understand context.
@@ -622,7 +629,7 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                           await OpenAIChatGPTGroup.sendFullPromptCall.call(
                             apiKey: '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',
                             promptJson: [
-                              {"role": "system", "content": "답변은 간단하게 하는데 필요에 따라 길게 해도 됍니다. 그러나 200자를 넘기지 않는 방향으로 답변하세요"},
+                              {"role": "system", "content": "답변은 간단하게 하는데 필요에 따라 길게 해도 됍니다. 그러나 200자를 넘기지 않는 방향으로 답변하세요. 그리고 공백으로 질문하거나 질문의 의도가 헷갈리면 '무엇이든 물어보세요' 라고 대답해"},
                               ..._model.chatHistory
                             ]
                           );
