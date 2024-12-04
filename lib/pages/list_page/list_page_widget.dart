@@ -494,6 +494,8 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                               children: [
                                                                                 Text(
                                                                                   simpleResultdictionItem.postTitle,
+                                                                                  maxLines: 1,
+                                                                                  overflow: TextOverflow.ellipsis,
                                                                                   style: FlutterFlowTheme.of(context).titleMedium.override(
                                                                                     fontFamily: 'Inter Tight',
                                                                                     letterSpacing: 0.0,
@@ -512,6 +514,8 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                           ),
                                                                           Text(
                                                                             simpleResultdictionItem.postDescription,
+                                                                            maxLines: 1,
+                                                                            overflow: TextOverflow.ellipsis,
                                                                             style: FlutterFlowTheme.of(context).bodyLarge.override(
                                                                               fontFamily: 'Inter',
                                                                               letterSpacing: 0.0,
@@ -674,6 +678,8 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                           children: [
                                                                             Text(
                                                                               listViewDictionsRecord.postTitle,
+                                                                              maxLines: 1,
+                                                                              overflow: TextOverflow.ellipsis,
                                                                               style: FlutterFlowTheme.of(context).titleMedium.override(
                                                                                 fontFamily: 'Inter Tight',
                                                                                 letterSpacing: 0.0,
@@ -693,6 +699,8 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                       Text(
                                                                         listViewDictionsRecord
                                                                             .postDescription,
+                                                                        maxLines: 1,
+                                                                        overflow: TextOverflow.ellipsis,
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyLarge
                                                                             .override(
@@ -1140,6 +1148,8 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                     Text(
                                                                       simpleResultItem
                                                                           .postTitle,
+                                                                      maxLines: 1,
+                                                                      overflow: TextOverflow.ellipsis,
                                                                       style: FlutterFlowTheme.of(
                                                                           context)
                                                                           .titleMedium
@@ -1153,6 +1163,8 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                     Text(
                                                                       simpleResultItem
                                                                           .postDescription,
+                                                                      maxLines: 1,
+                                                                      overflow: TextOverflow.ellipsis,
                                                                       style: FlutterFlowTheme.of(
                                                                           context)
                                                                           .bodyLarge
@@ -1403,6 +1415,8 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                       Text(
                                                                         listViewPostsRecord
                                                                             .postTitle,
+                                                                        maxLines: 1,
+                                                                        overflow: TextOverflow.ellipsis,
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .titleMedium
                                                                             .override(
@@ -1413,6 +1427,8 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                       Text(
                                                                         listViewPostsRecord
                                                                             .postDescription,
+                                                                        maxLines: 1,
+                                                                        overflow: TextOverflow.ellipsis,
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyLarge
                                                                             .override(
