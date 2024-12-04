@@ -755,9 +755,9 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                           buttonSize: 60.0,
                                           fillColor: Colors.white,
                                           icon: Icon(
-                                            Icons.settings_sharp,
+                                            Icons.person,
                                             color: FlutterFlowTheme.of(context).primaryText,
-                                            size: 30.0,
+                                            size: 40.0,
                                           ),
                                           onPressed: () async {
                                             context.pushNamed('ChangeProflie');
@@ -1512,14 +1512,14 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                         ),
                                         FlutterFlowIconButton(
                                           borderColor: Color(0xFF747474),
-                                          borderRadius: 3.0,
+                                          borderRadius: 30.0,
                                           borderWidth: 3.0,
                                           buttonSize: 60.0,
                                           fillColor: Colors.white,
                                           icon: Icon(
-                                            Icons.add_circle_outline,
+                                            Icons.add_outlined,
                                             color: FlutterFlowTheme.of(context).primaryText,
-                                            size: 30.0,
+                                            size: 40.0,
                                           ),
                                           onPressed: () async {
                                             context.pushNamed('CreatePost');
