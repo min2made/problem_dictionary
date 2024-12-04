@@ -67,10 +67,12 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
     });
     setupAnimations(
       animationsMap.values.where((anim) =>
-          anim.trigger == AnimationTrigger.onActionTrigger ||
+      anim.trigger == AnimationTrigger.onActionTrigger ||
           !anim.applyInitialState),
       this,
     );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -120,9 +122,9 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                   Text(
                     '글 작성하기',
                     style: FlutterFlowTheme.of(context).headlineMedium.override(
-                          fontFamily: 'Inter Tight',
-                          letterSpacing: 0.0,
-                        ),
+                      fontFamily: 'Inter Tight',
+                      letterSpacing: 0.0,
+                    ),
                   ),
                   Column(
                     mainAxisSize: MainAxisSize.max,
@@ -136,18 +138,18 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                           labelStyle: FlutterFlowTheme.of(context)
                               .headlineSmall
                               .override(
-                                fontFamily: 'Inter Tight',
-                                color:
-                                    FlutterFlowTheme.of(context).secondaryText,
-                                letterSpacing: 0.0,
-                                fontWeight: FontWeight.w500,
-                              ),
+                            fontFamily: 'Inter Tight',
+                            color:
+                            FlutterFlowTheme.of(context).secondaryText,
+                            letterSpacing: 0.0,
+                            fontWeight: FontWeight.w500,
+                          ),
                           hintText: '제목 입력하기...',
                           hintStyle:
-                              FlutterFlowTheme.of(context).labelMedium.override(
-                                    fontFamily: 'Inter',
-                                    letterSpacing: 0.0,
-                                  ),
+                          FlutterFlowTheme.of(context).labelMedium.override(
+                            fontFamily: 'Inter',
+                            letterSpacing: 0.0,
+                          ),
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
                               color: FlutterFlowTheme.of(context).alternate,
@@ -180,10 +182,10 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                               16.0, 12.0, 16.0, 12.0),
                         ),
                         style:
-                            FlutterFlowTheme.of(context).headlineSmall.override(
-                                  fontFamily: 'Inter Tight',
-                                  letterSpacing: 0.0,
-                                ),
+                        FlutterFlowTheme.of(context).headlineSmall.override(
+                          fontFamily: 'Inter Tight',
+                          letterSpacing: 0.0,
+                        ),
                         maxLength: 30,
                         maxLengthEnforcement: MaxLengthEnforcement.enforced,
                         cursorColor: FlutterFlowTheme.of(context).primary,
@@ -197,16 +199,16 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                         obscureText: false,
                         decoration: InputDecoration(
                           labelStyle:
-                              FlutterFlowTheme.of(context).labelMedium.override(
-                                    fontFamily: 'Inter',
-                                    letterSpacing: 0.0,
-                                  ),
+                          FlutterFlowTheme.of(context).labelMedium.override(
+                            fontFamily: 'Inter',
+                            letterSpacing: 0.0,
+                          ),
                           hintText: '텍스트 입력하기...',
                           hintStyle:
-                              FlutterFlowTheme.of(context).labelMedium.override(
-                                    fontFamily: 'Inter',
-                                    letterSpacing: 0.0,
-                                  ),
+                          FlutterFlowTheme.of(context).labelMedium.override(
+                            fontFamily: 'Inter',
+                            letterSpacing: 0.0,
+                          ),
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
                               color: FlutterFlowTheme.of(context).alternate,
@@ -239,9 +241,9 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                               16.0, 24.0, 16.0, 12.0),
                         ),
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily: 'Inter',
-                              letterSpacing: 0.0,
-                            ),
+                          fontFamily: 'Inter',
+                          letterSpacing: 0.0,
+                        ),
                         maxLines: 16,
                         minLines: 6,
                         maxLength: 1000,
@@ -254,16 +256,17 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                         Builder(
                           builder: (context) {
                             final imagesuploaded =
-                                _model.uploadedFileUrls.toList();
+                            _model.uploadedFileUrls.toList();
 
                             return ListView.builder(
                               padding: EdgeInsets.zero,
+                              primary: false,
                               shrinkWrap: true,
                               scrollDirection: Axis.vertical,
                               itemCount: imagesuploaded.length,
                               itemBuilder: (context, imagesuploadedIndex) {
                                 final imagesuploadedItem =
-                                    imagesuploaded[imagesuploadedIndex];
+                                imagesuploaded[imagesuploadedIndex];
                                 return Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       0.0, 5.0, 0.0, 5.0),
@@ -285,7 +288,7 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                   ),
                   Padding(
                     padding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+                    EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
                     child: Container(
                       width: double.infinity,
                       constraints: BoxConstraints(
@@ -312,6 +315,15 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                               mediaSource: MediaSource.photoGallery,
                               multiImage: true,
                             );
+                            if (selectedMedia != null && selectedMedia.length > 3) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('최대 3개의 이미지만 선택할 수 있습니다.'),
+                                  behavior: SnackBarBehavior.floating,  // floating 스타일 적용
+                                ),
+                              );
+                              return;
+                            }
                             if (selectedMedia != null &&
                                 selectedMedia.every((m) => validateFileFormat(
                                     m.storagePath, context))) {
@@ -322,17 +334,17 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                               try {
                                 selectedUploadedFiles = selectedMedia
                                     .map((m) => FFUploadedFile(
-                                          name: m.storagePath.split('/').last,
-                                          bytes: m.bytes,
-                                          height: m.dimensions?.height,
-                                          width: m.dimensions?.width,
-                                          blurHash: m.blurHash,
-                                        ))
+                                  name: m.storagePath.split('/').last,
+                                  bytes: m.bytes,
+                                  height: m.dimensions?.height,
+                                  width: m.dimensions?.width,
+                                  blurHash: m.blurHash,
+                                ))
                                     .toList();
 
                                 downloadUrls = (await Future.wait(
                                   selectedMedia.map(
-                                    (m) async => await uploadData(
+                                        (m) async => await uploadData(
                                         m.storagePath, m.bytes),
                                   ),
                                 ))
@@ -343,7 +355,7 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                                 _model.isDataUploading = false;
                               }
                               if (selectedUploadedFiles.length ==
-                                      selectedMedia.length &&
+                                  selectedMedia.length &&
                                   downloadUrls.length == selectedMedia.length) {
                                 safeSetState(() {
                                   _model.uploadedLocalFiles =
@@ -373,9 +385,9 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        fontFamily: 'Inter',
-                                        letterSpacing: 0.0,
-                                      ),
+                                    fontFamily: 'Inter',
+                                    letterSpacing: 0.0,
+                                  ),
                                 ),
                               ),
                             ],
@@ -387,7 +399,7 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                   ),
                   Padding(
                     padding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 12.0),
+                    EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 12.0),
                     child: StreamBuilder<List<PostsRecord>>(
                       stream: queryPostsRecord(
                         singleRecord: true,
@@ -408,15 +420,15 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                           );
                         }
                         List<PostsRecord> buttonPostsRecordList =
-                            snapshot.data!;
+                        snapshot.data!;
                         // Return an empty Container when the item does not exist.
                         if (snapshot.data!.isEmpty) {
                           return Container();
                         }
                         final buttonPostsRecord =
-                            buttonPostsRecordList.isNotEmpty
-                                ? buttonPostsRecordList.first
-                                : null;
+                        buttonPostsRecordList.isNotEmpty
+                            ? buttonPostsRecordList.first
+                            : null;
 
                         return FFButtonWidget(
                           onPressed: () async {
@@ -431,7 +443,7 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                               ...mapToFirestore(
                                 {
                                   'post_mutiple_photos':
-                                      _model.uploadedFileUrls,
+                                  _model.uploadedFileUrls,
                                 },
                               ),
                             });
@@ -448,11 +460,11 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                             textStyle: FlutterFlowTheme.of(context)
                                 .titleSmall
                                 .override(
-                                  fontFamily: 'Inter Tight',
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                  letterSpacing: 0.0,
-                                ),
+                              fontFamily: 'Inter Tight',
+                              color:
+                              FlutterFlowTheme.of(context).primaryText,
+                              letterSpacing: 0.0,
+                            ),
                             elevation: 4.0,
                             borderSide: BorderSide(
                               color: Colors.transparent,
