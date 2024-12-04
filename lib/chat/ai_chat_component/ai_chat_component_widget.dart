@@ -14,14 +14,15 @@ export 'ai_chat_component_model.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-
 class AnimatedChatText extends StatefulWidget {
   final String fullText; // 출력할 전체 텍스트
-  final Duration delay;  // 글자 간 지연 시간
+  final Duration delay; // 글자 간 지연 시간
+  final VoidCallback? onAnimationComplete; // 애니메이션 완료 콜백
 
   const AnimatedChatText({
     required this.fullText,
     this.delay = const Duration(milliseconds: 50),
+    this.onAnimationComplete, // 추가
     Key? key,
   }) : super(key: key);
 
@@ -40,21 +41,24 @@ class _AnimatedChatTextState extends State<AnimatedChatText> {
 
   void _startTypingAnimation() async {
     for (int i = 0; i < widget.fullText.length; i++) {
-      await Future.delayed(widget.delay); // 각 글자 출력 간의 지연
+      await Future.delayed(widget.delay); // 글자 간의 지연
+      if (!mounted) return;
       setState(() {
         displayedText = widget.fullText.substring(0, i + 1);
       });
     }
+
+    // 애니메이션 완료 시 콜백 호출
+    widget.onAnimationComplete?.call();
   }
 
   @override
   Widget build(BuildContext context) {
     return Text(
       displayedText,
-      style: FlutterFlowTheme.of(context).bodyMedium.override(
-        fontFamily: 'Inter',
-        letterSpacing: 0.0,
-        lineHeight: 1.5,
+      style: const TextStyle(
+        fontSize: 16.0,
+        height: 1.5,
       ),
     );
   }
@@ -69,6 +73,7 @@ class AiChatComponentWidget extends StatefulWidget {
 
 class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
   late AiChatComponentModel _model;
+  bool isAnimated = false; // 애니메이션 상태 제어 변수
 
   @override
   void setState(VoidCallback callback) {
@@ -87,9 +92,9 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
   @override
   void dispose() {
     _model.maybeDispose();
-
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -174,6 +179,7 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                                             itemCount: chat.length,
                                             itemBuilder: (context, chatIndex) {
                                               final chatItem = chat[chatIndex];
+                                              final bool isLastItem = chatIndex == (_model.chatHistory?.length ?? 0) - 1;
                                               return Padding(
                                                 padding: const EdgeInsetsDirectional
                                                     .fromSTEB(
@@ -261,13 +267,27 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                                                                         .start,
                                                                     children: [
                                                                       SelectionArea(
-                                                                        child:
-                                                                        AnimatedChatText(
+                                                                        child: isLastItem && isAnimated
+                                                                            ? AnimatedChatText(
                                                                           fullText: getJsonField(
                                                                             chatItem,
                                                                             r'''$['content']''',
                                                                           ).toString(),
-                                                                          delay: const Duration(milliseconds: 50), // 텍스트 애니메이션 속도 조정 가능
+                                                                          delay: const Duration(milliseconds: 50),
+                                                                          onAnimationComplete: () {
+                                                                            setState(() {
+                                                                              isAnimated = true;
+                                                                                });})
+                                                                            : Text(
+                                                                          getJsonField(
+                                                                            chatItem,
+                                                                            r'''$['content']''',
+                                                                          ).toString(),
+                                                                          style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                            fontFamily: 'Inter',
+                                                                            letterSpacing: 0.0,
+                                                                            lineHeight: 1.5,
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     ],
@@ -610,6 +630,7 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                           // addToChat_aiTyping
 
                           var chattext =_model.textController.text;
+                          isAnimated = true;
                           _model.textController?.clear();
                           _model.aiResponding = true;
                           _model.chatHistory = functions.saveChatHistory(
