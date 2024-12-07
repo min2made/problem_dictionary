@@ -315,15 +315,6 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                               mediaSource: MediaSource.photoGallery,
                               multiImage: true,
                             );
-                            if (selectedMedia != null && selectedMedia.length > 3) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('최대 3개의 이미지만 선택할 수 있습니다.'),
-                                  behavior: SnackBarBehavior.floating,  // floating 스타일 적용
-                                ),
-                              );
-                              return;
-                            }
                             if (selectedMedia != null &&
                                 selectedMedia.every((m) => validateFileFormat(
                                     m.storagePath, context))) {
@@ -439,6 +430,7 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                                 timePosted: getCurrentTimestamp,
                                 author: currentUserDisplayName,
                                 postUser: currentUserReference,
+                                postUserPhoto: currentUserPhoto,
                               ),
                               ...mapToFirestore(
                                 {

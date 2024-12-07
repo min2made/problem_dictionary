@@ -118,16 +118,50 @@ class _DetailPostWidgetState extends State<DetailPostWidget> {
                                 letterSpacing: 0.0,
                               ),
                             ),
-                            Text(
-                              detailPostPostsRecord.author,
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                fontFamily: 'Inter',
-                                color: FlutterFlowTheme.of(context)
-                                    .secondaryText,
-                                letterSpacing: 0.0,
-                              ),
+                            Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Container(
+                                  width: 1.0,
+                                  height: 1.0,
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Image.network(
+                                    'https://picsum.photos/seed/998/600',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Container(
+                                      width: 30.0,
+                                      height: 30.0,
+                                      clipBehavior: Clip.antiAlias,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Image.network(
+                                        detailPostPostsRecord.postUserPhoto,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Text(
+                                      detailPostPostsRecord.author,
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                        fontFamily: 'Inter',
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryText,
+                                        letterSpacing: 0.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                             Divider(
                               thickness: 2.0,
