@@ -22,12 +22,13 @@ class RustDeskLauncher {
       }
     } else if (Platform.isAndroid) {
       try {
-        final rustDeskUrl = Uri.parse('rustdesk://');
+        final rustDeskUrl = Uri.parse('rustdesk://');  // 이 부분은 그대로
         final canLaunch = await canLaunchUrl(rustDeskUrl);
 
         if (canLaunch) {
-          await launchUrl(rustDeskUrl);
+          await launchUrl(rustDeskUrl, mode: LaunchMode.externalApplication);
         } else {
+          // 설치되어 있지 않은 경우 다운로드 페이지로 이동
           final downloadUrl = Uri.parse('https://rustdesk.com/');
           await launchUrl(downloadUrl, mode: LaunchMode.externalApplication);
         }

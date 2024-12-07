@@ -7,6 +7,14 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
+    <queries>
+        <package android:name="com.carriez.flutter_hbb" />
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="rustdesk" />
+        </intent>
+    </queries>
+
     <application
         android:label="Problem Dictionary"
         tools:replace="android:label"
