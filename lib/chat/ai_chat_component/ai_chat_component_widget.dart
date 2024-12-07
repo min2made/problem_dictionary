@@ -13,6 +13,7 @@ import 'ai_chat_component_model.dart';
 export 'ai_chat_component_model.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class AnimatedChatText extends StatefulWidget {
   final String fullText; // 출력할 전체 텍스트
@@ -33,11 +34,13 @@ class AnimatedChatText extends StatefulWidget {
 class _AnimatedChatTextState extends State<AnimatedChatText> {
   String displayedText = ""; // 현재 출력된 텍스트
 
+
   @override
   void initState() {
     super.initState();
     _startTypingAnimation();
   }
+
 
   void _startTypingAnimation() async {
     for (int i = 0; i < widget.fullText.length; i++) {
@@ -73,6 +76,8 @@ class AiChatComponentWidget extends StatefulWidget {
 
 class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
   late AiChatComponentModel _model;
+  final stt.SpeechToText _speech = stt.SpeechToText();  // 추가
+  bool _isListening = false; // 추가
   bool isAnimated = false; // 애니메이션 상태 제어 변수
 
   @override
@@ -87,6 +92,41 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
     _model = createModel(context, () => AiChatComponentModel());
     _model.textController ??= TextEditingController();
     _model.textFieldFocusNode ??= FocusNode();
+    _initSpeech();
+  }
+
+  // 음성인식 초기화 함수 추가
+  void _initSpeech() async {
+    bool available = await _speech.initialize();
+    if (available) {
+      setState(() {});
+    }
+  }
+
+  // 음성인식 시작/중지 함수 추가
+  void _startListening() async {
+    if (!_isListening) {
+      bool available = await _speech.initialize();
+      if (available) {
+        setState(() => _isListening = true);
+        _speech.listen(
+          onResult: (result) {
+            setState(() {
+              _model.textController?.text = result.recognizedWords;
+            });
+            if (!_speech.isListening) {
+              setState(() => _isListening = false);
+            }
+          },
+          listenFor: Duration(seconds: 4),
+          pauseFor: Duration(seconds: 4),
+          localeId: 'ko_KR',
+        );
+      }
+    } else {
+      setState(() => _isListening = false);
+      _speech.stop();
+    }
   }
 
   @override
@@ -615,114 +655,135 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                     ),
                     Align(
                       alignment: const AlignmentDirectional(1.0, 0.0),
-                      child: FlutterFlowIconButton(
-                        borderColor: Colors.transparent,
-                        borderRadius: 30.0,
-                        borderWidth: 1.0,
-                        buttonSize: 60.0,
-                        icon: Icon(
-                          Icons.send_rounded,
-                          color: FlutterFlowTheme.of(context).primary,
-                          size: 30.0,
-                        ),
-                        showLoadingIndicator: true,
-                        onPressed: () async {
-                          // addToChat_aiTyping
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // 음성인식 버튼 추가
+                          FlutterFlowIconButton(
+                            borderColor: Colors.transparent,
+                            borderRadius: 30.0,
+                            borderWidth: 1.0,
+                            buttonSize: 50.0,
+                            icon: Icon(
+                              _model.isListening ? Icons.mic : Icons.mic_none,
+                              color: _model.isListening
+                                  ? FlutterFlowTheme.of(context).primary
+                                  : FlutterFlowTheme.of(context).secondaryText,
+                              size: 28.0,
+                            ),
+                            onPressed: _startListening,
+                          ),
+                          // 기존 전송 버튼
+                          FlutterFlowIconButton(
+                            borderColor: Colors.transparent,
+                            borderRadius: 30.0,
+                            borderWidth: 1.0,
+                            buttonSize: 60.0,
+                            icon: Icon(
+                              Icons.send_rounded,
+                              color: FlutterFlowTheme.of(context).primary,
+                              size: 30.0,
+                            ),
+                            showLoadingIndicator: true,
+                            onPressed: () async {
+                              // addToChat_aiTyping
 
-                          var chattext =_model.textController.text;
-                          isAnimated = true;
-                          _model.textController?.clear();
-                          _model.aiResponding = true;
-                          _model.chatHistory = functions.saveChatHistory(
-                              _model.chatHistory,
-                              functions
-                                  .convertToJSON(chattext));
-                          safeSetState(() {});
-
-                          // The "chatHistory" is the generated JSON -- we send the whole chat history to AI in order for it to understand context.
-                          _model.chatGPTResponse =
-                          await OpenAIChatGPTGroup.sendFullPromptCall.call(
-                              apiKey: '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',
-                              promptJson: [
-                                {"role": "system", "content": "답변은 간단하게 하는데 필요에 따라 길게 해도 됍니다. 그러나 200자를 넘기지 않는 방향으로 답변하세요. 그리고 공백으로 질문하거나 질문의 의도가 헷갈리면 '무엇이든 물어보세요' 라고 대답해"},
-                                ..._model.chatHistory
-                              ]
-                          );
-                          if ((_model.chatGPTResponse?.succeeded ?? true)) {
-                            _model.aiResponding = false;
-                            final responseJson = _model.chatGPTResponse?.jsonBody;
-                            print('API Response: $responseJson'); // 디버깅
-                            print('API Response: $responseJson'); //
-
-
-                            final rawMessage = getJsonField(
-                              responseJson,
-                              r'''$['choices'][0]['message']''',
-                            );
-
-                            dynamic chatResponse;
-                            if (rawMessage != null) {
-                              try {
-                                if (rawMessage is Map) {
-                                  chatResponse = {
-                                    ...rawMessage,
-                                    'content': utf8.decode(rawMessage['content'].toString().runes.toList()),
-                                  };
-                                } else {
-                                  chatResponse = utf8.decode(rawMessage.toString().runes.toList());
-                                }
-                              } catch (e) {
-                                print('Decoding error: $e');
-                                chatResponse = rawMessage;
-                              }
-                            } else {
-                              chatResponse = {'error': 'AI 응답을 가져오는 데 실패했습니다.'};
-                            }
-
-                            // chatHistory에 chatResponse 추가
-                            _model.chatHistory = functions.saveChatHistory(
-                              _model.chatHistory,
-                              chatResponse,
-                            );
-
-                            safeSetState(() {});
-                            safeSetState(() {
+                              var chattext =_model.textController.text;
+                              isAnimated = true;
                               _model.textController?.clear();
-                            });
+                              _model.aiResponding = true;
+                              _model.chatHistory = functions.saveChatHistory(
+                                  _model.chatHistory,
+                                  functions
+                                      .convertToJSON(chattext));
+                              safeSetState(() {});
 
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Your API Call Failed!',
-                                  style: FlutterFlowTheme.of(context)
-                                      .titleSmall
-                                      .override(
-                                    fontFamily: 'Inter Tight',
-                                    color:
-                                    FlutterFlowTheme.of(context).info,
-                                    letterSpacing: 0.0,
+                              // The "chatHistory" is the generated JSON -- we send the whole chat history to AI in order for it to understand context.
+                              _model.chatGPTResponse =
+                              await OpenAIChatGPTGroup.sendFullPromptCall.call(
+                                  apiKey: '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',
+                                  promptJson: [
+                                    {"role": "system", "content": "답변은 간단하게 하는데 필요에 따라 길게 해도 됍니다. 그러나 200자를 넘기지 않는 방향으로 답변하세요. 그리고 공백으로 질문하거나 질문의 의도가 헷갈리면 '무엇이든 물어보세요' 라고 대답해"},
+                                    ..._model.chatHistory
+                                  ]
+                              );
+                              if ((_model.chatGPTResponse?.succeeded ?? true)) {
+                                _model.aiResponding = false;
+                                final responseJson = _model.chatGPTResponse?.jsonBody;
+                                print('API Response: $responseJson'); // 디버깅
+                                print('API Response: $responseJson'); //
+
+
+                                final rawMessage = getJsonField(
+                                  responseJson,
+                                  r'''$['choices'][0]['message']''',
+                                );
+
+                                dynamic chatResponse;
+                                if (rawMessage != null) {
+                                  try {
+                                    if (rawMessage is Map) {
+                                      chatResponse = {
+                                        ...rawMessage,
+                                        'content': utf8.decode(rawMessage['content'].toString().runes.toList()),
+                                      };
+                                    } else {
+                                      chatResponse = utf8.decode(rawMessage.toString().runes.toList());
+                                    }
+                                  } catch (e) {
+                                    print('Decoding error: $e');
+                                    chatResponse = rawMessage;
+                                  }
+                                } else {
+                                  chatResponse = {'error': 'AI 응답을 가져오는 데 실패했습니다.'};
+                                }
+
+                                // chatHistory에 chatResponse 추가
+                                _model.chatHistory = functions.saveChatHistory(
+                                  _model.chatHistory,
+                                  chatResponse,
+                                );
+
+                                safeSetState(() {});
+                                safeSetState(() {
+                                  _model.textController?.clear();
+                                });
+
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Your API Call Failed!',
+                                      style: FlutterFlowTheme.of(context)
+                                          .titleSmall
+                                          .override(
+                                        fontFamily: 'Inter Tight',
+                                        color:
+                                        FlutterFlowTheme.of(context).info,
+                                        letterSpacing: 0.0,
+                                      ),
+                                    ),
+                                    duration: const Duration(milliseconds: 4000),
+                                    backgroundColor:
+                                    FlutterFlowTheme.of(context).error,
                                   ),
-                                ),
-                                duration: const Duration(milliseconds: 4000),
-                                backgroundColor:
-                                FlutterFlowTheme.of(context).error,
-                              ),
-                            );
-                            _model.aiResponding = false;
-                            safeSetState(() {});
-                          }
+                                );
+                                _model.aiResponding = false;
+                                safeSetState(() {});
+                              }
 
-                          await Future.delayed(
-                              const Duration(milliseconds: 800));
-                          await _model.listViewController?.animateTo(
-                            _model.listViewController!.position.maxScrollExtent,
-                            duration: const Duration(milliseconds: 100),
-                            curve: Curves.ease,
-                          );
+                              await Future.delayed(
+                                  const Duration(milliseconds: 800));
+                              await _model.listViewController?.animateTo(
+                                _model.listViewController!.position.maxScrollExtent,
+                                duration: const Duration(milliseconds: 100),
+                                curve: Curves.ease,
+                              );
 
-                          safeSetState(() {});
-                        },
+                              safeSetState(() {});
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ],

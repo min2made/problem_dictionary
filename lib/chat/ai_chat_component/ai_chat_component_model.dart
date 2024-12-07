@@ -11,6 +11,8 @@ class AiChatComponentModel extends FlutterFlowModel<AiChatComponentWidget> {
 
   bool aiResponding = false;
 
+  bool isListening = false;
+
   String inputContent = '';
 
   ///  State fields for stateful widgets in this component.
