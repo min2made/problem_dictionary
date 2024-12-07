@@ -136,16 +136,20 @@ class _DetailPostWidgetState extends State<DetailPostWidget> {
                                 Row(
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
-                                    Container(
-                                      width: 30.0,
-                                      height: 30.0,
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Image.network(
-                                        detailPostPostsRecord.postUserPhoto,
-                                        fit: BoxFit.cover,
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0, 0, 10, 0),
+                                      child: Container(
+                                        width: 30,
+                                        height: 30,
+                                        clipBehavior: Clip.antiAlias,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Image.network(
+                                          detailPostPostsRecord.postUserPhoto,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                     Text(
