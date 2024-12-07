@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
 import 'change_proflie_model.dart';
 export 'change_proflie_model.dart';
 
@@ -35,6 +34,8 @@ class _ChangeProflieWidgetState extends State<ChangeProflieWidget> {
 
     _model.yourNameTextController ??= TextEditingController();
     _model.yourNameFocusNode ??= FocusNode();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -50,7 +51,7 @@ class _ChangeProflieWidgetState extends State<ChangeProflieWidget> {
       key: scaffoldKey,
       backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(120.0),
+        preferredSize: Size.fromHeight(100.0),
         child: AppBar(
           backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
           automaticallyImplyLeading: false,
@@ -117,280 +118,293 @@ class _ChangeProflieWidgetState extends State<ChangeProflieWidget> {
         child: Form(
           key: _model.formKey,
           autovalidateMode: AutovalidateMode.disabled,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        splashColor: Colors.transparent,
-                        focusColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onTap: () async {
-                          final selectedMedia =
-                          await selectMediaWithSourceBottomSheet(
-                            context: context,
-                            imageQuality: 80,
-                            allowPhoto: true,
-                            backgroundColor:
-                            FlutterFlowTheme.of(context).primaryBackground,
-                            textColor: FlutterFlowTheme.of(context).primaryText,
-                            pickerFontFamily: 'Outfit',
-                          );
-                          if (selectedMedia != null &&
-                              selectedMedia.every((m) =>
-                                  validateFileFormat(m.storagePath, context))) {
-                            safeSetState(() => _model.isDataUploading1 = true);
-                            var selectedUploadedFiles = <FFUploadedFile>[];
+          child: StreamBuilder<UsersRecord>(
+            stream: UsersRecord.getDocument(currentUserReference!),
+            builder: (context, snapshot) {
+              // Customize what your widget looks like when it's loading.
+              if (!snapshot.hasData) {
+                return Center(
+                  child: SizedBox(
+                    width: 50.0,
+                    height: 50.0,
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        FlutterFlowTheme.of(context).primary,
+                      ),
+                    ),
+                  ),
+                );
+              }
 
-                            var downloadUrls = <String>[];
-                            try {
-                              showUploadMessage(
-                                context,
-                                'Uploading file...',
-                                showLoading: true,
+              final columnUsersRecord = snapshot.data!;
+
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Padding(
+                      padding:
+                      EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            splashColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            onTap: () async {
+                              final selectedMedia =
+                              await selectMediaWithSourceBottomSheet(
+                                context: context,
+                                imageQuality: 80,
+                                allowPhoto: true,
+                                backgroundColor: FlutterFlowTheme.of(context)
+                                    .primaryBackground,
+                                textColor:
+                                FlutterFlowTheme.of(context).primaryText,
+                                pickerFontFamily: 'Outfit',
                               );
-                              selectedUploadedFiles = selectedMedia
-                                  .map((m) => FFUploadedFile(
-                                name: m.storagePath.split('/').last,
-                                bytes: m.bytes,
-                                height: m.dimensions?.height,
-                                width: m.dimensions?.width,
-                                blurHash: m.blurHash,
-                              ))
-                                  .toList();
+                              if (selectedMedia != null &&
+                                  selectedMedia.every((m) => validateFileFormat(
+                                      m.storagePath, context))) {
+                                safeSetState(
+                                        () => _model.isDataUploading1 = true);
+                                var selectedUploadedFiles = <FFUploadedFile>[];
 
-                              downloadUrls = (await Future.wait(
-                                selectedMedia.map(
-                                      (m) async =>
-                                  await uploadData(m.storagePath, m.bytes),
-                                ),
-                              ))
-                                  .where((u) => u != null)
-                                  .map((u) => u!)
-                                  .toList();
-                            } finally {
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
-                              _model.isDataUploading1 = false;
-                            }
-                            if (selectedUploadedFiles.length ==
-                                selectedMedia.length &&
-                                downloadUrls.length == selectedMedia.length) {
-                              safeSetState(() {
-                                _model.uploadedLocalFile1 =
-                                    selectedUploadedFiles.first;
-                                _model.uploadedFileUrl1 = downloadUrls.first;
-                              });
-                              showUploadMessage(context, 'Success!');
-                            } else {
-                              safeSetState(() {});
-                              showUploadMessage(
-                                  context, 'Failed to upload data');
-                              return;
-                            }
-                          }
-                        },
-                        child: Container(
-                          width: 100.0,
-                          height: 100.0,
-                          decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context).alternate,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(2.0),
-                            child: StreamBuilder<List<UsersRecord>>(
-                              stream: queryUsersRecord(
-                                singleRecord: true,
-                              ),
-                              builder: (context, snapshot) {
-                                // Customize what your widget looks like when it's loading.
-                                if (!snapshot.hasData) {
-                                  return Center(
-                                    child: SizedBox(
-                                      width: 50.0,
-                                      height: 50.0,
-                                      child: CircularProgressIndicator(
-                                        valueColor:
-                                        AlwaysStoppedAnimation<Color>(
-                                          FlutterFlowTheme.of(context).primary,
-                                        ),
-                                      ),
-                                    ),
+                                var downloadUrls = <String>[];
+                                try {
+                                  showUploadMessage(
+                                    context,
+                                    '업로드 중입니다...',
+                                    showLoading: true,
                                   );
-                                }
-                                List<UsersRecord> circleImageUsersRecordList =
-                                snapshot.data!;
-                                // Return an empty Container when the item does not exist.
-                                if (snapshot.data!.isEmpty) {
-                                  return Container();
-                                }
-                                final circleImageUsersRecord =
-                                circleImageUsersRecordList.isNotEmpty
-                                    ? circleImageUsersRecordList.first
-                                    : null;
+                                  selectedUploadedFiles = selectedMedia
+                                      .map((m) => FFUploadedFile(
+                                    name: m.storagePath.split('/').last,
+                                    bytes: m.bytes,
+                                    height: m.dimensions?.height,
+                                    width: m.dimensions?.width,
+                                    blurHash: m.blurHash,
+                                  ))
+                                      .toList();
 
-                                return Container(
-                                  width: 90.0,
-                                  height: 90.0,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
+                                  downloadUrls = (await Future.wait(
+                                    selectedMedia.map(
+                                          (m) async =>
+                                      await uploadData(m.storagePath, m.bytes),
+                                    ),
+                                  ))
+                                      .where((u) => u != null)
+                                      .map((u) => u!)
+                                      .toList();
+                                } finally {
+                                  ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar();
+                                  _model.isDataUploading1 = false;
+                                }
+                                if (selectedUploadedFiles.length ==
+                                    selectedMedia.length &&
+                                    downloadUrls.length == selectedMedia.length) {
+                                  safeSetState(() {
+                                    _model.uploadedLocalFile1 =
+                                        selectedUploadedFiles.first;
+                                    _model.uploadedFileUrl1 = downloadUrls.first;
+                                  });
+                                  showUploadMessage(context, '성공!');
+                                } else {
+                                  safeSetState(() {});
+                                  showUploadMessage(
+                                      context, '업로드에 실패했습니다.');
+                                  return;
+                                }
+                              }
+                            },
+                            child: Container(
+                              width: 100.0,
+                              height: 100.0,
+                              decoration: BoxDecoration(
+                                color: FlutterFlowTheme.of(context).alternate,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(2.0),
+                                child: StreamBuilder<List<UsersRecord>>(
+                                  stream: queryUsersRecord(
+                                    singleRecord: true,
                                   ),
-                                  child: CachedNetworkImage(
-                                    fadeInDuration: Duration(milliseconds: 500),
-                                    fadeOutDuration:
-                                    Duration(milliseconds: 500),
-                                    imageUrl: _model.uploadedFileUrl2 == null ||
-                                        _model.uploadedFileUrl2 == ''
-                                        ? (currentUserPhoto == null || currentUserPhoto == ''
-                                        ? 'https://i.ibb.co/vV93kgy/35cf059d31c96e31aaf0a5326ad513d2.jpg'
-                                        : currentUserPhoto)
-                                        : _model.uploadedFileUrl2,
-                                    fit: BoxFit.fitWidth,
-                                  ),
-                                );
-                              },
+                                  builder: (context, snapshot) {
+                                    // Customize what your widget looks like when it's loading.
+                                    if (!snapshot.hasData) {
+                                      return Center(
+                                        child: SizedBox(
+                                          width: 50.0,
+                                          height: 50.0,
+                                          child: CircularProgressIndicator(
+                                            valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                              FlutterFlowTheme.of(context)
+                                                  .primary,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                    List<UsersRecord>
+                                    circleImageUsersRecordList =
+                                    snapshot.data!;
+                                    // Return an empty Container when the item does not exist.
+                                    if (snapshot.data!.isEmpty) {
+                                      return Container();
+                                    }
+                                    final circleImageUsersRecord =
+                                    circleImageUsersRecordList.isNotEmpty
+                                        ? circleImageUsersRecordList.first
+                                        : null;
+
+                                    return Container(
+                                      width: 90.0,
+                                      height: 90.0,
+                                      clipBehavior: Clip.antiAlias,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: CachedNetworkImage(
+                                        fadeInDuration: Duration(milliseconds: 500),
+                                        fadeOutDuration:
+                                        Duration(milliseconds: 500),
+                                        imageUrl: _model.uploadedFileUrl2 == null ||
+                                            _model.uploadedFileUrl2 == ''
+                                            ? (currentUserPhoto == null || currentUserPhoto == ''
+                                            ? 'https://i.ibb.co/vV93kgy/35cf059d31c96e31aaf0a5326ad513d2.jpg'
+                                            : currentUserPhoto)
+                                            : _model.uploadedFileUrl2,
+                                        fit: BoxFit.fitWidth,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Align(
-                  alignment: AlignmentDirectional(0.0, 0.05),
-                  child: Padding(
-                    padding:
-                    EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 24.0),
-                    child: FFButtonWidget(
-                      onPressed: () async {
-                        final selectedMedia =
-                        await selectMediaWithSourceBottomSheet(
-                          context: context,
-                          allowPhoto: true,
-                        );
-                        if (selectedMedia != null &&
-                            selectedMedia.every((m) =>
-                                validateFileFormat(m.storagePath, context))) {
-                          safeSetState(() => _model.isDataUploading2 = true);
-                          var selectedUploadedFiles = <FFUploadedFile>[];
-
-                          var downloadUrls = <String>[];
-                          try {
-                            selectedUploadedFiles = selectedMedia
-                                .map((m) => FFUploadedFile(
-                              name: m.storagePath.split('/').last,
-                              bytes: m.bytes,
-                              height: m.dimensions?.height,
-                              width: m.dimensions?.width,
-                              blurHash: m.blurHash,
-                            ))
-                                .toList();
-
-                            downloadUrls = (await Future.wait(
-                              selectedMedia.map(
-                                    (m) async =>
-                                await uploadData(m.storagePath, m.bytes),
-                              ),
-                            ))
-                                .where((u) => u != null)
-                                .map((u) => u!)
-                                .toList();
-                          } finally {
-                            _model.isDataUploading2 = false;
-                          }
-                          if (selectedUploadedFiles.length ==
-                              selectedMedia.length &&
-                              downloadUrls.length == selectedMedia.length) {
-                            safeSetState(() {
-                              _model.uploadedLocalFile2 =
-                                  selectedUploadedFiles.first;
-                              _model.uploadedFileUrl2 = downloadUrls.first;
-                            });
-                          } else {
-                            safeSetState(() {});
-                            return;
-                          }
-                        }
-
-                        await currentUserReference!
-                            .update(createUsersRecordData(
-                          photoUrl: _model.uploadedFileUrl2,
-                        ));
-                      },
-                      text: '이미지 수정하기',
-                      options: FFButtonOptions(
-                        width: 200.0,
-                        height: 50.0,
-                        padding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        iconPadding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        color: FlutterFlowTheme.of(context).primary,
-                        textStyle: FlutterFlowTheme.of(context)
-                            .titleMedium
-                            .override(
-                          fontFamily: 'Inter Tight',
-                          color: FlutterFlowTheme.of(context).primaryText,
-                          letterSpacing: 0.0,
-                        ),
-                        elevation: 2.0,
-                        borderSide: BorderSide(
-                          color: Colors.transparent,
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(12.0),
+                        ],
                       ),
                     ),
-                  ),
-                ),
-                Divider(
-                  height: 16.0,
-                  thickness: 2.0,
-                  color: Color(0xFFF1F4F8),
-                ),
-                Padding(
-                  padding:
-                  EdgeInsetsDirectional.fromSTEB(20.0, 24.0, 20.0, 24.0),
-                  child: StreamBuilder<List<UsersRecord>>(
-                    stream: queryUsersRecord(
-                      singleRecord: true,
-                    ),
-                    builder: (context, snapshot) {
-                      // Customize what your widget looks like when it's loading.
-                      if (!snapshot.hasData) {
-                        return Center(
-                          child: SizedBox(
-                            width: 50.0,
+                    Align(
+                      alignment: AlignmentDirectional(0.0, 0.05),
+                      child: Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                            0.0, 12.0, 0.0, 24.0),
+                        child: FFButtonWidget(
+                          onPressed: () async {
+                            final selectedMedia =
+                            await selectMediaWithSourceBottomSheet(
+                              context: context,
+                              allowPhoto: true,
+                            );
+                            if (selectedMedia != null &&
+                                selectedMedia.every((m) => validateFileFormat(
+                                    m.storagePath, context))) {
+                              safeSetState(
+                                      () => _model.isDataUploading2 = true);
+                              var selectedUploadedFiles = <FFUploadedFile>[];
+
+                              var downloadUrls = <String>[];
+                              try {
+                                selectedUploadedFiles = selectedMedia
+                                    .map((m) => FFUploadedFile(
+                                  name: m.storagePath.split('/').last,
+                                  bytes: m.bytes,
+                                  height: m.dimensions?.height,
+                                  width: m.dimensions?.width,
+                                  blurHash: m.blurHash,
+                                ))
+                                    .toList();
+
+                                downloadUrls = (await Future.wait(
+                                  selectedMedia.map(
+                                        (m) async => await uploadData(
+                                        m.storagePath, m.bytes),
+                                  ),
+                                ))
+                                    .where((u) => u != null)
+                                    .map((u) => u!)
+                                    .toList();
+                              } finally {
+                                _model.isDataUploading2 = false;
+                              }
+                              if (selectedUploadedFiles.length ==
+                                  selectedMedia.length &&
+                                  downloadUrls.length == selectedMedia.length) {
+                                safeSetState(() {
+                                  _model.uploadedLocalFile2 =
+                                      selectedUploadedFiles.first;
+                                  _model.uploadedFileUrl2 = downloadUrls.first;
+                                });
+                              } else {
+                                safeSetState(() {});
+                                return;
+                              }
+                            }
+
+                            await currentUserReference!
+                                .update(createUsersRecordData(
+                              photoUrl: _model.uploadedFileUrl2,
+                            ));
+                          },
+                          text: '이미지 수정하기',
+                          options: FFButtonOptions(
+                            width: 200.0,
                             height: 50.0,
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                FlutterFlowTheme.of(context).primary,
-                              ),
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            color: FlutterFlowTheme.of(context).primary,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .titleMedium
+                                .override(
+                              fontFamily: 'Inter Tight',
+                              color:
+                              FlutterFlowTheme.of(context).primaryText,
+                              letterSpacing: 0.0,
                             ),
+                            elevation: 2.0,
+                            borderSide: BorderSide(
+                              color: Colors.transparent,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(12.0),
                           ),
-                        );
-                      }
-                      List<UsersRecord> yourNameUsersRecordList =
-                      snapshot.data!;
-                      // Return an empty Container when the item does not exist.
-                      if (snapshot.data!.isEmpty) {
-                        return Container();
-                      }
-                      final yourNameUsersRecord =
-                      yourNameUsersRecordList.isNotEmpty
-                          ? yourNameUsersRecordList.first
-                          : null;
-
-                      return TextFormField(
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      height: 16.0,
+                      thickness: 2.0,
+                      color: Color(0xFFF1F4F8),
+                    ),
+                    Text(
+                      valueOrDefault<String>(
+                        columnUsersRecord.displayName,
+                        '닉네임이 없습니다.',
+                      ),
+                      textAlign: TextAlign.center,
+                      style: FlutterFlowTheme.of(context).bodyLarge.override(
+                        fontFamily: 'Inter',
+                        letterSpacing: 0.0,
+                      ),
+                    ),
+                    Divider(
+                      height: 16.0,
+                      thickness: 2.0,
+                      color: Color(0xFFF1F4F8),
+                    ),
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(
+                          20.0, 24.0, 20.0, 24.0),
+                      child: TextFormField(
                         controller: _model.yourNameTextController,
                         focusNode: _model.yourNameFocusNode,
                         textCapitalization: TextCapitalization.words,
@@ -454,113 +468,124 @@ class _ChangeProflieWidgetState extends State<ChangeProflieWidget> {
                         null,
                         validator: _model.yourNameTextControllerValidator
                             .asValidator(context),
-                      );
-                    },
-                  ),
-                ),
-                Align(
-                  alignment: AlignmentDirectional(0.0, 0.0),
-                  child: Padding(
-                    padding:
-                    EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 24.0),
-                    child: FFButtonWidget(
-                      onPressed: () async {
-                        if (_model.formKey.currentState == null ||
-                            !_model.formKey.currentState!.validate()) {
-                          return;
-                        }
-
-                        try {
-                          await currentUserReference!
-                              .update(createUsersRecordData(
-                            displayName: _model.yourNameTextController.text,
-                          ));
-
-                          // 수정 완료 후 알림 메시지 표시
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('닉네임이 수정되었습니다!'),
-                              duration: Duration(seconds: 2),
-                            ),
-                          );
-                        } catch (e) {
-                          // 수정 실패 시 알림 메시지 표시
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('수정에 실패했습니다. 다시 시도해주세요.'),
-                              duration: Duration(seconds: 2),
-                            ),
-                          );
-                        }
-                      },
-                      text: '닉네임 수정하기',
-                      options: FFButtonOptions(
-                        width: 270.0,
-                        height: 50.0,
-                        padding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        iconPadding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        color: FlutterFlowTheme.of(context).primary,
-                        textStyle: FlutterFlowTheme.of(context)
-                            .titleMedium
-                            .override(
-                          fontFamily: 'Inter Tight',
-                          color: FlutterFlowTheme.of(context).primaryText,
-                          letterSpacing: 0.0,
-                        ),
-                        elevation: 2.0,
-                        borderSide: BorderSide(
-                          color: Colors.transparent,
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(12.0),
                       ),
                     ),
-                  ),
-                ),
-                Divider(
-                  height: 16.0,
-                  thickness: 2.0,
-                  color: Color(0xFFF1F4F8),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 48.0, 0.0, 0.0),
-                  child: FFButtonWidget(
-                    onPressed: () async {
-                      GoRouter.of(context).prepareAuthEvent();
-                      await authManager.signOut();
-                      GoRouter.of(context).clearRedirectLocation();
-
-                      context.goNamedAuth('StartPage', context.mounted);
-                    },
-                    text: '로그아웃',
-                    options: FFButtonOptions(
-                      width: 270.0,
-                      height: 50.0,
+                    Align(
+                      alignment: AlignmentDirectional(0.0, 0.0),
+                      child: Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                            0.0, 12.0, 0.0, 24.0),
+                        child: FFButtonWidget(
+                          onPressed: () async {
+                            if (_model.formKey.currentState == null ||
+                                !_model.formKey.currentState!.validate()) {
+                              return;
+                            }
+                            try {
+                              if (_model.yourNameTextController.text.trim().isNotEmpty) {
+                                await currentUserReference!
+                                    .update(createUsersRecordData(
+                                  displayName: _model.yourNameTextController
+                                      .text,
+                                ));
+                                // 수정 완료 후 알림 메시지 표시
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('닉네임이 수정되었습니다!'),
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                              }
+                              else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('닉네임은 빈칸일 수 없습니다.'),
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                              }
+                            } catch (e) {
+                              // 수정 실패 시 알림 메시지 표시
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('수정에 실패했습니다. 다시 시도해주세요.'),
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            }
+                          },
+                          text: '닉네임 수정하기',
+                          options: FFButtonOptions(
+                            width: 270.0,
+                            height: 50.0,
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            color: FlutterFlowTheme.of(context).primary,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .titleMedium
+                                .override(
+                              fontFamily: 'Inter Tight',
+                              color:
+                              FlutterFlowTheme.of(context).primaryText,
+                              letterSpacing: 0.0,
+                            ),
+                            elevation: 2.0,
+                            borderSide: BorderSide(
+                              color: Colors.transparent,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      height: 16.0,
+                      thickness: 2.0,
+                      color: Color(0xFFF1F4F8),
+                    ),
+                    Padding(
                       padding:
-                      EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                      iconPadding:
-                      EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                      color: Color(0xFFFB848A),
-                      textStyle:
-                      FlutterFlowTheme.of(context).titleMedium.override(
-                        fontFamily: 'Inter Tight',
-                        color: FlutterFlowTheme.of(context)
-                            .secondaryBackground,
-                        letterSpacing: 0.0,
+                      EdgeInsetsDirectional.fromSTEB(0.0, 48.0, 0.0, 0.0),
+                      child: FFButtonWidget(
+                        onPressed: () async {
+                          GoRouter.of(context).prepareAuthEvent();
+                          await authManager.signOut();
+                          GoRouter.of(context).clearRedirectLocation();
+
+                          context.goNamedAuth('StartPage', context.mounted);
+                        },
+                        text: '로그아웃',
+                        options: FFButtonOptions(
+                          width: 270.0,
+                          height: 50.0,
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 0.0),
+                          iconPadding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 0.0),
+                          color: Color(0xFFFB848A),
+                          textStyle:
+                          FlutterFlowTheme.of(context).titleMedium.override(
+                            fontFamily: 'Inter Tight',
+                            color: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
+                            letterSpacing: 0.0,
+                          ),
+                          elevation: 2.0,
+                          borderSide: BorderSide(
+                            color: Colors.transparent,
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
                       ),
-                      elevation: 2.0,
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(12.0),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
         ),
       ),
