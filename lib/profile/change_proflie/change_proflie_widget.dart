@@ -541,47 +541,6 @@ class _ChangeProflieWidgetState extends State<ChangeProflieWidget> {
                         ),
                       ),
                     ),
-                    Divider(
-                      height: 16.0,
-                      thickness: 2.0,
-                      color: Color(0xFFF1F4F8),
-                    ),
-                    Padding(
-                      padding:
-                      EdgeInsetsDirectional.fromSTEB(0.0, 48.0, 0.0, 0.0),
-                      child: FFButtonWidget(
-                        onPressed: () async {
-                          GoRouter.of(context).prepareAuthEvent();
-                          await authManager.signOut();
-                          GoRouter.of(context).clearRedirectLocation();
-
-                          context.goNamedAuth('StartPage', context.mounted);
-                        },
-                        text: '로그아웃',
-                        options: FFButtonOptions(
-                          width: 270.0,
-                          height: 50.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFFFB848A),
-                          textStyle:
-                          FlutterFlowTheme.of(context).titleMedium.override(
-                            fontFamily: 'Inter Tight',
-                            color: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
-                            letterSpacing: 0.0,
-                          ),
-                          elevation: 2.0,
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               );

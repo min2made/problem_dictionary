@@ -15,6 +15,7 @@ import 'list_page_model.dart';
 export 'list_page_model.dart';
 import '/utils/rustdesk_launcher.dart';
 import '/utils/speech_recognition_widget.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class ListPageWidget extends StatefulWidget {
   const ListPageWidget({
@@ -765,49 +766,59 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 10.0, 0.0),
-                                          child: FlutterFlowIconButton(
-                                            borderColor: Color(0xFF747474),
-                                            borderRadius: 30.0,
-                                            borderWidth: 3.0,
-                                            buttonSize: 60.0,
-                                            fillColor: Colors.white,
-                                            icon: Icon(
-                                              Icons.desktop_windows,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryText,
-                                              size: 30.0,
+                                        SpeedDial(
+                                          animatedIcon: AnimatedIcons.menu_close,
+                                          buttonSize: Size(65, 65),
+                                          childrenButtonSize: Size(65,65),
+                                          backgroundColor: Color(0xFFD4A373),
+                                          overlayColor: Colors.black,
+                                          overlayOpacity:0.2,
+                                          spacing: 5,
+                                          children: [
+                                            SpeedDialChild(
+                                                child: Icon(Icons.logout),
+                                                backgroundColor: Color(0xFAFF6B5E),
+                                                label: '로그아웃',
+                                                labelStyle: TextStyle(
+                                                  fontSize: 20.0,
+                                                ),
+                                                labelBackgroundColor: Color(
+                                                    0xFAFF6B5E),
+                                                onTap: () async {
+                                                  GoRouter.of(context).prepareAuthEvent();
+                                                  await authManager.signOut();
+                                                  GoRouter.of(context).clearRedirectLocation();
+
+                                                  context.goNamedAuth('StartPage', context.mounted);
+                                                },
                                             ),
-                                            onPressed: () async {
-                                              try {
-                                                await RustDeskLauncher
-                                                    .launchRustDesk();
-                                              } catch (e) {
-                                                print(
-                                                    'Failed to launch RustDesk: $e');
-                                              }
-                                            },
-                                          ),
-                                        ),
-                                        FlutterFlowIconButton(
-                                          borderColor: Color(0xFF747474),
-                                          borderRadius: 30.0,
-                                          borderWidth: 3.0,
-                                          buttonSize: 60.0,
-                                          fillColor: Colors.white,
-                                          icon: Icon(
-                                            Icons.person,
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
-                                            size: 40.0,
-                                          ),
-                                          onPressed: () async {
-                                            context.pushNamed('ChangeProflie');
-                                          },
+                                            SpeedDialChild(
+                                                child: Icon(Icons.computer),
+                                                label: '화면 공유',
+                                                labelStyle: TextStyle(
+                                                  fontSize: 20.0,
+                                                ),
+                                                onTap: () async {
+                                                  try {
+                                                    await RustDeskLauncher
+                                                        .launchRustDesk();
+                                                  } catch (e) {
+                                                    print(
+                                                        '화면 공유 실행 실패: $e');
+                                                  }
+                                                }
+                                            ),
+                                            SpeedDialChild(
+                                                child: Icon(Icons.person),
+                                                label: '프로필 수정하기',
+                                                labelStyle: TextStyle(
+                                                  fontSize: 20.0,
+                                                ),
+                                                onTap: () async {
+                                                  context.pushNamed('ChangeProflie');
+                                              },
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
@@ -1176,7 +1187,7 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                             style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                                                   fontFamily: 'Plus Jakarta Sans',
                                                                                   color: Color(0xFF39D2C0),
-                                                                                  fontSize: 14.0,
+                                                                                  fontSize: 16.0,
                                                                                   letterSpacing: 0.0,
                                                                                   fontWeight: FontWeight.w500,
                                                                                 ),
@@ -1461,7 +1472,7 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                               style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                                                     fontFamily: 'Plus Jakarta Sans',
                                                                                     color: Color(0xFF39D2C0),
-                                                                                    fontSize: 14.0,
+                                                                                    fontSize: 16.0,
                                                                                     letterSpacing: 0.0,
                                                                                     fontWeight: FontWeight.w500,
                                                                                   ),
@@ -1598,32 +1609,11 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 10.0, 0.0),
-                                          child: FlutterFlowIconButton(
-                                            borderColor: Color(0xFF747474),
-                                            borderRadius: 30.0,
-                                            borderWidth: 3.0,
-                                            buttonSize: 60.0,
-                                            fillColor: Colors.white,
-                                            icon: Icon(
-                                              Icons.desktop_windows,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryText,
-                                              size: 30.0,
-                                            ),
-                                            onPressed:
-                                                RustDeskLauncher.launchRustDesk,
-                                          ),
-                                        ),
                                         FlutterFlowIconButton(
                                           borderColor: Color(0xFF747474),
                                           borderRadius: 30.0,
                                           borderWidth: 3.0,
-                                          buttonSize: 60.0,
+                                          buttonSize: 65.0,
                                           fillColor: Colors.white,
                                           icon: Icon(
                                             Icons.add_outlined,
@@ -1634,6 +1624,61 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                           onPressed: () async {
                                             context.pushNamed('CreatePost');
                                           },
+                                        ),
+                                        SizedBox(width: 10.0),
+                                        SpeedDial(
+                                          animatedIcon: AnimatedIcons.menu_close,
+                                          buttonSize: Size(65, 65),
+                                          childrenButtonSize: Size(65,65),
+                                          backgroundColor: Color(0xFFD4A373),
+                                          overlayColor: Colors.black,
+                                          overlayOpacity:0.2,
+                                          spacing: 5,
+                                          children: [
+                                            SpeedDialChild(
+                                              child: Icon(Icons.logout),
+                                              backgroundColor: Color(0xFAFF6B5E),
+                                              label: '로그아웃',
+                                              labelStyle: TextStyle(
+                                                fontSize: 20.0,
+                                              ),
+                                              labelBackgroundColor: Color(
+                                                  0xFAFF6B5E),
+                                              onTap: () async {
+                                                GoRouter.of(context).prepareAuthEvent();
+                                                await authManager.signOut();
+                                                GoRouter.of(context).clearRedirectLocation();
+
+                                                context.goNamedAuth('StartPage', context.mounted);
+                                              },
+                                            ),
+                                            SpeedDialChild(
+                                                child: Icon(Icons.computer),
+                                                label: '화면 공유',
+                                                labelStyle: TextStyle(
+                                                  fontSize: 20.0,
+                                                ),
+                                                onTap: () async {
+                                                  try {
+                                                    await RustDeskLauncher
+                                                        .launchRustDesk();
+                                                  } catch (e) {
+                                                    print(
+                                                        '화면 공유 실행 실패: $e');
+                                                  }
+                                                }
+                                            ),
+                                            SpeedDialChild(
+                                              child: Icon(Icons.person),
+                                              label: '프로필 수정하기',
+                                              labelStyle: TextStyle(
+                                                fontSize: 20.0,
+                                              ),
+                                              onTap: () async {
+                                                context.pushNamed('ChangeProflie');
+                                              },
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),

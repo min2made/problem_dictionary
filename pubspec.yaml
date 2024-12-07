@@ -123,6 +123,7 @@ dependencies:
 
   crypto: any
   http_parser: any
+  flutter_speed_dial: ^7.0.0
 dependency_overrides:
   http: 1.2.2
   uuid: ^4.0.0
