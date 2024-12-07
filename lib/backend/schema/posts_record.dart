@@ -10,9 +10,9 @@ import '/flutter_flow/flutter_flow_util.dart';
 
 class PostsRecord extends FirestoreRecord {
   PostsRecord._(
-    DocumentReference reference,
-    Map<String, dynamic> data,
-  ) : super(reference, data) {
+      DocumentReference reference,
+      Map<String, dynamic> data,
+      ) : super(reference, data) {
     _initializeFields();
   }
 
@@ -66,6 +66,11 @@ class PostsRecord extends FirestoreRecord {
   List<String> get postMutiplePhotos => _postMutiplePhotos ?? const [];
   bool hasPostMutiplePhotos() => _postMutiplePhotos != null;
 
+  // "post_user_photo" field.
+  String? _postUserPhoto;
+  String get postUserPhoto => _postUserPhoto ?? '';
+  bool hasPostUserPhoto() => _postUserPhoto != null;
+
   void _initializeFields() {
     _postTitle = snapshotData['post_title'] as String?;
     _postDescription = snapshotData['post_description'] as String?;
@@ -77,6 +82,7 @@ class PostsRecord extends FirestoreRecord {
     _like = getDataList(snapshotData['like']);
     _dislike = getDataList(snapshotData['dislike']);
     _postMutiplePhotos = getDataList(snapshotData['post_mutiple_photos']);
+    _postUserPhoto = snapshotData['post_user_photo'] as String?;
   }
 
   static CollectionReference get collection =>
@@ -89,14 +95,14 @@ class PostsRecord extends FirestoreRecord {
       ref.get().then((s) => PostsRecord.fromSnapshot(s));
 
   static PostsRecord fromSnapshot(DocumentSnapshot snapshot) => PostsRecord._(
-        snapshot.reference,
-        mapFromFirestore(snapshot.data() as Map<String, dynamic>),
-      );
+    snapshot.reference,
+    mapFromFirestore(snapshot.data() as Map<String, dynamic>),
+  );
 
   static PostsRecord getDocumentFromData(
-    Map<String, dynamic> data,
-    DocumentReference reference,
-  ) =>
+      Map<String, dynamic> data,
+      DocumentReference reference,
+      ) =>
       PostsRecord._(reference, mapFromFirestore(data));
 
   @override
@@ -109,7 +115,7 @@ class PostsRecord extends FirestoreRecord {
   @override
   bool operator ==(other) =>
       other is PostsRecord &&
-      reference.path.hashCode == other.reference.path.hashCode;
+          reference.path.hashCode == other.reference.path.hashCode;
 }
 
 Map<String, dynamic> createPostsRecordData({
@@ -120,6 +126,7 @@ Map<String, dynamic> createPostsRecordData({
   String? tag,
   String? author,
   String? postPhoto,
+  String? postUserPhoto,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -130,6 +137,7 @@ Map<String, dynamic> createPostsRecordData({
       'tag': tag,
       'author': author,
       'post_photo': postPhoto,
+      'post_user_photo': postUserPhoto,
     }.withoutNulls,
   );
 
@@ -151,22 +159,24 @@ class PostsRecordDocumentEquality implements Equality<PostsRecord> {
         e1?.postPhoto == e2?.postPhoto &&
         listEquality.equals(e1?.like, e2?.like) &&
         listEquality.equals(e1?.dislike, e2?.dislike) &&
-        listEquality.equals(e1?.postMutiplePhotos, e2?.postMutiplePhotos);
+        listEquality.equals(e1?.postMutiplePhotos, e2?.postMutiplePhotos) &&
+        e1?.postUserPhoto == e2?.postUserPhoto;
   }
 
   @override
   int hash(PostsRecord? e) => const ListEquality().hash([
-        e?.postTitle,
-        e?.postDescription,
-        e?.postUser,
-        e?.timePosted,
-        e?.tag,
-        e?.author,
-        e?.postPhoto,
-        e?.like,
-        e?.dislike,
-        e?.postMutiplePhotos
-      ]);
+    e?.postTitle,
+    e?.postDescription,
+    e?.postUser,
+    e?.timePosted,
+    e?.tag,
+    e?.author,
+    e?.postPhoto,
+    e?.like,
+    e?.dislike,
+    e?.postMutiplePhotos,
+    e?.postUserPhoto
+  ]);
 
   @override
   bool isValidKey(Object? o) => o is PostsRecord;

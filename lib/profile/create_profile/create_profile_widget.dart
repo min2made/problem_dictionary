@@ -124,7 +124,7 @@ class _CreateProfileWidgetState extends State<CreateProfileWidget> {
                           try {
                             showUploadMessage(
                               context,
-                              'Uploading file...',
+                              '업로드 중입니다...',
                               showLoading: true,
                             );
                             selectedUploadedFiles = selectedMedia
@@ -158,10 +158,10 @@ class _CreateProfileWidgetState extends State<CreateProfileWidget> {
                                   selectedUploadedFiles.first;
                               _model.uploadedFileUrl1 = downloadUrls.first;
                             });
-                            showUploadMessage(context, 'Success!');
+                            showUploadMessage(context, '성공!');
                           } else {
                             safeSetState(() {});
-                            showUploadMessage(context, 'Failed to upload data');
+                            showUploadMessage(context, '업로드에 실패했습니다.');
                             return;
                           }
                         }
@@ -329,7 +329,7 @@ class _CreateProfileWidgetState extends State<CreateProfileWidget> {
                   textCapitalization: TextCapitalization.words,
                   obscureText: false,
                   decoration: InputDecoration(
-                    labelText: '닉네임',
+                    labelText: '닉네임 입력하기...',
                     labelStyle:
                         FlutterFlowTheme.of(context).labelMedium.override(
                               fontFamily: 'Inter',

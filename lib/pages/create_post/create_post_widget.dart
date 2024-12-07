@@ -439,6 +439,7 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                                 timePosted: getCurrentTimestamp,
                                 author: currentUserDisplayName,
                                 postUser: currentUserReference,
+                                postUserPhoto: currentUserPhoto,
                               ),
                               ...mapToFirestore(
                                 {
