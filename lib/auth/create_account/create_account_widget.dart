@@ -427,8 +427,14 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                               .showSnackBar(
                                             const SnackBar(
                                               content: Text(
-                                                'Passwords don\'t match!',
+                                                '비밀번호가 일치하지 않습니다!',
+                                                style: TextStyle(
+                                                  color: Colors.black, // 글자색 설정
+                                                  fontSize: 14.0,
+                                                ),
                                               ),
+                                              backgroundColor: Color(0xFFFAEDCD), // 배경색 설정
+                                              behavior: SnackBarBehavior.floating, // 스낵바 동작 변경
                                             ),
                                           );
                                           return;
