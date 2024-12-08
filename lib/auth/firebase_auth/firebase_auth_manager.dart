@@ -86,7 +86,7 @@ class FirebaseAuthManager extends AuthManager
   }) async {
     try {
       if (!loggedIn) {
-        print('Error: update email attempted with no logged in user!');
+        print('오류: 로그인된 사용자가 없는 상태에서 이메일 업데이트를 시도했습니다');
         return;
       }
       await currentUser?.updateEmail(email);
@@ -97,7 +97,7 @@ class FirebaseAuthManager extends AuthManager
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text(
-                  'Too long since most recent sign in. Sign in again before updating your email.')),
+                  '마지막 로그인이 너무 오래됐습니다. 이메일을 업데이트하기 전에 다시 로그인하세요.')),
         );
       }
     }
@@ -118,7 +118,16 @@ class FirebaseAuthManager extends AuthManager
       return null;
     }
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Password reset email sent')),
+      const SnackBar(content: Text(
+        '비밀번호 초기화 이메일을 전송했습니다.',
+        style: TextStyle(
+          color: Colors.black, // 글자색 설정
+          fontSize: 14.0,
+        ),
+      ),
+        backgroundColor:  Color(0xFFFAEDCD), // 배경색 설정
+        behavior: SnackBarBehavior.floating, // 추가적으로 스낵바 동작 변경 (선택 사항)
+      ),
     );
   }
 
@@ -184,7 +193,7 @@ class FirebaseAuthManager extends AuthManager
       } else if (phoneAuthManager.phoneAuthError != null) {
         final e = phoneAuthManager.phoneAuthError!;
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Error: ${e.message!}'),
+          content: Text('오류: ${e.message!}'),
         ));
         phoneAuthManager.update(() => phoneAuthManager.phoneAuthError = null);
       }
@@ -289,16 +298,61 @@ class FirebaseAuthManager extends AuthManager
           ? null
           : ProblemDictionaryFirebaseUser.fromUserCredential(userCredential);
     } on FirebaseAuthException catch (e) {
-      final errorMsg = switch (e.code) {
-        'email-already-in-use' =>
-          'Error: The email is already in use by a different account',
-        'INVALID_LOGIN_CREDENTIALS' =>
-          'Error: The supplied auth credential is incorrect, malformed or has expired',
-        _ => 'Error: ${e.message!}',
+      String customMessage = '';
+      switch (e.code) {
+        case 'email-already-in-use':
+          customMessage = '이미 사용 중인 이메일입니다. 다른 이메일을 사용해주세요.';
+          break;
+        case 'wrong-password':
+          customMessage = '비밀번호가 잘못되었습니다. 다시 확인해주세요.';
+         break;
+        case 'user-not-found':
+          customMessage = '등록된 사용자가 없습니다. 이메일을 확인해주세요.';
+         break;
+        case 'too-many-requests':
+          customMessage = '너무 많은 요청이 발생했습니다. 잠시 후 다시 시도해주세요.';
+          break;
+        case 'user-disabled':
+          customMessage = '해당 계정이 비활성화되었습니다. 관리자에게 문의하세요.';
+          break;
+        case 'wrong-password':
+          customMessage = '비밀번호가 잘못되었습니다. 다시 확인해주세요.';
+          break;
+        case 'requires-recent-login':
+          customMessage = '보안 상의 이유로 최근 로그인 기록이 필요합니다. 다시 로그인해주세요.';
+          break;
+        case 'credential-already-in-use':
+          customMessage = '이미 다른 계정에서 사용 중인 인증 정보입니다.';
+          break;
+        case 'network-request-failed':
+          customMessage = '네트워크 연결에 문제가 발생했습니다. 인터넷 연결을 확인해주세요.';
+          break;
+        case 'invalid-email':
+          customMessage = '유효하지 않은 이메일 형식입니다.';
+          break;
+        case 'invalid-verification-id':
+          customMessage = '유효하지 않은 인증 ID입니다. 다시 시도해주세요.';
+          break;
+        case 'invalid-credential':
+          customMessage =
+          '이메일 또는 비밀번호가 잘못되었거나 만료되었습니다.';
+          break;
+        default:
+        customMessage = '이메일과 비밀번호를 모두 입력해주세요.';
+        //customMessage = '오류발생: ${e.message ?? "오류 내용 없음"}';
       };
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMsg)),
+        SnackBar(content: Text(
+          customMessage,
+          style: TextStyle(
+            color: Colors.black, // 글자색 설정
+            fontSize: 14.0,
+          ),
+        ),
+          backgroundColor:  Color(0xFFFAEDCD), // 배경색 설정
+          behavior: SnackBarBehavior.floating, // 추가적으로 스낵바 동작 변경 (선택 사항)
+        ),
       );
       return null;
     }
