@@ -368,23 +368,15 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                                                                     ScaffoldMessenger.of(
                                                                         context)
                                                                         .showSnackBar(
-                                                                      SnackBar(
-                                                                        content:
-                                                                        Text(
-                                                                          '클립보드에 복사되었습니다',
-                                                                          style: FlutterFlowTheme.of(context)
-                                                                              .bodyMedium
-                                                                              .override(
-                                                                            fontFamily: 'Inter',
-                                                                            color: FlutterFlowTheme.of(context).info,
-                                                                            fontSize: 12.0,
-                                                                            letterSpacing: 0.0,
-                                                                          ),
+                                                                      SnackBar(content: Text(
+                                                                        '클립보드에 복사되었습니다!',
+                                                                        style: TextStyle(
+                                                                          color: Colors.black, // 글자색 설정
+                                                                          fontSize: 14.0,
                                                                         ),
-                                                                        duration:
-                                                                        const Duration(milliseconds: 2000),
-                                                                        backgroundColor:
-                                                                        FlutterFlowTheme.of(context).primary,
+                                                                      ),
+                                                                        backgroundColor:  Color(0xFFFAEDCD), // 배경색 설정
+                                                                        behavior: SnackBarBehavior.floating, // 추가적으로 스낵바 동작 변경 (선택 사항)
                                                                       ),
                                                                     );
                                                                   },
