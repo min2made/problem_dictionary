@@ -350,7 +350,9 @@ class _ChangeProflieWidgetState extends State<ChangeProflieWidget> {
 
                             await currentUserReference!
                                 .update(createUsersRecordData(
-                              photoUrl: _model.uploadedFileUrl2,
+                              photoUrl: _model.uploadedFileUrl2 == null || _model.uploadedFileUrl2 == ''
+                                  ? 'https://i.ibb.co/vV93kgy/35cf059d31c96e31aaf0a5326ad513d2.jpg'
+                                  : _model.uploadedFileUrl2,
                             ));
                           },
                           text: '이미지 수정하기',

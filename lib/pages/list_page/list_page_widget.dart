@@ -102,19 +102,28 @@ class _ListPageWidgetState extends State<ListPageWidget>
                           padding: EdgeInsets.all(4.0),
                           tabs: [
                             Tab(
-                              text: '백과사전',
+                              child: Text(
+                                '백과사전',
+                                overflow: TextOverflow.ellipsis, // 텍스트가 넘칠 때 말줄임표 처리
+                              ),
                               icon: FaIcon(
                                 FontAwesomeIcons.book,
                               ),
                             ),
                             Tab(
-                              text: '커뮤니티',
+                              child: Text(
+                                '커뮤니티',
+                                overflow: TextOverflow.ellipsis,
+                              ),
                               icon: Icon(
                                 Icons.message_rounded,
                               ),
                             ),
                             Tab(
-                              text: '챗봇',
+                              child: Text(
+                                '챗봇',
+                                overflow: TextOverflow.ellipsis,
+                              ),
                               icon: FaIcon(
                                 FontAwesomeIcons.robot,
                               ),
@@ -705,14 +714,16 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                                 color: FlutterFlowTheme.of(context).primaryText,
                                                                                 size: 24,
                                                                               ),
-                                                                            Text(
-                                                                              listViewDictionsRecord.postTitle,
-                                                                              maxLines: 1,
-                                                                              overflow: TextOverflow.ellipsis,
-                                                                              style: FlutterFlowTheme.of(context).titleMedium.override(
-                                                                                    fontFamily: 'Inter Tight',
-                                                                                    letterSpacing: 0.0,
-                                                                                  ),
+                                                                            Expanded(
+                                                                              child: Text(
+                                                                                listViewDictionsRecord.postTitle,
+                                                                                maxLines: 1,
+                                                                                overflow: TextOverflow.ellipsis,
+                                                                                style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                  fontFamily: 'Inter Tight',
+                                                                                  letterSpacing: 0.0,
+                                                                                ),
+                                                                              ),
                                                                             ),
                                                                           ],
                                                                         ),
@@ -1507,16 +1518,16 @@ class _ListPageWidgetState extends State<ListPageWidget>
                                                                               color: FlutterFlowTheme.of(context).primaryText,
                                                                               size: 24,
                                                                             ),
-                                                                          Text(
-                                                                            listViewPostsRecord.postTitle,
-                                                                            maxLines:
-                                                                                1,
-                                                                            overflow:
-                                                                                TextOverflow.ellipsis,
-                                                                            style: FlutterFlowTheme.of(context).titleMedium.override(
-                                                                                  fontFamily: 'Inter Tight',
-                                                                                  letterSpacing: 0.0,
-                                                                                ),
+                                                                          Expanded(
+                                                                            child: Text(
+                                                                              listViewPostsRecord.postTitle,
+                                                                              maxLines: 1,
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                              style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                fontFamily: 'Inter Tight',
+                                                                                letterSpacing: 0.0,
+                                                                              ),
+                                                                            ),
                                                                           ),
                                                                         ],
                                                                       ),
