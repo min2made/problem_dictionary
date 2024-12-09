@@ -87,6 +87,17 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Problem Dictionary',
+      builder: (context, child) {
+        final mediaQueryData = MediaQuery.of(context);
+        return MediaQuery(
+          data: mediaQueryData.copyWith(
+            textScaler: TextScaler.linear(
+                mediaQueryData.textScaler.scale(1.0).clamp(1.0, 1.3)
+            ),
+          ),
+          child: child!,
+        );
+      },
       localizationsDelegates: const [
         FFLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
