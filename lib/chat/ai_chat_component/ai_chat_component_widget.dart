@@ -236,6 +236,7 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                                                       Row(
                                                         mainAxisSize:
                                                         MainAxisSize.max,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
                                                           Column(
                                                             mainAxisSize:
@@ -248,7 +249,7 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                                                               Container(
                                                                 constraints:
                                                                 BoxConstraints(
-                                                                  maxWidth: () {
+                                                                  maxWidth: MediaQuery.of(context).size.width * 0.8,/*() {
                                                                     if (MediaQuery.sizeOf(context)
                                                                         .width >=
                                                                         1170.0) {
@@ -260,7 +261,7 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                                                                     } else {
                                                                       return 530.0;
                                                                     }
-                                                                  }(),
+                                                                  }(),*/
                                                                 ),
                                                                 decoration:
                                                                 BoxDecoration(
@@ -301,7 +302,7 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                                                                   child: Column(
                                                                     mainAxisSize:
                                                                     MainAxisSize
-                                                                        .min,
+                                                                        .max,
                                                                     crossAxisAlignment:
                                                                     CrossAxisAlignment
                                                                         .start,
@@ -328,6 +329,8 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                                                                             letterSpacing: 0.0,
                                                                             lineHeight: 1.5,
                                                                           ),
+                                                                          overflow: TextOverflow.clip, // 오버플로우 방지
+                                                                          softWrap: true, // 줄바꿈 활성화
                                                                         ),
                                                                       ),
                                                                     ],
@@ -445,7 +448,8 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                                                           Container(
                                                             constraints:
                                                             BoxConstraints(
-                                                              maxWidth: () {
+                                                              maxWidth: MediaQuery.of(context).size.width * 0.8,
+                                                              /*maxWidth: () {
                                                                 if (MediaQuery.sizeOf(
                                                                     context)
                                                                     .width >=
@@ -459,7 +463,7 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                                                                 } else {
                                                                   return 530.0;
                                                                 }
-                                                              }(),
+                                                              }(),*/
                                                             ),
                                                             decoration:
                                                             BoxDecoration(
