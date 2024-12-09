@@ -737,28 +737,33 @@ class _DetailPostWidgetState extends State<DetailPostWidget> {
                                         size: 24.0,
                                       ),
                                       onPressed: () async {
-                                        await CommentsRecord.collection
-                                            .doc()
-                                            .set({
-                                          ...createCommentsRecordData(
-                                            comment: _model.textController.text,
-                                            commentName:
-                                            columnUsersRecord?.displayName,
-                                            commentPost:
-                                            detailPostPostsRecord.reference,
-                                            commentUser: currentUserReference,
-                                            commentPhoto: currentUserPhoto,
-                                          ),
-                                          ...mapToFirestore(
-                                            {
-                                              'created_at':
-                                              FieldValue.serverTimestamp(),
-                                            },
-                                          ),
-                                        });
-                                        safeSetState(() {
-                                          _model.textController?.clear();
-                                        });
+                                        if (_model.textController.text !=
+                                            null &&
+                                            _model.textController.text != '') {
+                                          await CommentsRecord.collection
+                                              .doc()
+                                              .set({
+                                            ...createCommentsRecordData(
+                                              comment:
+                                              _model.textController.text,
+                                              commentName:
+                                              currentUserDisplayName,
+                                              commentPost: detailPostPostsRecord
+                                                  .reference,
+                                              commentUser: currentUserReference,
+                                              commentPhoto: currentUserPhoto,
+                                            ),
+                                            ...mapToFirestore(
+                                              {
+                                                'created_at': FieldValue
+                                                    .serverTimestamp(),
+                                              },
+                                            ),
+                                          });
+                                          safeSetState(() {
+                                            _model.textController?.clear();
+                                          });
+                                        }
                                       },
                                     ),
                                   ),
