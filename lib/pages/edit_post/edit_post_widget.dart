@@ -15,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
 import 'edit_post_model.dart';
 export 'edit_post_model.dart';
 
@@ -360,15 +361,6 @@ class _EditPostWidgetState extends State<EditPostWidget>
                                   mediaSource: MediaSource.photoGallery,
                                   multiImage: true,
                                 );
-                                if (selectedMedia != null && selectedMedia.length > 3) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text('최대 3개의 이미지만 선택할 수 있습니다.'),
-                                      behavior: SnackBarBehavior.floating,  // floating 스타일 적용
-                                    ),
-                                  );
-                                  return;
-                                }
                                 if (selectedMedia != null &&
                                     selectedMedia.every((m) =>
                                         validateFileFormat(
@@ -567,22 +559,28 @@ class _EditPostWidgetState extends State<EditPostWidget>
 
                             return FFButtonWidget(
                               onPressed: () async {
-                                await editPostPostsRecord.reference
-                                    .update(createPostsRecordData(
-                                  postTitle: _model.textController1.text,
-                                  postDescription: _model.textController2.text,
-                                  timePosted: getCurrentTimestamp,
-                                ));
+                                if ((_model.textController1.text != null &&
+                                    _model.textController1.text != '') &&
+                                    (_model.textController2.text != null &&
+                                        _model.textController2.text != '')) {
+                                  await editPostPostsRecord.reference
+                                      .update(createPostsRecordData(
+                                    postTitle: _model.textController1.text,
+                                    postDescription:
+                                    _model.textController2.text,
+                                    timePosted: getCurrentTimestamp,
+                                  ));
 
-                                context.pushNamed(
-                                  'ListPage',
-                                  queryParameters: {
-                                    'tabIndexRef': serializeParam(
-                                      1,
-                                      ParamType.int,
-                                    ),
-                                  }.withoutNulls,
-                                );
+                                  context.pushNamed(
+                                    'ListPage',
+                                    queryParameters: {
+                                      'tabIndexRef': serializeParam(
+                                        1,
+                                        ParamType.int,
+                                      ),
+                                    }.withoutNulls,
+                                  );
+                                }
                               },
                               text: '저장',
                               options: FFButtonOptions(

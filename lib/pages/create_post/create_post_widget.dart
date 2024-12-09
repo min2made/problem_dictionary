@@ -15,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
 import 'create_post_model.dart';
 export 'create_post_model.dart';
 
@@ -315,15 +316,6 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
                               mediaSource: MediaSource.photoGallery,
                               multiImage: true,
                             );
-                            if (selectedMedia != null && selectedMedia.length > 3) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('최대 3개의 이미지만 선택할 수 있습니다.'),
-                                  behavior: SnackBarBehavior.floating,  // floating 스타일 적용
-                                ),
-                              );
-                              return;
-                            }
                             if (selectedMedia != null &&
                                 selectedMedia.every((m) => validateFileFormat(
                                     m.storagePath, context))) {
@@ -432,23 +424,28 @@ class _CreatePostWidgetState extends State<CreatePostWidget>
 
                         return FFButtonWidget(
                           onPressed: () async {
-                            await PostsRecord.collection.doc().set({
-                              ...createPostsRecordData(
-                                postTitle: _model.textController1.text,
-                                postDescription: _model.textController2.text,
-                                timePosted: getCurrentTimestamp,
-                                author: currentUserDisplayName,
-                                postUser: currentUserReference,
-                                postUserPhoto: currentUserPhoto,
-                              ),
-                              ...mapToFirestore(
-                                {
-                                  'post_mutiple_photos':
-                                  _model.uploadedFileUrls,
-                                },
-                              ),
-                            });
-                            context.safePop();
+                            if ((_model.textController1.text != null &&
+                                _model.textController1.text != '') &&
+                                (_model.textController2.text != null &&
+                                    _model.textController2.text != '')) {
+                              await PostsRecord.collection.doc().set({
+                                ...createPostsRecordData(
+                                  postTitle: _model.textController1.text,
+                                  postDescription: _model.textController2.text,
+                                  timePosted: getCurrentTimestamp,
+                                  author: currentUserDisplayName,
+                                  postUser: currentUserReference,
+                                  postUserPhoto: currentUserPhoto,
+                                ),
+                                ...mapToFirestore(
+                                  {
+                                    'post_mutiple_photos':
+                                    _model.uploadedFileUrls,
+                                  },
+                                ),
+                              });
+                              context.safePop();
+                            }
                           },
                           text: '완료',
                           options: FFButtonOptions(

@@ -397,6 +397,9 @@ class _CreateProfileWidgetState extends State<CreateProfileWidget> {
                           // Firestore 문서 업데이트 시도
                           await currentUserReference!.update(createUsersRecordData(
                             displayName: _model.yourNameTextController.text,
+                            photoUrl: _model.uploadedFileUrl2?.isEmpty ?? true
+                                ? 'https://i.ibb.co/vV93kgy/35cf059d31c96e31aaf0a5326ad513d2.jpg'
+                                : _model.uploadedFileUrl2,
                           ));
                           context.pushNamed('ListPage');
                         } catch (e) {
