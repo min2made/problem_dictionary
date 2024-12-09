@@ -57,21 +57,22 @@ class _CreateProfileWidgetState extends State<CreateProfileWidget> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Align(
-                    alignment: const AlignmentDirectional(-1.0, 0.0),
-                    child: Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 0.0, 0.0),
-                      child: Text(
-                        '프로필 생성하기',
-                        style: FlutterFlowTheme.of(context)
-                            .headlineMedium
-                            .override(
-                              fontFamily: 'Inter Tight',
-                              color: FlutterFlowTheme.of(context).primaryText,
-                              fontSize: 22.0,
-                              letterSpacing: 0.0,
-                            ),
+                  Expanded(
+                    child: Align(
+                      alignment: const AlignmentDirectional(-1.0, 0.0),
+                      child: Padding(
+                        padding: const EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 0.0, 0.0),
+                        child: Text(
+                          '프로필 생성하기',
+                          style: FlutterFlowTheme.of(context)
+                              .headlineMedium
+                              .override(
+                            fontFamily: 'Inter Tight',
+                            color: FlutterFlowTheme.of(context).primaryText,
+                            fontSize: 22.0,
+                            letterSpacing: 0.0,
+                          ),
+                        ),
                       ),
                     ),
                   ),

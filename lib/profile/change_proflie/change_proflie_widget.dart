@@ -60,7 +60,7 @@ class _ChangeProflieWidgetState extends State<ChangeProflieWidget> {
             title: Padding(
               padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 14.0),
               child: Column(
-                mainAxisSize: MainAxisSize.max,
+                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -70,8 +70,7 @@ class _ChangeProflieWidgetState extends State<ChangeProflieWidget> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              12.0, 0.0, 0.0, 0.0),
+                          padding: EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
                           child: FlutterFlowIconButton(
                             borderColor: Colors.transparent,
                             borderRadius: 30.0,
@@ -90,17 +89,17 @@ class _ChangeProflieWidgetState extends State<ChangeProflieWidget> {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding:
-                    EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 0.0, 0.0),
-                    child: Text(
-                      '프로필 수정하기',
-                      style:
-                      FlutterFlowTheme.of(context).headlineMedium.override(
-                        fontFamily: 'Inter Tight',
-                        color: FlutterFlowTheme.of(context).primaryText,
-                        fontSize: 22.0,
-                        letterSpacing: 0.0,
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 0.0, 0.0),
+                      child: Text(
+                        '프로필 수정하기',
+                        style: FlutterFlowTheme.of(context).headlineMedium.override(
+                          fontFamily: 'Inter Tight',
+                          color: FlutterFlowTheme.of(context).primaryText,
+                          fontSize: 22.0,
+                          letterSpacing: 0.0,
+                        ),
                       ),
                     ),
                   ),
@@ -140,7 +139,7 @@ class _ChangeProflieWidgetState extends State<ChangeProflieWidget> {
 
               return SingleChildScrollView(
                 child: Column(
-                  mainAxisSize: MainAxisSize.max,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Padding(
                       padding:
