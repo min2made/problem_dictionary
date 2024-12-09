@@ -695,7 +695,7 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                               await OpenAIChatGPTGroup.sendFullPromptCall.call(
                                   apiKey: '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',
                                   promptJson: [
-                                    {"role": "system", "content": "답변은 간단하게 하는데 필요에 따라 길게 해도 됍니다. 그러나 200자를 넘기지 않는 방향으로 답변하세요. 그리고 공백으로 질문하거나 질문의 의도가 헷갈리면 '무엇이든 물어보세요' 라고 대답해"},
+                                    {"role": "system", "content": "답변은 간단하게 하는데 필요에 따라 길게 해도 됩니다. 그러나 200자를 넘기지 않는 방향으로 답변하세요. 정확 하지 않은 답변은 절대 하지말고 차라리 모른다고 하세요. 그리고 공백으로 질문하거나 질문의 의도가 헷갈리면 '무엇이든 물어보세요' 라고 대답해"},
                                     ..._model.chatHistory
                                   ]
                               );
