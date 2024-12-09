@@ -92,7 +92,7 @@ class _MyAppState extends State<MyApp> {
         return MediaQuery(
           data: mediaQueryData.copyWith(
             textScaler: TextScaler.linear(
-                mediaQueryData.textScaler.scale(1.0).clamp(1.0, 1.3)
+                mediaQueryData.textScaler.scale(1.0).clamp(1.0, 1.2)
             ),
           ),
           child: child!,
