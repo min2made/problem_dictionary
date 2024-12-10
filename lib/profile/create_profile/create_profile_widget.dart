@@ -412,6 +412,7 @@ class _CreateProfileWidgetState extends State<CreateProfileWidget> {
                               'display_name': _model.yourNameTextController.text,
                               'uid': currentUserReference!.id,
                               'email': 'kakao',
+                              'photo_url': 'https://i.ibb.co/vV93kgy/35cf059d31c96e31aaf0a5326ad513d2.jpg',
                               'created_time': FieldValue.serverTimestamp(),
                             });
                             context.pushNamed('ListPage');
