@@ -249,7 +249,7 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                                                               Container(
                                                                 constraints:
                                                                 BoxConstraints(
-                                                                  maxWidth: MediaQuery.of(context).size.width * 0.8,/*() {
+                                                                  maxWidth: () {
                                                                     if (MediaQuery.sizeOf(context)
                                                                         .width >=
                                                                         1170.0) {
@@ -261,7 +261,7 @@ class _AiChatComponentWidgetState extends State<AiChatComponentWidget> {
                                                                     } else {
                                                                       return 530.0;
                                                                     }
-                                                                  }(),*/
+                                                                  }(),
                                                                 ),
                                                                 decoration:
                                                                 BoxDecoration(
