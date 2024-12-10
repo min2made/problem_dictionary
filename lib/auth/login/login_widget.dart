@@ -463,7 +463,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                         0.0, 0.0, 0.0, 16.0),
                                     child: FFButtonWidget(
                                       onPressed: () async {
-                                        print(await KakaoSdk.origin);
+                                        print("키 해시: ${await KakaoSdk.origin}");
                                         if (await isKakaoTalkInstalled()) {
                                           try {
                                             var provider = OAuthProvider("oidc.problemdictionary");
