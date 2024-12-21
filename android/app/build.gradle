@@ -31,6 +31,7 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
+
 android {
     compileSdkVersion 34
     
@@ -51,6 +52,9 @@ android {
         targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        resValue "string", "kakao_native_key", "kakao${keystoreProperties['NativeKey']}"
+        resValue "string", "native_key", keystoreProperties["NativeKey"] ?: "default_native_key"
+        resValue "string", "java_key", keystoreProperties["JavaKey"] ?: "default_java_key"
     }
 
    signingConfigs {

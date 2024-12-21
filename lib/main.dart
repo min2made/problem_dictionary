@@ -10,6 +10,7 @@ import 'backend/firebase/firebase_config.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/internationalization.dart';
+import 'appkey.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,8 +22,8 @@ void main() async {
   await FlutterFlowTheme.initialize();
 
   KakaoSdk.init(
-    nativeAppKey: '758e33a13a58a3ac9223034b1c314ea8',
-    javaScriptAppKey: '19b4f8059d8e7b1e98c3ae6dbe7950dd',
+    nativeAppKey: NativeKey,
+    javaScriptAppKey: JavaKey,
   );
   runApp(MyApp());;
 }
