@@ -136,3 +136,8 @@
 |김용빈|원격 제어 API 연동 및 서버 관리, 사용자 인증 로직 개발|
 |박준수|로그인 UI 구현 및 카카오 API 연동, 챗봇 UI 개발|
 
+## 시연 영상
+[![image](https://github.com/user-attachments/assets/0dcb87a9-0d27-408a-83e0-c7de4f238fad)](https://www.youtube.com/watch?v=BjMTquWZwI4)  
+https://www.youtube.com/watch?v=BjMTquWZwI4
+
+
